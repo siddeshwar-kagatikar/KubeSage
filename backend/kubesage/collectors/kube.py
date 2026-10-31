@@ -73,6 +73,41 @@ def watch_namespaced(
             stop.wait(5)
 
 
+def node_capacity(api_client: client.ApiClient, node_name: str) -> dict:
+    """Allocatable CPU/memory of a node and what its scheduled pods request."""
+    core = client.CoreV1Api(api_client)
+    node = core.read_node(node_name)
+    pods = core.list_pod_for_all_namespaces(field_selector=f"spec.nodeName={node_name}").items
+    active = [p for p in pods if p.status.phase in ("Pending", "Running")]
+    cpu_m = sum(_cpu_millicores(c.resources.requests or {}) for p in active for c in p.spec.containers)
+    mem_b = sum(_memory_bytes(c.resources.requests or {}) for p in active for c in p.spec.containers)
+    return {
+        "node": node_name,
+        "allocatable_cpu_millicores": _cpu_millicores({"cpu": node.status.allocatable.get("cpu", "0")}),
+        "allocatable_memory_bytes": _memory_bytes({"memory": node.status.allocatable.get("memory", "0")}),
+        "requested_cpu_millicores": cpu_m,
+        "requested_memory_bytes": mem_b,
+        "active_pods": len(active),
+        "conditions": {c.type: c.status for c in node.status.conditions or []},
+    }
+
+
+def _cpu_millicores(resources: dict) -> int:
+    value = str(resources.get("cpu", "0"))
+    return int(value[:-1]) if value.endswith("m") else int(float(value) * 1000)
+
+
+MEMORY_SUFFIXES = {"Ki": 1024, "Mi": 1024**2, "Gi": 1024**3, "Ti": 1024**4, "k": 1000, "M": 1000**2, "G": 1000**3}
+
+
+def _memory_bytes(resources: dict) -> int:
+    value = str(resources.get("memory", "0"))
+    for suffix, factor in MEMORY_SUFFIXES.items():
+        if value.endswith(suffix):
+            return int(float(value[: -len(suffix)]) * factor)
+    return int(float(value))
+
+
 def measure_clock_offset(api_client: client.ApiClient, namespace: str) -> float:
     """Seconds by which the cluster clock leads this host, from a throwaway ConfigMap's creationTimestamp.
 

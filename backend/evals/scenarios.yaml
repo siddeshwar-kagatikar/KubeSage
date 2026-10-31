@@ -1,0 +1,14 @@
+# Ground truth for the Copilot evaluation: the latest incident of each workload must be diagnosed as `expected`.
+scenarios:
+  - name: s1-large-image
+    namespace: demo
+    workload: large-image-svc
+    expected: large_image
+  - name: s3-model-weights
+    namespace: demo
+    workload: model-weights-svc
+    expected: model_loading
+  - name: s6a-slow-readiness
+    namespace: demo
+    workload: slow-readiness-svc
+    expected: slow_readiness

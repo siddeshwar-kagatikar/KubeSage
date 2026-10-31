@@ -104,3 +104,80 @@ export interface HealthOut {
   watchers_running: boolean
   clock_offset_s: number | null
 }
+
+// ---- Phase 3: AI diagnosis ----
+
+/** A Category, or "unknown" when the diagnosis could not determine one. */
+export type DiagnosisCategory = Category | 'unknown'
+
+export interface EvidenceOut {
+  /** Stable reference cited by findings, e.g. "E1". */
+  ref: string
+  tool: string
+  args: Record<string, unknown>
+  result: Record<string, unknown>
+  created_at: ISODateTime
+}
+
+export interface FindingOut {
+  statement: string
+  evidence_ids: string[]
+}
+
+export interface RuledOutOut {
+  /** A Category (or other string the model produced). */
+  category: string
+  reason: string
+  evidence_ids: string[]
+}
+
+export interface RecommendationOut {
+  action: string
+  rationale: string
+  evidence_ids: string[]
+}
+
+export type DiagnosisStatus = 'running' | 'completed' | 'failed'
+export type DiagnosisSource = 'llm' | 'fallback'
+export type Confidence = 'high' | 'medium' | 'low'
+
+export interface DiagnosisRunOut {
+  id: number
+  incident_id: number
+  status: DiagnosisStatus
+  /** 'llm' = validated AI diagnosis; 'fallback' = deterministic detector result. */
+  source: DiagnosisSource | null
+  provider: string | null
+  model: string | null
+  prompt_version: string | null
+  category: string | null
+  summary: string | null
+  confidence: Confidence | null
+  findings: FindingOut[]
+  ruled_out: RuledOutOut[]
+  recommendations: RecommendationOut[]
+  validation_errors: string[]
+  tool_calls: number
+  error: string | null
+  started_at: ISODateTime
+  finished_at: ISODateTime | null
+  llm_calls: number
+  input_tokens: number | null
+  output_tokens: number | null
+  evidence: EvidenceOut[]
+}
+
+export interface LlmCallOut {
+  id: number
+  run_id: number | null
+  purpose: string
+  provider: string
+  model: string
+  prompt_version: string | null
+  input_tokens: number | null
+  output_tokens: number | null
+  latency_ms: number
+  status: 'ok' | 'error'
+  error: string | null
+  created_at: ISODateTime
+}

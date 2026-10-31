@@ -84,6 +84,77 @@ class IncidentOut(BaseModel):
     candidates: list[CandidateOut]
 
 
+class EvidenceOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    ref: str
+    tool: str
+    args: dict
+    result: dict
+    created_at: datetime
+
+
+class FindingOut(BaseModel):
+    statement: str
+    evidence_ids: list[str]
+
+
+class RuledOutOut(BaseModel):
+    category: str
+    reason: str
+    evidence_ids: list[str]
+
+
+class RecommendationOut(BaseModel):
+    action: str
+    rationale: str
+    evidence_ids: list[str]
+
+
+class DiagnosisRunOut(BaseModel):
+    """`source`: 'llm' = validated AI diagnosis; 'fallback' = deterministic detector result (LLM failed or invalid)."""
+
+    id: int
+    incident_id: int
+    status: Literal["running", "completed", "failed"]
+    source: Literal["llm", "fallback"] | None
+    provider: str | None
+    model: str | None
+    prompt_version: str | None
+    category: str | None  # a Category or "unknown"
+    summary: str | None
+    confidence: Literal["high", "medium", "low"] | None
+    findings: list[FindingOut]
+    ruled_out: list[RuledOutOut]
+    recommendations: list[RecommendationOut]
+    validation_errors: list[str]
+    tool_calls: int
+    error: str | None
+    started_at: datetime
+    finished_at: datetime | None
+    llm_calls: int
+    input_tokens: int | None
+    output_tokens: int | None
+    evidence: list[EvidenceOut]
+
+
+class LlmCallOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    run_id: int | None
+    purpose: str
+    provider: str
+    model: str
+    prompt_version: str | None
+    input_tokens: int | None
+    output_tokens: int | None
+    latency_ms: int
+    status: Literal["ok", "error"]
+    error: str | None
+    created_at: datetime
+
+
 class HealthOut(BaseModel):
     status: Literal["ok", "degraded"]
     database: bool

@@ -5,6 +5,7 @@ import type { IncidentOut } from '../api/types'
 import { IncidentStatusBadge } from '../components/Badges'
 import CandidatesList from '../components/CandidatesList'
 import CategoryBadge from '../components/CategoryBadge'
+import DiagnosisPanel from '../components/DiagnosisPanel'
 import { ErrorState, Loading } from '../components/QueryState'
 import Section, { Stat } from '../components/Section'
 import { formatDateTime, formatPercent, formatSeconds } from '../components/format'
@@ -107,18 +108,7 @@ function IncidentView({ incident: i }: { incident: IncidentOut }) {
         <CandidatesList candidates={i.candidates} />
       </Section>
 
-      <section
-        aria-labelledby="ai-diagnosis-heading"
-        className="rounded-lg border-2 border-dashed border-line bg-surface-2/40 p-4"
-      >
-        <h2 id="ai-diagnosis-heading" className="text-sm font-semibold">
-          AI diagnosis — coming in Phase 3
-        </h2>
-        <p className="mt-1 text-sm text-muted">
-          Placeholder. Phase 3 adds an AI-generated root-cause diagnosis and proposed fix for this incident, followed
-          by fix approval and before/after experiments.
-        </p>
-      </section>
+      <DiagnosisPanel incidentId={i.id} />
     </div>
   )
 }

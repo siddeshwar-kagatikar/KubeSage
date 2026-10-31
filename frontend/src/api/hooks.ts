@@ -1,7 +1,10 @@
+import { useEffect, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { api } from './client'
+import { ApiError, api } from './client'
 import type {
+  DiagnosisRunOut,
   HealthOut,
+  LlmCallOut,
   IncidentOut,
   IncidentStatus,
   SloUpdate,
@@ -20,7 +23,12 @@ export const queryKeys = {
   startup: (id: number) => ['startups', id] as const,
   incidents: (status?: IncidentStatus) => ['incidents', { status: status ?? null }] as const,
   incident: (id: number) => ['incident', id] as const,
+  diagnosis: (incidentId: number) => ['diagnosis', incidentId] as const,
+  llmCalls: (limit: number) => ['llm', 'calls', limit] as const,
 }
+
+/** Poll interval while a diagnosis run is in progress. */
+export const DIAGNOSIS_POLL_MS = 2_000
 
 export function useHealth() {
   return useQuery({
@@ -90,5 +98,70 @@ export function useUpdateSlo(workloadId: number) {
       void qc.invalidateQueries({ queryKey: queryKeys.workloads })
       void qc.invalidateQueries({ queryKey: ['workloads', workloadId, 'startups'] })
     },
+  })
+}
+
+// ---- Phase 3: AI diagnosis ----
+
+/**
+ * Latest diagnosis run for an incident. Resolves to `null` when none exists yet (API 404).
+ * Polls every 2 s while the run is `running`; when it finishes, refreshes the incident
+ * (its status moves to "diagnosed") and the lists that show incident status.
+ */
+export function useDiagnosis(incidentId: number) {
+  const qc = useQueryClient()
+  const query = useQuery({
+    queryKey: queryKeys.diagnosis(incidentId),
+    queryFn: async (): Promise<DiagnosisRunOut | null> => {
+      try {
+        return await api.get<DiagnosisRunOut>(`/incidents/${incidentId}/diagnosis`)
+      } catch (e) {
+        if (e instanceof ApiError && e.status === 404) return null
+        throw e
+      }
+    },
+    enabled: Number.isFinite(incidentId),
+    refetchInterval: (q) => (q.state.data?.status === 'running' ? DIAGNOSIS_POLL_MS : false),
+  })
+
+  const status = query.data?.status
+  const prev = useRef(status)
+  useEffect(() => {
+    if (prev.current === 'running' && status && status !== 'running') {
+      void qc.invalidateQueries({ queryKey: queryKeys.incident(incidentId) })
+      void qc.invalidateQueries({ queryKey: ['incidents'] })
+      void qc.invalidateQueries({ queryKey: queryKeys.workloads })
+    }
+    prev.current = status
+  }, [status, incidentId, qc])
+
+  return query
+}
+
+/**
+ * Starts a diagnosis run (202 → running). On 409 (already running) the caller shows the
+ * message; either way we refetch so polling picks up the in-flight run.
+ */
+export function useRunDiagnosis(incidentId: number) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: () => api.post<DiagnosisRunOut>(`/incidents/${incidentId}/diagnose`),
+    onSuccess: (run) => {
+      qc.setQueryData(queryKeys.diagnosis(incidentId), run)
+    },
+    onError: (e) => {
+      if (e instanceof ApiError && e.status === 409) {
+        void qc.invalidateQueries({ queryKey: queryKeys.diagnosis(incidentId) })
+      }
+    },
+  })
+}
+
+/** Recent LLM calls (for the Phase 6 observability page). */
+export function useLlmCalls(limit = 100) {
+  return useQuery({
+    queryKey: queryKeys.llmCalls(limit),
+    queryFn: () => api.get<LlmCallOut[]>(`/llm/calls?limit=${limit}`),
+    refetchInterval: LIST_POLL_MS,
   })
 }

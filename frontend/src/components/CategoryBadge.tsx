@@ -1,5 +1,5 @@
 import type { Category } from '../api/types'
-import { categoryLabel } from './categories'
+import { categoryLabel, isCategory } from './categories'
 
 /** Muted swatch per category; the text label always carries the meaning. */
 const SWATCH: Record<Category, string> = {
@@ -11,11 +11,16 @@ const SWATCH: Record<Category, string> = {
   slow_readiness: '#9c4dbe',
 }
 
-export default function CategoryBadge({ category }: { category: Category | null | undefined }) {
+/** Accepts a Category, "unknown" (shown as "Undetermined") or another string from the model. */
+export default function CategoryBadge({ category }: { category: Category | string | null | undefined }) {
   if (!category) return <span className="text-sm text-muted">—</span>
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface-2 px-2 py-0.5 text-xs font-medium whitespace-nowrap">
-      <span aria-hidden="true" className="size-2 rounded-full" style={{ backgroundColor: SWATCH[category] }} />
+      {isCategory(category) ? (
+        <span aria-hidden="true" className="size-2 rounded-full" style={{ backgroundColor: SWATCH[category] }} />
+      ) : (
+        <span aria-hidden="true" className="size-2 rounded-full border border-muted" />
+      )}
       {categoryLabel(category)}
     </span>
   )

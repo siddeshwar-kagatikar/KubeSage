@@ -4,6 +4,7 @@ Finalising = fetch the pod's events and startup spans, build the timeline, run d
 workload SLO/baseline and open an incident on breach. Everything is persisted so it survives event TTLs.
 """
 
+import copy
 import logging
 import threading
 import time
@@ -20,6 +21,7 @@ from kubesage.collectors.kube import measure_clock_offset, new_api_client, to_di
 from kubesage.config import Settings
 from kubesage.db.models import Incident, K8sEvent, PodStartup, Workload, utcnow
 from kubesage.db.session import session_scope
+from kubesage.llm.redact import redact_env, redact_text
 from kubesage.profiler.baselines import evaluate
 from kubesage.profiler.detectors import detect
 from kubesage.profiler.timeline import Span, build_timeline, event_last_time, event_time, parse_time
@@ -27,6 +29,7 @@ from kubesage.profiler.timeline import Span, build_timeline, event_last_time, ev
 log = logging.getLogger(__name__)
 
 SPAN_FETCH_ATTEMPTS = 3
+LOG_TAIL_LINES = 300
 
 
 def workload_ref(pod: dict) -> tuple[str, str]:
@@ -176,10 +179,12 @@ class ProfilerService:
                 self._pending.discard(uid)
 
     def finalise(self, uid: str, pod: dict) -> None:
-        time.sleep(self.settings.span_wait_seconds)
         api = self._api()
         core = client.CoreV1Api(api)
         meta = pod["metadata"]
+        # Logs first: they are complete at Ready, and the pod may be deleted during the span wait.
+        logs = self._container_logs(core, pod)
+        time.sleep(self.settings.span_wait_seconds)
         # Prefer a fresh read, but only while the pod is still Ready: if it was stopped during the span wait
         # it is terminating (Ready=False) or gone, and the Ready snapshot from the watch is the right record.
         try:
@@ -206,6 +211,8 @@ class ProfilerService:
             startup = session.scalar(select(PodStartup).where(PodStartup.pod_uid == uid))
             if startup is None:
                 startup = self._new_startup(session, pod)
+            startup.pod_snapshot = snapshot_pod(pod)
+            startup.logs = logs
             startup.node = timeline.node
             startup.ready_at = timeline.ready_at
             startup.total_s = timeline.total_s
@@ -227,6 +234,21 @@ class ProfilerService:
             timeline.cold,
             candidates[0].category if candidates else None,
         )
+
+    def _container_logs(self, core: client.CoreV1Api, pod: dict) -> str | None:
+        """Last log lines of the main container, redacted. None if the pod is already gone."""
+        meta = pod["metadata"]
+        try:
+            text = core.read_namespaced_pod_log(
+                meta["name"],
+                meta["namespace"],
+                container=pod["spec"]["containers"][0]["name"],
+                tail_lines=LOG_TAIL_LINES,
+            )
+        except client.ApiException as exc:
+            log.info("no logs for %s: %s", meta["name"], exc.status)
+            return None
+        return redact_text(text)
 
     def _startup_spans(self, pod: dict) -> list[Span]:
         service = service_name(pod)
@@ -277,6 +299,15 @@ class ProfilerService:
                 candidates=startup.candidates,
             )
         )
+
+
+def snapshot_pod(pod: dict) -> dict:
+    """Pod spec and status for later investigation, without managedFields noise and with env values redacted."""
+    spec = copy.deepcopy(pod["spec"])
+    for container in spec.get("containers", []) + spec.get("initContainers", []):
+        container["env"] = redact_env(container.get("env", []))
+    metadata = {k: v for k, v in pod["metadata"].items() if k != "managedFields"}
+    return {"metadata": metadata, "spec": spec, "status": pod.get("status", {})}
 
 
 def upsert_event(session: Session, event: dict) -> None:

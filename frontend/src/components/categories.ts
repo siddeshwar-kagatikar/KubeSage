@@ -9,7 +9,13 @@ export const CATEGORY_LABELS: Record<Category, string> = {
   slow_readiness: 'Slow readiness',
 }
 
-export function categoryLabel(c: Category | null | undefined): string {
+export function isCategory(c: string | null | undefined): c is Category {
+  return c != null && Object.hasOwn(CATEGORY_LABELS, c)
+}
+
+/** Label for a Category, "unknown" (→ Undetermined) or any other string the model produced. */
+export function categoryLabel(c: string | null | undefined): string {
   if (!c) return 'Unattributed'
-  return CATEGORY_LABELS[c] ?? c
+  if (c === 'unknown') return 'Undetermined'
+  return isCategory(c) ? CATEGORY_LABELS[c] : c
 }

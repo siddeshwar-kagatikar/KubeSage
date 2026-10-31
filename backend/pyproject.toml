@@ -12,6 +12,10 @@ dependencies = [
     "httpx==0.28.1",
     "pydantic==2.14.2",
     "pydantic-settings==2.16.2",
+    "langgraph==1.2.19",
+    "langchain-core==1.7.3",
+    "langchain-google-genai==4.4.2",
+    "pyyaml==6.0.3",
 ]
 
 [project.optional-dependencies]
@@ -38,3 +42,6 @@ extend-immutable-calls = ["fastapi.Depends"]
 # Health probes and background workers must never raise; broad excepts there are deliberate.
 "kubesage/api/health.py" = ["BLE001"]
 "kubesage/profiler/service.py" = ["BLE001"]
+# Model and tool failures must degrade to the deterministic fallback, never crash a diagnosis run.
+"kubesage/copilot/*.py" = ["BLE001"]
+"kubesage/llm/*.py" = ["BLE001"]

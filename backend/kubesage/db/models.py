@@ -53,6 +53,9 @@ class PodStartup(Base):
     candidates: Mapped[list] = mapped_column(JsonType, default=list)
     top_category: Mapped[str | None] = mapped_column(String(64))
     finalized_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Captured at finalisation because pods (and their logs) are transient; the Copilot reads these.
+    pod_snapshot: Mapped[dict | None] = mapped_column(JsonType)
+    logs: Mapped[str | None] = mapped_column(Text)
 
     workload: Mapped[Workload] = relationship(back_populates="startups")
 
@@ -96,3 +99,66 @@ class Incident(Base):
 
     workload: Mapped[Workload] = relationship()
     startup: Mapped[PodStartup] = relationship()
+
+
+class DiagnosisRun(Base):
+    """One Incident Copilot run: its status, the validated diagnosis and how it was produced."""
+
+    __tablename__ = "diagnosis_runs"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    incident_id: Mapped[int] = mapped_column(ForeignKey("incidents.id"), index=True)
+    status: Mapped[str] = mapped_column(String(32), default="running")  # running | completed | failed
+    source: Mapped[str | None] = mapped_column(String(32))  # llm | fallback
+    provider: Mapped[str | None] = mapped_column(String(64))
+    model: Mapped[str | None] = mapped_column(String(128))
+    prompt_version: Mapped[str | None] = mapped_column(String(64))
+    category: Mapped[str | None] = mapped_column(String(64))
+    summary: Mapped[str | None] = mapped_column(Text)
+    confidence: Mapped[str | None] = mapped_column(String(16))
+    findings: Mapped[list] = mapped_column(JsonType, default=list)
+    ruled_out: Mapped[list] = mapped_column(JsonType, default=list)
+    recommendations: Mapped[list] = mapped_column(JsonType, default=list)
+    validation_errors: Mapped[list] = mapped_column(JsonType, default=list)
+    tool_calls: Mapped[int] = mapped_column(Integer, default=0)
+    error: Mapped[str | None] = mapped_column(Text)
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+    evidence: Mapped[list["Evidence"]] = relationship(back_populates="run", order_by="Evidence.id")
+
+
+class Evidence(Base):
+    """A tool result the Copilot saw. Diagnoses may only cite these by `ref`."""
+
+    __tablename__ = "evidence"
+    __table_args__ = (UniqueConstraint("run_id", "ref"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    run_id: Mapped[int] = mapped_column(ForeignKey("diagnosis_runs.id"), index=True)
+    ref: Mapped[str] = mapped_column(String(16))  # E1, E2, ...
+    tool: Mapped[str] = mapped_column(String(64))
+    args: Mapped[dict] = mapped_column(JsonType, default=dict)
+    result: Mapped[dict] = mapped_column(JsonType, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+    run: Mapped[DiagnosisRun] = relationship(back_populates="evidence")
+
+
+class LlmCall(Base):
+    """Every model call, for LLMOps visibility: latency, tokens, prompt version and failures."""
+
+    __tablename__ = "llm_calls"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    run_id: Mapped[int | None] = mapped_column(ForeignKey("diagnosis_runs.id"), index=True)
+    purpose: Mapped[str] = mapped_column(String(64))  # investigate | synthesise
+    provider: Mapped[str] = mapped_column(String(64))
+    model: Mapped[str] = mapped_column(String(128))
+    prompt_version: Mapped[str | None] = mapped_column(String(64))
+    input_tokens: Mapped[int | None] = mapped_column(Integer)
+    output_tokens: Mapped[int | None] = mapped_column(Integer)
+    latency_ms: Mapped[int] = mapped_column(Integer)
+    status: Mapped[str] = mapped_column(String(16))  # ok | error
+    error: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

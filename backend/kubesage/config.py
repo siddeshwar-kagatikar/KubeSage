@@ -1,7 +1,7 @@
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import Field
+from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -27,6 +27,18 @@ class Settings(BaseSettings):
     prometheus_url: str = "http://127.0.0.1:30090"
     # Wait after Ready before reading spans: the app flushes its startup trace asynchronously.
     span_wait_seconds: float = 3.0
+
+    # LLM (pluggable provider; Gemini Flash by default)
+    llm_provider: str = "google_genai"
+    llm_model: str = "gemini-2.5-flash"
+    llm_thinking_budget: int = 1024
+    llm_max_retries: int = 3
+    llm_timeout_s: float = 90.0
+    google_api_key: SecretStr | None = Field(None, validation_alias="GOOGLE_API_KEY")
+
+    # Incident Copilot
+    copilot_max_tool_calls: int = 6
+    copilot_max_synthesis_attempts: int = 2
 
     # Incident rules
     default_slo_seconds: float = 30.0

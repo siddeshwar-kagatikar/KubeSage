@@ -6,7 +6,8 @@ KubeSage profiles pod startups, detects cold-start problems, diagnoses root caus
 
 ## Status
 
-Phase 2 complete — Cold-Start Profiler (timeline, detectors, SLO/baseline incidents) and dashboard.
+Phase 3 — Incident Copilot (evidence-grounded LLM diagnosis) built; final live evaluation of prompt v2 pending
+Gemini quota.
 
 ## Running KubeSage
 
@@ -32,6 +33,29 @@ startups with the same cold/warm state). Incidents are raised for `demo` only; s
 but never raise incidents.
 
 `scripts/capture-fixture.ps1` records a live startup (pod, events, trace) as a test fixture.
+
+## Incident Copilot
+
+"Run diagnosis" on an incident starts a LangGraph agent (Gemini Flash by default; `KUBESAGE_LLM_PROVIDER` /
+`KUBESAGE_LLM_MODEL` select another model). It investigates with read-only tools scoped to that incident — pod
+events, pod spec, logs, workload history, Prometheus metrics, node capacity, runbooks (`runbooks/`) and past
+incidents — all read from data persisted when the pod became Ready, with secrets redacted.
+
+Grounding is enforced in code: every tool result is stored as numbered evidence (E1, E2, ...), every finding must
+cite existing evidence, and a diagnosis that contradicts a strong detector result must rule it out. Invalid output
+gets one retry with the errors as feedback; if it is still invalid, or the model is unavailable, the run completes
+as a clearly labelled detector fallback. Every model call is logged (`/api/llm/calls`) with tokens, latency and
+prompt version.
+
+```powershell
+# from backend/
+python -m evals.run                   # live evaluation against ground truth (evals/scenarios.yaml)
+python -m evals.run --mode record     # live, and save validated runs to evals/recordings/
+python -m evals.run --mode replay     # replay recordings: no API calls
+```
+
+Quota: the Gemini free tier allows 20 requests per model per day; one diagnosis uses about 5–6. A paid key is
+needed for regular use; on quota errors the Copilot degrades to the detector fallback.
 
 ## Prerequisites
 
