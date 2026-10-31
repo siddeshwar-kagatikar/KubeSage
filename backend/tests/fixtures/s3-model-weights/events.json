@@ -1,0 +1,238 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:54:55Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "kind": "Pod",
+                "name": "model-weights-svc-84f9c655-rs2vm",
+                "namespace": "demo",
+                "resourceVersion": "3338",
+                "uid": "6869661e-134a-4d95-8694-879ecaed3217"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:54:55Z",
+            "message": "Successfully assigned demo/model-weights-svc-84f9c655-rs2vm to kubesage-worker",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:54:55Z",
+                "name": "model-weights-svc-84f9c655-rs2vm.18e38441ed7bf84b",
+                "namespace": "demo",
+                "resourceVersion": "3344",
+                "uid": "f37a1b4c-f61b-4a37-bffd-354193c1a3fe"
+            },
+            "reason": "Scheduled",
+            "reportingComponent": "default-scheduler",
+            "reportingInstance": "",
+            "source": {
+                "component": "default-scheduler"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:54:56Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "model-weights-svc-84f9c655-rs2vm",
+                "namespace": "demo",
+                "resourceVersion": "3341",
+                "uid": "6869661e-134a-4d95-8694-879ecaed3217"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:54:56Z",
+            "message": "Pulling image \"localhost:5001/demo-ai-service:slim\"",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:54:56Z",
+                "name": "model-weights-svc-84f9c655-rs2vm.18e384422420d595",
+                "namespace": "demo",
+                "resourceVersion": "3348",
+                "uid": "fe38b50e-92a8-40e1-ac8e-a8570433f34b"
+            },
+            "reason": "Pulling",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:55:01Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "model-weights-svc-84f9c655-rs2vm",
+                "namespace": "demo",
+                "resourceVersion": "3341",
+                "uid": "6869661e-134a-4d95-8694-879ecaed3217"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:55:01Z",
+            "message": "Successfully pulled image \"localhost:5001/demo-ai-service:slim\" in 5.467s (5.467s including waiting). Image size: 53299792 bytes.",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:55:01Z",
+                "name": "model-weights-svc-84f9c655-rs2vm.18e3844369ff5a6d",
+                "namespace": "demo",
+                "resourceVersion": "3361",
+                "uid": "a0f368bc-9f5e-4675-9479-c0fac09fb64b"
+            },
+            "reason": "Pulled",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:55:01Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "model-weights-svc-84f9c655-rs2vm",
+                "namespace": "demo",
+                "resourceVersion": "3341",
+                "uid": "6869661e-134a-4d95-8694-879ecaed3217"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:55:01Z",
+            "message": "Container created",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:55:01Z",
+                "name": "model-weights-svc-84f9c655-rs2vm.18e384436f7c800d",
+                "namespace": "demo",
+                "resourceVersion": "3362",
+                "uid": "452f7d5a-bb55-4731-bb5e-c996948a4c71"
+            },
+            "reason": "Created",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:55:01Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "model-weights-svc-84f9c655-rs2vm",
+                "namespace": "demo",
+                "resourceVersion": "3341",
+                "uid": "6869661e-134a-4d95-8694-879ecaed3217"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:55:01Z",
+            "message": "Container started",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:55:01Z",
+                "name": "model-weights-svc-84f9c655-rs2vm.18e38443748082ad",
+                "namespace": "demo",
+                "resourceVersion": "3363",
+                "uid": "3373255b-8b11-4522-8469-a7ae838fdfb8"
+            },
+            "reason": "Started",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 2,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:55:01Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "model-weights-svc-84f9c655-rs2vm",
+                "namespace": "demo",
+                "resourceVersion": "3341",
+                "uid": "6869661e-134a-4d95-8694-879ecaed3217"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:55:02Z",
+            "message": "Readiness probe failed: Get \"http://10.244.1.7:8080/ready\": dial tcp 10.244.1.7:8080: connect: connection refused",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:55:01Z",
+                "name": "model-weights-svc-84f9c655-rs2vm.18e3844374acbd19",
+                "namespace": "demo",
+                "resourceVersion": "3366",
+                "uid": "a0893690-acc7-4cc5-9ffa-9b41197b1bc8"
+            },
+            "reason": "Unhealthy",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Warning"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 23,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:55:03Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "model-weights-svc-84f9c655-rs2vm",
+                "namespace": "demo",
+                "resourceVersion": "3341",
+                "uid": "6869661e-134a-4d95-8694-879ecaed3217"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:55:24Z",
+            "message": "Readiness probe failed: HTTP probe failed with statuscode: 503",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:55:03Z",
+                "name": "model-weights-svc-84f9c655-rs2vm.18e38443c3c53d7b",
+                "namespace": "demo",
+                "resourceVersion": "3424",
+                "uid": "d8297942-30b4-4f34-97c1-f4983e609fe3"
+            },
+            "reason": "Unhealthy",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Warning"
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

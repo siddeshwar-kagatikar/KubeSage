@@ -6,7 +6,32 @@ KubeSage profiles pod startups, detects cold-start problems, diagnoses root caus
 
 ## Status
 
-Phase 1 complete — Kubernetes lab environment with reproducible cold-start scenarios.
+Phase 2 complete — Cold-Start Profiler (timeline, detectors, SLO/baseline incidents) and dashboard.
+
+## Running KubeSage
+
+```powershell
+docker compose up -d postgres
+
+# Backend (from backend/)
+python -m venv .venv
+.\.venv\Scripts\pip install -e ".[dev]"
+.\.venv\Scripts\python -m uvicorn kubesage.main:app --port 8000
+.\.venv\Scripts\python -m pytest            # unit tests on recorded lab fixtures
+
+# Frontend (from frontend/)
+npm install
+npm run dev                                 # http://localhost:5173, proxies /api to :8000
+```
+
+The backend watches the `demo` and `kubesage-sandbox` namespaces. Each pod start is finalised once Ready:
+events and OTel startup spans are joined into a phase timeline, rule-based detectors attribute the time to a
+category (large image, slow registry, model loading, app init, capacity, slow readiness), and an incident is
+opened when the startup exceeds the workload SLO (default 30 s) or 1.5× its baseline (median of ≥ 3 earlier
+startups with the same cold/warm state). Incidents are raised for `demo` only; sandbox startups are profiled
+but never raise incidents.
+
+`scripts/capture-fixture.ps1` records a live startup (pod, events, trace) as a test fixture.
 
 ## Prerequisites
 
@@ -57,3 +82,7 @@ docker compose up -d postgres
 - The kubelet `Pulled` duration includes layer unpacking, not just network transfer.
 - FastAPI ≥ 0.16x has native OpenTelemetry; the sample app disables it so only startup spans are exported.
 - Kubernetes condition timestamps have 1 s resolution.
+- The app's process start comes from `/proc` (`btime` has 1 s resolution). When it would place the app start
+  before the image pull ended, the profiler clamps it and records `span_clock_skew_s`.
+- Pods deleted before becoming Ready (aborted starts) are not recorded; pods that never become Ready
+  (e.g. stuck Pending) are not profiled yet.

@@ -1,0 +1,172 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:55:40Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "kind": "Pod",
+                "name": "slow-readiness-svc-67bf596557-kwp95",
+                "namespace": "demo",
+                "resourceVersion": "3505",
+                "uid": "37399332-bda6-4fd3-8781-151361be2a35"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:55:40Z",
+            "message": "Successfully assigned demo/slow-readiness-svc-67bf596557-kwp95 to kubesage-worker",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:55:40Z",
+                "name": "slow-readiness-svc-67bf596557-kwp95.18e3844c80d0a41c",
+                "namespace": "demo",
+                "resourceVersion": "3511",
+                "uid": "9aab6e24-d15b-4083-ac84-7bb5126bd0d6"
+            },
+            "reason": "Scheduled",
+            "reportingComponent": "default-scheduler",
+            "reportingInstance": "",
+            "source": {
+                "component": "default-scheduler"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:55:41Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "slow-readiness-svc-67bf596557-kwp95",
+                "namespace": "demo",
+                "resourceVersion": "3507",
+                "uid": "37399332-bda6-4fd3-8781-151361be2a35"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:55:41Z",
+            "message": "Pulling image \"localhost:5001/demo-ai-service:slim\"",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:55:41Z",
+                "name": "slow-readiness-svc-67bf596557-kwp95.18e3844ca5fd6a7a",
+                "namespace": "demo",
+                "resourceVersion": "3516",
+                "uid": "ae80047c-febf-49d4-a92f-706c59f40f1e"
+            },
+            "reason": "Pulling",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:55:45Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "slow-readiness-svc-67bf596557-kwp95",
+                "namespace": "demo",
+                "resourceVersion": "3507",
+                "uid": "37399332-bda6-4fd3-8781-151361be2a35"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:55:45Z",
+            "message": "Successfully pulled image \"localhost:5001/demo-ai-service:slim\" in 4.437s (4.437s including waiting). Image size: 53299792 bytes.",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:55:45Z",
+                "name": "slow-readiness-svc-67bf596557-kwp95.18e3844dae836518",
+                "namespace": "demo",
+                "resourceVersion": "3524",
+                "uid": "d8de83b8-db3d-4aa7-86eb-76834a2a1b55"
+            },
+            "reason": "Pulled",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:55:45Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "slow-readiness-svc-67bf596557-kwp95",
+                "namespace": "demo",
+                "resourceVersion": "3507",
+                "uid": "37399332-bda6-4fd3-8781-151361be2a35"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:55:45Z",
+            "message": "Container created",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:55:45Z",
+                "name": "slow-readiness-svc-67bf596557-kwp95.18e3844db196b4af",
+                "namespace": "demo",
+                "resourceVersion": "3525",
+                "uid": "d0a12c53-5eb6-4b67-ba09-177b79ae9a73"
+            },
+            "reason": "Created",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:55:45Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "slow-readiness-svc-67bf596557-kwp95",
+                "namespace": "demo",
+                "resourceVersion": "3507",
+                "uid": "37399332-bda6-4fd3-8781-151361be2a35"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:55:45Z",
+            "message": "Container started",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:55:45Z",
+                "name": "slow-readiness-svc-67bf596557-kwp95.18e3844db6443559",
+                "namespace": "demo",
+                "resourceVersion": "3526",
+                "uid": "e5b971d5-5969-4bd6-8123-9b783922ff75"
+            },
+            "reason": "Started",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Normal"
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

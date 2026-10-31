@@ -1,0 +1,40 @@
+[project]
+name = "kubesage"
+version = "0.1.0"
+description = "LLMOps platform for Kubernetes cold-start optimisation and incident diagnosis"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi==0.162.0",
+    "uvicorn==0.54.0",
+    "sqlalchemy==2.1.6",
+    "psycopg[binary]==3.3.6",
+    "kubernetes==37.0.1",
+    "httpx==0.28.1",
+    "pydantic==2.14.2",
+    "pydantic-settings==2.16.2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==9.2.0", "ruff==0.17.3"]
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["kubesage*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends"]
+
+[tool.ruff.lint.per-file-ignores]
+# Health probes and background workers must never raise; broad excepts there are deliberate.
+"kubesage/api/health.py" = ["BLE001"]
+"kubesage/profiler/service.py" = ["BLE001"]

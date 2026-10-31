@@ -1,0 +1,172 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:58:03Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "kind": "Pod",
+                "name": "large-image-svc-59c7547b7b-9qz9g",
+                "namespace": "demo",
+                "resourceVersion": "3831",
+                "uid": "f2551f8e-b5b7-4c4c-83c5-986d6df8bf54"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:58:03Z",
+            "message": "Successfully assigned demo/large-image-svc-59c7547b7b-9qz9g to kubesage-worker",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:58:03Z",
+                "name": "large-image-svc-59c7547b7b-9qz9g.18e3846dce156080",
+                "namespace": "demo",
+                "resourceVersion": "3837",
+                "uid": "796bac15-2e0c-4323-b118-a951f52cb2b5"
+            },
+            "reason": "Scheduled",
+            "reportingComponent": "default-scheduler",
+            "reportingInstance": "",
+            "source": {
+                "component": "default-scheduler"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:58:04Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "large-image-svc-59c7547b7b-9qz9g",
+                "namespace": "demo",
+                "resourceVersion": "3835",
+                "uid": "f2551f8e-b5b7-4c4c-83c5-986d6df8bf54"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:58:04Z",
+            "message": "Container image \"localhost:5001/demo-ai-service:fat\" already present on machine and can be accessed by the pod",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:58:04Z",
+                "name": "large-image-svc-59c7547b7b-9qz9g.18e3846dec1740e4",
+                "namespace": "demo",
+                "resourceVersion": "3841",
+                "uid": "e30ceb16-1690-4b29-b6ec-b28a9a0b0d2a"
+            },
+            "reason": "Pulled",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:58:04Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "large-image-svc-59c7547b7b-9qz9g",
+                "namespace": "demo",
+                "resourceVersion": "3835",
+                "uid": "f2551f8e-b5b7-4c4c-83c5-986d6df8bf54"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:58:04Z",
+            "message": "Container created",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:58:04Z",
+                "name": "large-image-svc-59c7547b7b-9qz9g.18e3846deeb34ebc",
+                "namespace": "demo",
+                "resourceVersion": "3844",
+                "uid": "6beca768-77d9-4a1c-af09-4f628d6e7ea7"
+            },
+            "reason": "Created",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:58:04Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "large-image-svc-59c7547b7b-9qz9g",
+                "namespace": "demo",
+                "resourceVersion": "3835",
+                "uid": "f2551f8e-b5b7-4c4c-83c5-986d6df8bf54"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:58:04Z",
+            "message": "Container started",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:58:04Z",
+                "name": "large-image-svc-59c7547b7b-9qz9g.18e3846df4159c91",
+                "namespace": "demo",
+                "resourceVersion": "3846",
+                "uid": "7725bb59-d808-45eb-8d96-b52561499d13"
+            },
+            "reason": "Started",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 2,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:58:04Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "large-image-svc-59c7547b7b-9qz9g",
+                "namespace": "demo",
+                "resourceVersion": "3835",
+                "uid": "f2551f8e-b5b7-4c4c-83c5-986d6df8bf54"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:58:04Z",
+            "message": "Readiness probe failed: Get \"http://10.244.1.10:8080/ready\": dial tcp 10.244.1.10:8080: connect: connection refused",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:58:04Z",
+                "name": "large-image-svc-59c7547b7b-9qz9g.18e3846df4582ed6",
+                "namespace": "demo",
+                "resourceVersion": "3849",
+                "uid": "76d98d42-bcd0-4fd3-9187-866a5a2f99b5"
+            },
+            "reason": "Unhealthy",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Warning"
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

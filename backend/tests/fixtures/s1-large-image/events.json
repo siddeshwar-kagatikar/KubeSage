@@ -1,0 +1,205 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:53:40Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "kind": "Pod",
+                "name": "large-image-svc-59c7547b7b-d86tg",
+                "namespace": "demo",
+                "resourceVersion": "3144",
+                "uid": "23c2048d-6b7e-46b6-a030-52fbacc268e8"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:53:40Z",
+            "message": "Successfully assigned demo/large-image-svc-59c7547b7b-d86tg to kubesage-worker",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:53:40Z",
+                "name": "large-image-svc-59c7547b7b-d86tg.18e38430850e0b68",
+                "namespace": "demo",
+                "resourceVersion": "3150",
+                "uid": "8c214b52-13f7-44cf-b91a-1e97f665af06"
+            },
+            "reason": "Scheduled",
+            "reportingComponent": "default-scheduler",
+            "reportingInstance": "",
+            "source": {
+                "component": "default-scheduler"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:53:41Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "large-image-svc-59c7547b7b-d86tg",
+                "namespace": "demo",
+                "resourceVersion": "3148",
+                "uid": "23c2048d-6b7e-46b6-a030-52fbacc268e8"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:53:41Z",
+            "message": "Pulling image \"localhost:5001/demo-ai-service:fat\"",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:53:41Z",
+                "name": "large-image-svc-59c7547b7b-d86tg.18e38430a255749c",
+                "namespace": "demo",
+                "resourceVersion": "3155",
+                "uid": "399150dd-ac2e-403e-86b4-f5ec69b2b3a0"
+            },
+            "reason": "Pulling",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:54:37Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "large-image-svc-59c7547b7b-d86tg",
+                "namespace": "demo",
+                "resourceVersion": "3148",
+                "uid": "23c2048d-6b7e-46b6-a030-52fbacc268e8"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:54:37Z",
+            "message": "Successfully pulled image \"localhost:5001/demo-ai-service:fat\" in 56.239s (56.24s including waiting). Image size: 647964219 bytes.",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:54:37Z",
+                "name": "large-image-svc-59c7547b7b-d86tg.18e3843dba671ad1",
+                "namespace": "demo",
+                "resourceVersion": "3245",
+                "uid": "169dd354-da73-49a4-bd3e-efe68301066e"
+            },
+            "reason": "Pulled",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:54:37Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "large-image-svc-59c7547b7b-d86tg",
+                "namespace": "demo",
+                "resourceVersion": "3148",
+                "uid": "23c2048d-6b7e-46b6-a030-52fbacc268e8"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:54:37Z",
+            "message": "Container created",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:54:37Z",
+                "name": "large-image-svc-59c7547b7b-d86tg.18e3843dc42caad9",
+                "namespace": "demo",
+                "resourceVersion": "3247",
+                "uid": "34de6266-8010-4a3f-933c-0de96c77efde"
+            },
+            "reason": "Created",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 1,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:54:37Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "large-image-svc-59c7547b7b-d86tg",
+                "namespace": "demo",
+                "resourceVersion": "3148",
+                "uid": "23c2048d-6b7e-46b6-a030-52fbacc268e8"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:54:37Z",
+            "message": "Container started",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:54:37Z",
+                "name": "large-image-svc-59c7547b7b-d86tg.18e3843dd7130bd1",
+                "namespace": "demo",
+                "resourceVersion": "3248",
+                "uid": "93abf43c-6bc3-497a-8c54-aca25cf5a412"
+            },
+            "reason": "Started",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Normal"
+        },
+        {
+            "apiVersion": "v1",
+            "count": 3,
+            "eventTime": null,
+            "firstTimestamp": "2026-10-31T04:54:37Z",
+            "involvedObject": {
+                "apiVersion": "v1",
+                "fieldPath": "spec.containers{app}",
+                "kind": "Pod",
+                "name": "large-image-svc-59c7547b7b-d86tg",
+                "namespace": "demo",
+                "resourceVersion": "3148",
+                "uid": "23c2048d-6b7e-46b6-a030-52fbacc268e8"
+            },
+            "kind": "Event",
+            "lastTimestamp": "2026-10-31T04:54:38Z",
+            "message": "Readiness probe failed: Get \"http://10.244.1.6:8080/ready\": dial tcp 10.244.1.6:8080: connect: connection refused",
+            "metadata": {
+                "creationTimestamp": "2026-10-31T04:54:37Z",
+                "name": "large-image-svc-59c7547b7b-d86tg.18e3843dd7720063",
+                "namespace": "demo",
+                "resourceVersion": "3254",
+                "uid": "3464a1f7-7178-4c78-b618-ba1ed1194f8c"
+            },
+            "reason": "Unhealthy",
+            "reportingComponent": "kubelet",
+            "reportingInstance": "kubesage-worker",
+            "source": {
+                "component": "kubelet",
+                "host": "kubesage-worker"
+            },
+            "type": "Warning"
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}
