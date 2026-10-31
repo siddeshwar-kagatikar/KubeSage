@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: kubesage-postgres
+    environment:
+      POSTGRES_USER: kubesage
+      POSTGRES_PASSWORD: kubesage
+      POSTGRES_DB: kubesage
+    ports:
+      - "5433:5432"
+    volumes:
+      - kubesage-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kubesage -d kubesage"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  kubesage-pgdata:
