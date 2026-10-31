@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kubesage-infra
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: demo
+  labels:
+    kubesage.io/monitored: "true"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kubesage-sandbox
+  labels:
+    kubesage.io/sandbox: "true"
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: sandbox-quota
+  namespace: kubesage-sandbox
+spec:
+  hard:
+    pods: "10"
+    requests.cpu: "4"
+    requests.memory: 4Gi
+    limits.memory: 6Gi
+    persistentvolumeclaims: "2"
+    requests.storage: 2Gi
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: sandbox-defaults
+  namespace: kubesage-sandbox
+spec:
+  limits:
+    - type: Container
+      defaultRequest:
+        cpu: 100m
+        memory: 128Mi
+      default:
+        cpu: "1"
+        memory: 1Gi
+      max:
+        cpu: "2"
+        memory: 2Gi

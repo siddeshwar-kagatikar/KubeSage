@@ -1,0 +1,77 @@
+# Jaeger v2 all-in-one (in-memory storage). Receives OTLP on 4317/4318; query UI/API on 16686
+# (exposed to the host on 127.0.0.1:30686). Traces are lost on restart; KubeSage persists cited spans.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger
+  namespace: kubesage-infra
+  labels:
+    app.kubernetes.io/name: jaeger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: jaeger
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: jaeger
+    spec:
+      nodeSelector:
+        kubesage.io/pool: infra
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: jaeger
+          image: docker.io/jaegertracing/jaeger:2.22.0
+          ports:
+            - name: otlp-grpc
+              containerPort: 4317
+            - name: otlp-http
+              containerPort: 4318
+            - name: query
+              containerPort: 16686
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 16686
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger
+  namespace: kubesage-infra
+spec:
+  selector:
+    app.kubernetes.io/name: jaeger
+  ports:
+    - name: otlp-grpc
+      port: 4317
+      targetPort: 4317
+    - name: otlp-http
+      port: 4318
+      targetPort: 4318
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-query
+  namespace: kubesage-infra
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: jaeger
+  ports:
+    - name: query
+      port: 16686
+      targetPort: 16686
+      nodePort: 30686

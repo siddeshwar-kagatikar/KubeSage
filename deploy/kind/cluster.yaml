@@ -1,0 +1,30 @@
+# KubeSage lab cluster.
+# - control-plane hosts infrastructure (Prometheus, Jaeger, model hub) so worker timings stay clean.
+# - worker  (kubesage-worker)  runs the original demo workloads.
+# - worker2 (kubesage-worker2) runs sandbox experiments only.
+# Registry mirrors are configured after creation via /etc/containerd/certs.d/<host>/hosts.toml.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: kubesage
+# The kind v0.33 node image (containerd 2.3, v2-format config) leaves config_path empty, so enable certs.d.
+containerdConfigPatches:
+  - |-
+    [plugins."io.containerd.grpc.v1.cri".registry]
+      config_path = "/etc/containerd/certs.d"
+nodes:
+  - role: control-plane
+    labels:
+      kubesage.io/pool: infra
+    extraPortMappings:
+      - containerPort: 30090 # Prometheus
+        hostPort: 30090
+        listenAddress: "127.0.0.1"
+      - containerPort: 30686 # Jaeger query UI/API
+        hostPort: 30686
+        listenAddress: "127.0.0.1"
+  - role: worker
+    labels:
+      kubesage.io/pool: workload
+  - role: worker
+    labels:
+      kubesage.io/pool: sandbox

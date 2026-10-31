@@ -1,0 +1,35 @@
+# prometheus-community/prometheus chart 29.40.1 — server only, small footprint.
+# kube-state-metrics is disabled: pod timings come from the K8s API watch, not metrics.
+# 5 s scrape interval so rate() over cAdvisor throttling counters has samples during a ~30 s startup.
+alertmanager:
+  enabled: false
+prometheus-pushgateway:
+  enabled: false
+prometheus-node-exporter:
+  enabled: false
+kube-state-metrics:
+  enabled: false
+
+server:
+  global:
+    scrape_interval: 5s
+    scrape_timeout: 4s
+    evaluation_interval: 15s
+  retention: 2d
+  persistentVolume:
+    enabled: false
+  service:
+    type: NodePort
+    nodePort: 30090
+  nodeSelector:
+    kubesage.io/pool: infra
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 1Gi
