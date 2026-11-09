@@ -10,7 +10,8 @@
 #>
 param(
     [Parameter(Mandatory)]
-    [ValidateSet('s1-large-image', 's3-model-weights', 's6a-slow-readiness')]
+    [ValidateSet('s1-large-image', 's2-slow-registry', 's3-model-weights', 's4-cpu-init', 's5-capacity',
+        's6a-slow-readiness', 's6b-slow-dependency')]
     [string]$Scenario,
     [switch]$Cold,
     [int]$TimeoutSeconds = 600
@@ -38,6 +39,15 @@ Invoke-Checked 'wait for pod deletion' { kubectl -n $DemoNamespace wait --for=de
 
 if ($Cold) { & "$PSScriptRoot\evict-image.ps1" -Node $WorkloadNode }
 
+if ($Scenario -eq 's5-capacity') {
+    # The hog must hold the node's CPU before the app pod is created.
+    Invoke-Checked 'wait for capacity hog' { kubectl -n kubesage-infra rollout status deploy/capacity-hog --timeout=120s }
+}
+if ($Scenario -eq 's6b-slow-dependency') {
+    # Recreate strategy: the dependency goes fully down and needs ~40 s to answer again.
+    Invoke-Checked 'restart slow dependency' { kubectl -n kubesage-infra rollout restart deploy/slow-dependency }
+}
+
 Invoke-Checked 'scale to 1' { kubectl -n $DemoNamespace scale deploy -l $selector --replicas=1 }
 
 $podName = $null
@@ -46,6 +56,11 @@ while (-not $podName) {
     if ((Get-Date) -gt $deadline) { throw 'No pod was created' }
     Start-Sleep -Milliseconds 500
     $podName = kubectl -n $DemoNamespace get pod -l $selector -o jsonpath='{.items[0].metadata.name}' 2>$null
+}
+if ($Scenario -eq 's5-capacity') {
+    Write-Host "Pod $podName is Pending; releasing the capacity hog in 40 s (capacity freed / node added)..."
+    Start-Sleep -Seconds 40
+    Invoke-Checked 'release capacity hog' { kubectl delete -f "$RepoRoot\deploy\scenarios\s5-capacity\hog.yaml" --wait=false }
 }
 Write-Host "Pod $podName created; waiting for Ready (timeout ${TimeoutSeconds}s)..."
 Invoke-Checked 'wait for Ready' { kubectl -n $DemoNamespace wait --for=condition=Ready "pod/$podName" "--timeout=${TimeoutSeconds}s" }

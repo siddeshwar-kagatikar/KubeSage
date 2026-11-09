@@ -213,3 +213,50 @@ def test_redact_env():
     assert env[0]["value"] == "[REDACTED]"
     assert env[1]["value"] == "http://hub/weights.bin"
     assert env[2]["valueFrom"] == "secret s/k"
+
+
+PER_MINUTE = (
+    "429 RESOURCE_EXHAUSTED ... 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier' ... "
+    "Please retry in 31.8s."
+)
+PER_DAY = "429 RESOURCE_EXHAUSTED ... 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel' ... retry in 2455s"
+
+
+def test_per_minute_rate_limit_is_retried_after_suggested_delay(monkeypatch):
+    from kubesage.llm import calls as calls_module
+
+    sleeps = []
+    monkeypatch.setattr(calls_module.time, "sleep", sleeps.append)
+    attempts = iter([RuntimeError(PER_MINUTE), "ok"])
+
+    def invoke():
+        item = next(attempts)
+        if isinstance(item, Exception):
+            raise item
+        return item
+
+    logger = CallLogger(None, "p", "m", "v", persist=False)
+    assert logger.call("investigate", invoke) == "ok"
+    assert sleeps == [pytest.approx(32.8)]
+    assert [r["status"] for r in logger.records] == ["error", "ok"]
+
+
+def test_daily_quota_and_repeated_limits_are_not_retried_forever(monkeypatch):
+    from kubesage.llm import calls as calls_module
+
+    monkeypatch.setattr(calls_module.time, "sleep", lambda _s: None)
+    logger = CallLogger(None, "p", "m", "v", persist=False)
+
+    def daily():
+        raise RuntimeError(PER_DAY)
+
+    with pytest.raises(RuntimeError):
+        logger.call("investigate", daily)
+    assert len(logger.records) == 1
+
+    def always_per_minute():
+        raise RuntimeError(PER_MINUTE)
+
+    with pytest.raises(RuntimeError):
+        logger.call("investigate", always_per_minute)
+    assert len(logger.records) == 1 + 3  # first try + 2 retries

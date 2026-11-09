@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     )
 
     kube_context: str = "kind-kubesage"
+    # Empty to use the kubeconfig identity directly (not recommended: it is cluster-admin in the lab).
+    kube_impersonate: str = "system:serviceaccount:kubesage-system:kubesage"
     monitored_namespaces: list[str] = ["demo", "kubesage-sandbox"]
     incident_namespaces: list[str] = ["demo"]
     sandbox_namespace: str = "kubesage-sandbox"
@@ -39,6 +41,12 @@ class Settings(BaseSettings):
     # Incident Copilot
     copilot_max_tool_calls: int = 6
     copilot_max_synthesis_attempts: int = 2
+
+    # Optimisation experiments
+    registry_url: str = "http://localhost:5001"  # host-side endpoint of the lab registry
+    registry_hosts: list[str] = ["localhost:5001", "localhost:5002"]  # image hosts served by that registry
+    trial_timeout_s: float = 600.0
+    smoke_path: str = "predict"  # guardrail request through the API-server pod proxy after Ready
 
     # Incident rules
     default_slo_seconds: float = 30.0

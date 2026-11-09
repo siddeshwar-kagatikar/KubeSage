@@ -33,7 +33,7 @@ src/
   App.tsx       route table
 ```
 
-Routes: `/`, `/workloads/:id`, `/startups/:id`, `/incidents/:id`.
+Routes: `/`, `/workloads/:id`, `/startups/:id`, `/incidents/:id`, `/plans/:id`, `/experiments`, `/experiments/:id`, `/audit`, `/llmops`.
 
 Lists poll every 5 s (`LIST_POLL_MS` in `src/api/hooks.ts`); a startup detail polls until the pod is ready.
 

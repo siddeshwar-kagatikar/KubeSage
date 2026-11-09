@@ -1,0 +1,115 @@
+{
+ "incident_id": 10,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The primary cause of the slow startup is the readiness probe configuration. The application itself initializes quickly (1.731s), but the `initialDelaySeconds` of 45s and `periodSeconds` of 20s for the readiness probe cause a significant delay before Kubernetes marks the pod as Ready. The pod is marked Ready 58.569s after the application is ready.\", \"extras\": {\"signature\": \"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\"}}]",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "slow_readiness"
+     },
+     "id": "e8f8455a-d661-49de-8ebf-bc898477f02a"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "The root cause is **slow_readiness**. The application becomes ready quickly, but the readiness probe's `initialDelaySeconds` of 45s and `periodSeconds` of 20s cause a significant delay before Kubernetes marks the pod as Ready. The total readiness phase duration is 58.569s.",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_readiness",
+    "summary": "The pod startup exceeded the SLO of 30.0 s, taking 65.0 s to become Ready. This delay was primarily due to an over-conservative readiness probe configuration. The application itself initialised quickly, but the probe's initial delay and period caused Kubernetes to mark the pod Ready significantly later.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total pod startup time was 65.0 s, which breached the SLO threshold of 30.0 s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'readiness' phase alone accounted for 58.569 s of the total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The readiness probe was configured with an 'initialDelaySeconds' of 45 s and a 'periodSeconds' of 20 s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The application's 'app_init' phase completed quickly, taking only 1.731 s.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "There were no probe failures after the application was ready, indicating the delay was due to configuration rather than an unhealthy application.",
+      "evidence_ids": [
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "app_init",
+      "reason": "The application initialisation ('app_init') was very fast, completing in 1.731 s, which is not the cause of the 65.0 s startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.506 s for 53299792 bytes, resulting in a throughput of 11828627 bytes/s, which is not indicative of a large image or slow pull.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput was 11828627 bytes/s, which is a reasonable speed and does not suggest a slow registry or network.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "There was no time spent on model loading, with 'model_s' reported as 0.0 s.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The pod did not experience any scheduling delays, with 'scheduling_s' being 0.0 s and no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "tune_probes",
+      "rationale": "The current readiness probe configuration with an 'initialDelaySeconds' of 45 s and a 'periodSeconds' of 20 s is causing a significant delay in marking the pod Ready. Implementing a 'startupProbe' with a short period for the startup window and a tighter 'readinessProbe' (e.g., 'initialDelaySeconds: 0', short 'periodSeconds') will improve how quickly readiness is detected.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

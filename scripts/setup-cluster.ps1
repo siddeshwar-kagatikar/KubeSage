@@ -46,6 +46,7 @@ foreach ($node in (kind get nodes --name $ClusterName)) {
 
 # --- Namespaces and infrastructure -------------------------------------------------------------
 Invoke-Checked 'apply namespaces' { kubectl apply -f "$RepoRoot\deploy\kubesage\namespaces.yaml" }
+Invoke-Checked 'apply KubeSage RBAC' { kubectl apply -f "$RepoRoot\deploy\kubesage\rbac.yaml" }
 Invoke-Checked 'apply model hub' { kubectl apply -f "$RepoRoot\deploy\infra\model-hub.yaml" }
 Invoke-Checked 'apply jaeger' { kubectl apply -f "$RepoRoot\deploy\infra\jaeger.yaml" }
 

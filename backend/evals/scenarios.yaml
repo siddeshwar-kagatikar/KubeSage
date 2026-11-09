@@ -4,11 +4,27 @@ scenarios:
     namespace: demo
     workload: large-image-svc
     expected: large_image
+  - name: s2-slow-registry
+    namespace: demo
+    workload: slow-registry-svc
+    expected: slow_registry
   - name: s3-model-weights
     namespace: demo
     workload: model-weights-svc
     expected: model_loading
+  - name: s4-cpu-init
+    namespace: demo
+    workload: cpu-init-svc
+    expected: app_init
+  - name: s5-capacity
+    namespace: demo
+    workload: capacity-svc
+    expected: capacity
   - name: s6a-slow-readiness
     namespace: demo
     workload: slow-readiness-svc
+    expected: slow_readiness
+  - name: s6b-slow-dependency
+    namespace: demo
+    workload: dependency-svc
     expected: slow_readiness

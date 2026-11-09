@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 Category = Literal["large_image", "slow_registry", "model_loading", "app_init", "capacity", "slow_readiness"]
 
@@ -153,6 +153,108 @@ class LlmCallOut(BaseModel):
     status: Literal["ok", "error"]
     error: str | None
     created_at: datetime
+
+
+class PolicyCheckOut(BaseModel):
+    name: str
+    passed: bool
+    detail: str
+
+
+class ActionPlanOut(BaseModel):
+    """`source`: 'llm' = the agent chose the action; 'fallback' = deterministic default (model unavailable/invalid).
+    `export` holds the patch for the original workload: {patch, objects, command}."""
+
+    id: int
+    incident_id: int
+    diagnosis_run_id: int | None
+    category: str
+    action: str
+    action_title: str
+    action_note: str
+    params: dict
+    rationale: str
+    source: Literal["llm", "fallback"]
+    llm_error: str | None
+    risk: str
+    status: Literal["awaiting_approval", "rejected_by_policy", "rejected", "running", "completed", "failed", "aborted"]
+    policy_checks: list[PolicyCheckOut]
+    diff: str
+    export: dict
+    decided_by: str | None
+    decision_note: str | None
+    decided_at: datetime | None
+    created_at: datetime
+    experiment_id: int | None
+
+
+class DecisionIn(BaseModel):
+    approver: str = Field(min_length=1, max_length=128)
+    note: str | None = Field(None, max_length=2000)
+
+
+class TrialOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    index: int
+    arm: Literal["baseline", "candidate"]
+    warmup: bool
+    status: Literal["ok", "failed"]
+    pod_name: str | None
+    startup_id: int | None
+    total_s: float | None
+    phases: dict[str, float]
+    guardrails: dict
+    prep_s: float | None
+    error: str | None
+
+
+class ExperimentOut(BaseModel):
+    """`comparison`: {baseline, candidate: {trials, succeeded, failed, median_s, min_s, max_s, phase_median_s,
+    prep_median_s}, delta_s, delta_pct, threshold_s, verdict, reason}; empty until the experiment finishes."""
+
+    id: int
+    plan_id: int
+    incident_id: int
+    action: str
+    action_note: str
+    status: Literal["running", "completed", "failed", "aborted"]
+    trials_per_arm: int
+    planned_trials: int  # 1 warm-up + 2 x trials_per_arm
+    node: str | None
+    prep: dict
+    comparison: dict
+    verdict: Literal["improved", "no_change", "regressed", "failed"] | None
+    error: str | None
+    started_at: datetime
+    finished_at: datetime | None
+    trials: list[TrialOut]
+
+
+class AuditOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    at: datetime
+    actor: str
+    event: str
+    target: str | None
+    details: dict
+
+
+class LlmUsageOut(BaseModel):
+    purpose: str
+    model: str
+    calls: int
+    errors: int
+    input_tokens: int
+    output_tokens: int
+    avg_latency_ms: int
+
+
+class LlmOpsOut(BaseModel):
+    usage: list[LlmUsageOut]
+    latest_eval: dict | None  # contents of the newest backend/evals/results/*.json
 
 
 class HealthOut(BaseModel):

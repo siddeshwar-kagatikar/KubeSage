@@ -6,10 +6,12 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from kubesage.api import diagnosis, health, incidents, workloads
+from kubesage.api import diagnosis, health, incidents, optimizer, workloads
 from kubesage.config import get_settings
 from kubesage.copilot.service import CopilotService
 from kubesage.db.session import init_db
+from kubesage.experiments.runner import ExperimentService
+from kubesage.optimizer.service import OptimizerService
 from kubesage.profiler.service import ProfilerService
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -27,7 +29,12 @@ async def lifespan(app: FastAPI):
     copilot = CopilotService(settings)
     copilot.recover()
     app.state.copilot = copilot
+    experiments = ExperimentService(settings)
+    experiments.recover()
+    app.state.experiments = experiments
+    app.state.optimizer = OptimizerService(settings, experiments)
     yield
+    experiments.stop()
     copilot.stop()
     if profiler:
         profiler.stop()
@@ -44,3 +51,4 @@ app.include_router(health.router)
 app.include_router(workloads.router)
 app.include_router(incidents.router)
 app.include_router(diagnosis.router)
+app.include_router(optimizer.router)

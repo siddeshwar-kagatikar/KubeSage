@@ -6,6 +6,7 @@ import { IncidentStatusBadge } from '../components/Badges'
 import CandidatesList from '../components/CandidatesList'
 import CategoryBadge from '../components/CategoryBadge'
 import DiagnosisPanel from '../components/DiagnosisPanel'
+import OptimisationPanel from '../components/OptimisationPanel'
 import { ErrorState, Loading } from '../components/QueryState'
 import Section, { Stat } from '../components/Section'
 import { formatDateTime, formatPercent, formatSeconds } from '../components/format'
@@ -109,6 +110,8 @@ function IncidentView({ incident: i }: { incident: IncidentOut }) {
       </Section>
 
       <DiagnosisPanel incidentId={i.id} />
+
+      <OptimisationPanel incidentId={i.id} />
     </div>
   )
 }

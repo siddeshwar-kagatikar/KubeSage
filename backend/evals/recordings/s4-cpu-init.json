@@ -1,0 +1,87 @@
+{
+ "incident_id": 12,
+ "model": "gemini-3.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_throttling_ratio"
+     },
+     "id": "call_11679833612626776029"
+    },
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "app_init"
+     },
+     "id": "call_11679833612626773958"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_pod_spec",
+     "args": {},
+     "id": "call_15832409631984748227"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"**Root Cause:** `app_init`\\n\\n**Analysis:**\\nThe pod `cpu-init-svc-857b867cc7-tnp7p` took 42.0s to become ready, breaching the 30.0s SLO threshold. The delay was driven by application initialisation (`app_init`), which took 37.55s, specifically due to CPU-heavy initialisation (`init.compute` span took 34.31s). The container CPU limit of `250m` caused severe CFS throttling during startup, with Prometheus metrics showing an average `cpu_throttling_ratio` of 81.2% (peaking at 89.6%).\\n\\n**Alternative Causes Ruled Out:**\\n- `capacity`: Pod scheduled immediately without waiting (`scheduling` phase 0.0s).\\n- `large_image` / `slow_registry`: Image pull completed quickly in 3.78s (53.3 MB at ~14.1 MB/s throughput).\\n- `model_loading`: No model loading spans or delays recorded (`model_s` = 0.0s).\\n- `slow_readiness`: Readiness checks completed immediately upon app init (`readiness` phase 0.0s).\\n\\n**Recommended Remediation:**\\n- Increase container CPU limits and requests (`adjust_cpu_resources`) to provide sufficient CPU burst capacity during startup.\\n- Consider refactoring expensive initialisation work in `init.compute` to run asynchronously post-startup or move heavy operations to build time.\", \"extras\": {\"signature\": \"EsYGCsMGAWkUfRPbM+fJ8Kg5uPZVWrgIoV9lU7XAMq62TO5CxdJOtsKRSLnb5QU/x6jqrWBbBjcb/avpJ87rLblm2/D/o8nD0f5/+k58HgCMqEJFu192ABMYBHkWPNXi0b6YB16niTjujQG9x7q/HPaiwaiwegEa+TDytzzezYjfsEGurFtfTQnQQpCLu5lhadvz5Cj20KtOh8kL6W9I5KdxeWhBU9x/mevkpl7hFgHX6TYJa9Feu+3iZwTfPjXV+P9nVFnBtmnmodkc3X7gslnMH+3gYynL9nGU+qAXkO/b5ImFEwHYfI+kK1RKMRRU/grwZj+TxKC9iNc9ury81imgEv47oLRFOjkeD7dXZwrrGONKuQcbcH9hu183Lj5Cdw48huEp6r9AVv99J17zUEuY0UgT033pPd89pU3t5+cCtjEP+ipbNEHbv+mQl1kCP5yfaVSbIHfW+6+KuNVoYhkHu6zKSNq9cQnNp6bFF/mMfjhu9iV5IKrws6b2I8TZlI7msMsC3HDMui16LBlTu6mrcil1bxB7v9CzplRU7SHNloP7mX1+56+QBEp4TOeD74Mvr796EPYinYCLqRujRLJwmTHoZ+dlQCL1coPV97WvFieZRxi9rlUgXvKeOINZzi72Aje5v2ehGeTwn7VpQ9wig4+mkecMkar26RTgJWaIumzPunuFJfUcmoKclwBAkdARai0QU2SYyhTknUMZBP3TeC2dz55hrWOMlCL99gzXm1n6Mj7unm4Q1KezrPtIxFY9vv4NSmEp1XrDrQrIkLucGiu1ap4G/enwljPuRjspQEMV5zxMOGT41509Xs/oKDwP8NH3UlBtObWfz95R1rE8pbUnNCcwivBkl9eHq5g1LBnrcolFzo6kVBxAavAaCFdhv6T98Bzk+9H0CPfSj9iXylnmdvqOlt1Ss/m+QtoBC+ER1wbbqlpOJo+0FLAVlsrRV44ReAAXor/Xb2rXau3xcq/IocJK+HNPa2ycBUaANLyXDJOKRmBTXxTMouPmo86fo4L2K73/fIvbaobpQF3O24rvDgqp1ilpGcrVIYbjv9iscK0UmaJo58he0SfX0Y3W3mwkRf1ZZqCYOfA8zwcqrzijHleCDw==\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "app_init",
+    "summary": "The pod cpu-init-svc-857b867cc7-tnp7p took 42.0 s to become ready, exceeding the 30.0 s SLO threshold. The delay was primarily caused by slow application initialisation taking 37.552 s, dominated by the init.compute step of 34.312 s. This CPU-heavy operation suffered from severe CPU throttling under a 250m CPU limit, reaching an average throttling ratio of 81.18%.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total startup duration for pod cpu-init-svc-857b867cc7-tnp7p was 42.0 s, which breached the 30.0 s SLO threshold.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "Application initialisation phase (app_init) took 37.552 s, with the slowest span init.compute accounting for 34.312 s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The container had a low CPU limit of 250m and experienced severe CPU throttling, with an average cpu_throttling_ratio of 0.8118 and maximum of 0.8956.",
+      "evidence_ids": [
+       "E1",
+       "E3",
+       "E5"
+      ]
+     }
+    ],
+    "ruled_out": [],
+    "recommendations": [
+     {
+      "action": "adjust_cpu_resources",
+      "rationale": "Raise the container CPU limit and request above 250m to mitigate severe CPU throttling (average 81.18%) during startup computation.",
+      "evidence_ids": [
+       "E1",
+       "E3",
+       "E4",
+       "E5"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

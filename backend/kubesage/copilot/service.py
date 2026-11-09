@@ -17,7 +17,7 @@ from kubesage.copilot.tools import build_tools
 from kubesage.db.models import DiagnosisRun, Evidence, Incident, utcnow
 from kubesage.db.session import session_scope
 from kubesage.llm.calls import CallLogger
-from kubesage.llm.provider import create_chat_model
+from kubesage.llm.provider import create_chat_model, create_model_or_placeholder
 
 log = logging.getLogger(__name__)
 
@@ -99,10 +99,7 @@ class CopilotService:
             node_fn=lambda node: node_capacity(api_client, node),
         )
         calls = CallLogger(run_id, self.settings.llm_provider, self.settings.llm_model, PROMPT_VERSION)
-        try:
-            model = self.model_factory(self.settings)
-        except Exception as exc:
-            model = _Unavailable(exc)
+        model = create_model_or_placeholder(self.settings, self.model_factory)
         result = run_copilot(ctx, model, tools, evidence, calls, self.settings)
 
         draft = result.draft
@@ -126,19 +123,3 @@ class CopilotService:
             if incident.status == "open":
                 incident.status = "diagnosed"
         log.info("diagnosis run %s: %s (%s, %d tool calls)", run_id, draft.category, result.source, result.tool_calls)
-
-
-class _Unavailable:
-    """Stands in for a model that could not be created, so the run degrades to the deterministic fallback."""
-
-    def __init__(self, exc: Exception):
-        self.exc = exc
-
-    def bind_tools(self, *_args, **_kwargs):
-        return self
-
-    def with_structured_output(self, *_args, **_kwargs):
-        return self
-
-    def invoke(self, *_args, **_kwargs):
-        raise self.exc

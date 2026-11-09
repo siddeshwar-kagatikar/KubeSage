@@ -1,0 +1,59 @@
+# S6b — Slow readiness from a slow dependency: the app waits for a service that only answers ~40 s after it
+# starts. Probe settings are tight, so the delay is the dependency, not probe configuration (advisory only).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dependency-svc
+  namespace: demo
+  labels:
+    app.kubernetes.io/name: dependency-svc
+    kubesage.io/scenario: s6b-slow-dependency
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: dependency-svc
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: dependency-svc
+        kubesage.io/scenario: s6b-slow-dependency
+    spec:
+      nodeSelector:
+        kubesage.io/pool: workload
+      containers:
+        - name: app
+          image: localhost:5001/demo-ai-service:slim
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: POD_NAME
+              valueFrom: { fieldRef: { fieldPath: metadata.name } }
+            - name: POD_NAMESPACE
+              valueFrom: { fieldRef: { fieldPath: metadata.namespace } }
+            - name: NODE_NAME
+              valueFrom: { fieldRef: { fieldPath: spec.nodeName } }
+            - name: OTEL_SERVICE_NAME
+              value: dependency-svc
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://jaeger.kubesage-infra.svc.cluster.local:4318
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: k8s.pod.name=$(POD_NAME),k8s.namespace.name=$(POD_NAMESPACE),k8s.node.name=$(NODE_NAME)
+            - name: DEPENDENCY_URL
+              value: http://slow-dependency.kubesage-infra.svc.cluster.local/
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 0
+            periodSeconds: 1
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi

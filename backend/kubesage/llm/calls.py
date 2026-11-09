@@ -1,6 +1,7 @@
 """Times every model call and records it in `llm_calls` (tokens, latency, prompt version, failures)."""
 
 import logging
+import re
 import time
 from collections.abc import Callable
 from typing import Any
@@ -11,6 +12,20 @@ from kubesage.db.models import LlmCall
 from kubesage.db.session import session_scope
 
 log = logging.getLogger(__name__)
+
+MAX_RATE_LIMIT_RETRIES = 2
+MAX_RETRY_DELAY_S = 65.0
+RETRY_IN_RE = re.compile(r"retry in ([\d.]+)s", re.IGNORECASE)
+
+
+def per_minute_retry_delay(exc: Exception) -> float | None:
+    """Seconds to wait if `exc` is a per-minute rate limit (worth waiting for); None for anything else,
+    including daily quota exhaustion, which no short wait will fix."""
+    text = str(exc)
+    if "RESOURCE_EXHAUSTED" not in text or "PerMinute" not in text:
+        return None
+    match = RETRY_IN_RE.search(text)
+    return min(float(match.group(1)) + 1 if match else MAX_RETRY_DELAY_S, MAX_RETRY_DELAY_S)
 
 
 def _usage(output: Any) -> tuple[int | None, int | None]:
@@ -33,15 +48,22 @@ class CallLogger:
         self.records: list[dict] = []
 
     def call(self, purpose: str, invoke: Callable[[], Any]) -> Any:
-        started = time.perf_counter()
-        try:
-            output = invoke()
-        except Exception as exc:
-            self._record(purpose, started, None, None, "error", f"{type(exc).__name__}: {exc}")
-            raise
-        input_tokens, output_tokens = _usage(output)
-        self._record(purpose, started, input_tokens, output_tokens, "ok", None)
-        return output
+        for attempt in range(MAX_RATE_LIMIT_RETRIES + 1):
+            started = time.perf_counter()
+            try:
+                output = invoke()
+            except Exception as exc:
+                self._record(purpose, started, None, None, "error", f"{type(exc).__name__}: {exc}")
+                delay = per_minute_retry_delay(exc)
+                if delay is None or attempt == MAX_RATE_LIMIT_RETRIES:
+                    raise
+                log.info("per-minute rate limit on %s; retrying in %.0f s", purpose, delay)
+                time.sleep(delay)
+                continue
+            input_tokens, output_tokens = _usage(output)
+            self._record(purpose, started, input_tokens, output_tokens, "ok", None)
+            return output
+        raise AssertionError("unreachable")
 
     def _record(self, purpose, started, input_tokens, output_tokens, status, error) -> None:
         record = {

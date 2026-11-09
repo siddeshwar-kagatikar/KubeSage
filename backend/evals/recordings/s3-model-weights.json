@@ -1,0 +1,125 @@
+{
+ "incident_id": 9,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_throttling_ratio"
+     },
+     "id": "c5e7cd72-5cae-467a-a8d7-7dee9917c2e6"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "model_loading"
+     },
+     "id": "f5d80a46-fafd-4982-a24a-04cffca18914"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The root cause of the slow startup is `model_loading`. The `model.download` span took 25.242 seconds, which is the dominant factor in the 31.0-second startup time. This is consistent with the detector findings and the `model_loading` runbook, which highlights slow model weight loading as a primary cause when `model.download` dominates the `app_init` phase and `cache_hit` is false. CPU throttling was not observed, ruling out other `app_init` issues. The image pull time was also not a significant factor.\", \"extras\": {\"signature\": \"CrEHAWkUfRO8auJAMvtsW12yJvZ8ig0FIBC929fZi1LYBUKSSMHKxSLcFy9K2QjPt6AHUYX4zqnBVQm9YsGAgo6m0DZCTRxdXB4tYnMcWDRXlS9A3dcqooDx74BTufQ9zKVwmb+uoxes3KoxgtVhBgDv9fDCOr0fCuFyX1q5KoAt8IUpHFID1ssf+jaiNduCI6AltO2anDrJSvTDhr158xmpPqkwk5CvtMTPqjjh03IISSMkrJM+g1VHZ1IKWqfyhWogp9hk9gO8U7wPRYw7UfzMqybMnmAxRokWO0Rfzv9yDKeaDpjPXwOAJEKCfU46NlXGYCWDQialQIrKHjLUFjEoalEifpTviKh5XY94ydUVb4zf9CWFWlzwGGsF08aZWw2YU0aRSD8rzFzOxvvBhT+acM6BJDyr90Fp2HFPsbo4gM4F+XoAfrhEpKozgpjRFX04ED8IOXospQM/sAHUsAbkoW88qSeTyCyvOXtV4RH0kkei7jvHxFFkRt2WhT4Pm/chEYhvT+OkRP7JCT+lzUJX6mjcJMqFgm67FdLWPNmJ7dMCadMNY5207OQ7HpJJTGSlhCibXmCaeE08gW4M7F/YJx0C/aH4E5yIFnJyJ6GAFyPSsHljGx3LS5kKhOwQLMoi6qkd33AP/E9s9IPpTio9lHWIGvb6YGgZKnZn6u0fTrZtpvv0iWoUMBwUaVu4nqY8EPmUqztE/UQ6KFKjNiqr3LRX4faSp1vUxzgb2Z4Tp7rJKbBSQ1//qKkNW40Ib8LBgmyQJmo6uubH2KjltrJLuYT/4HkT+osp2jFS8JclLjS1n2qKIWHD/9Y1vrpHIviia8U6PTpSSLC94oWibG1tmHuMpG9/VwF8S3CIDuLj5OjafJl9TTFPYfsld9+Ky82YdzpBLrhB+p1HtKmdf2SL7XiQt+0XCFjQQtJC41FGHns9Am9d26OTILVSx2FnWtj0R2F6W/2MUN4QrlZEpU7g+1jsAaLtYbQWTeO3P+JyAMxaqFN/vV1E36BHRgnHOT3KBPuf3T9Pf7LKEaRMNnFc4Bq+WJGL7PJghKC4FfGiyozLlrQuw0RKeZ5vL6EDoPMccGZXgsuerBzI2uznWnr3ElNDVwtzCYJTcnMHIBABG5AA6G70pwZpGvNPLwf3+vgvD8YgSFHk6CPfx4WCQjpNncsRYQzuqSgtBhOZV2J9A2r8tIiK/gMWIXuMw0vyzfxQsh7G9UnhGURYZYMqi0gsOGOnFBiF/4EITrLWx8hjY1j0\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod model-weights-svc-84f9c655-f4g8j took 31.0 seconds to become Ready, exceeding the 30.0-second SLO. This delay was primarily caused by the model.download span, which took 25.242 seconds to fetch 262144000 bytes from a remote model store. The model weights were not served from a local cache.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod startup took 31.0 seconds, exceeding the SLO of 30.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'model.download' span was the dominant factor, taking 25.242 seconds to download 262144000 bytes from http://model-hub.kubesage-infra.svc.cluster.local/weights.bin.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'model.download' operation did not utilise a cache, as indicated by 'cache_hit: false'.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The combined 'model.download' and 'model.load' spans accounted for 25.406 seconds of the startup time.",
+      "evidence_ids": [
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'app_init' phase, which includes model loading, lasted 27.107 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "app_init",
+      "reason": "CPU throttling was not observed during the startup window.",
+      "evidence_ids": [
+       "E3"
+      ]
+     },
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.145 seconds, which is not a significant factor in the 31.0-second startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull duration was 4.145 seconds, which is not a significant factor in the 31.0-second startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase duration was 0.0 seconds, indicating no delay in pod scheduling.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe duration was 0.0 seconds, indicating no delay between the application being ready and Kubernetes marking the pod Ready.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "model_cache_pvc",
+      "rationale": "To prevent repeated downloads on every pod restart, keep model weights on a persistent volume, pre-populated by a prefetch job, and enable the application's cache reuse.",
+      "evidence_ids": [
+       "E4"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

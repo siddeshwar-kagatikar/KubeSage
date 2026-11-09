@@ -181,3 +181,172 @@ export interface LlmCallOut {
   error: string | null
   created_at: ISODateTime
 }
+
+// ---- Phases 4–6: fix plans, experiments, audit, LLMOps ----
+
+export interface PolicyCheckOut {
+  name: string
+  passed: boolean
+  detail: string
+}
+
+export type PlanStatus =
+  | 'awaiting_approval'
+  | 'rejected_by_policy'
+  | 'rejected'
+  | 'running'
+  | 'completed'
+  | 'failed'
+  | 'aborted'
+
+/** Patch for the original workload. Never applied automatically. */
+export interface PlanExport {
+  patch?: Record<string, unknown>
+  objects?: Record<string, unknown>[]
+  command?: string
+}
+
+export interface ActionPlanOut {
+  id: number
+  incident_id: number
+  diagnosis_run_id: number | null
+  category: string
+  action: string
+  action_title: string
+  action_note: string
+  params: Record<string, unknown>
+  rationale: string
+  /** 'llm' = the agent chose the action; 'fallback' = deterministic default. */
+  source: 'llm' | 'fallback'
+  llm_error: string | null
+  risk: string
+  status: PlanStatus
+  policy_checks: PolicyCheckOut[]
+  /** Unified diff of the sandbox pod spec (+ YAML of additional objects). */
+  diff: string
+  export: PlanExport
+  decided_by: string | null
+  decision_note: string | null
+  decided_at: ISODateTime | null
+  created_at: ISODateTime
+  experiment_id: number | null
+}
+
+export interface DecisionIn {
+  approver: string
+  note?: string | null
+}
+
+export type Arm = 'baseline' | 'candidate'
+
+export interface TrialOut {
+  index: number
+  arm: Arm
+  warmup: boolean
+  status: 'ok' | 'failed'
+  pod_name: string | null
+  startup_id: number | null
+  total_s: number | null
+  phases: Record<string, number>
+  /** e.g. {ready, restarts, smoke_ok, smoke} */
+  guardrails: Record<string, unknown>
+  prep_s: number | null
+  error: string | null
+}
+
+export interface ArmSummary {
+  trials: number
+  succeeded: number
+  failed: number
+  median_s: number | null
+  min_s: number | null
+  max_s: number | null
+  phase_median_s: Record<string, number>
+  prep_median_s: number | null
+}
+
+export type Verdict = 'improved' | 'no_change' | 'regressed' | 'failed'
+
+export interface ExperimentComparison {
+  baseline: ArmSummary
+  candidate: ArmSummary
+  delta_s: number | null
+  delta_pct: number | null
+  threshold_s: number | null
+  verdict: Verdict
+  reason: string
+}
+
+export interface ExperimentOut {
+  id: number
+  plan_id: number
+  incident_id: number
+  action: string
+  action_note: string
+  status: 'running' | 'completed' | 'failed' | 'aborted'
+  trials_per_arm: number
+  /** 1 warm-up + 2 x trials_per_arm */
+  planned_trials: number
+  node: string | null
+  /** One-off prep costs, e.g. {"<job>-model-prefetch_s": 41.2} */
+  prep: Record<string, number>
+  /** Empty object until the experiment finishes. */
+  comparison: Partial<ExperimentComparison>
+  verdict: Verdict | null
+  error: string | null
+  started_at: ISODateTime
+  finished_at: ISODateTime | null
+  trials: TrialOut[]
+}
+
+export interface AuditOut {
+  id: number
+  at: ISODateTime
+  actor: string
+  event: string
+  target: string | null
+  details: Record<string, unknown>
+}
+
+export interface LlmUsageOut {
+  purpose: string
+  model: string
+  calls: number
+  errors: number
+  input_tokens: number
+  output_tokens: number
+  avg_latency_ms: number
+}
+
+export interface EvalResult {
+  scenario: string
+  incident_id?: number
+  expected: string
+  category: string | null
+  correct: boolean
+  source: string | null
+  confidence?: string | null
+  citations_valid: boolean
+  validation_errors?: string[]
+  llm_error?: string | null
+  tool_calls: number
+  llm_calls?: number
+  input_tokens: number | null
+  output_tokens: number | null
+  seconds: number
+  summary?: string
+}
+
+/** Contents of the newest backend/evals/results/*.json */
+export interface LatestEval {
+  mode?: string
+  model?: string
+  prompt_version?: string
+  file?: string
+  results: EvalResult[]
+}
+
+export interface LlmOpsOut {
+  usage: LlmUsageOut[]
+  latest_eval: LatestEval | null
+}

@@ -152,7 +152,7 @@ class LlmCall(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     run_id: Mapped[int | None] = mapped_column(ForeignKey("diagnosis_runs.id"), index=True)
-    purpose: Mapped[str] = mapped_column(String(64))  # investigate | synthesise
+    purpose: Mapped[str] = mapped_column(String(64))  # investigate | synthesise | select_action
     provider: Mapped[str] = mapped_column(String(64))
     model: Mapped[str] = mapped_column(String(128))
     prompt_version: Mapped[str | None] = mapped_column(String(64))
@@ -162,3 +162,87 @@ class LlmCall(Base):
     status: Mapped[str] = mapped_column(String(16))  # ok | error
     error: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class ActionPlan(Base):
+    """An allow-listed optimisation proposed for an incident, its policy checks and the human decision."""
+
+    __tablename__ = "action_plans"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    incident_id: Mapped[int] = mapped_column(ForeignKey("incidents.id"), index=True)
+    diagnosis_run_id: Mapped[int | None] = mapped_column(ForeignKey("diagnosis_runs.id"))
+    category: Mapped[str] = mapped_column(String(64))
+    action: Mapped[str] = mapped_column(String(64))
+    params: Mapped[dict] = mapped_column(JsonType, default=dict)
+    rationale: Mapped[str] = mapped_column(Text)
+    source: Mapped[str] = mapped_column(String(16))  # llm | fallback
+    risk: Mapped[str] = mapped_column(String(16))
+    # proposing | awaiting_approval | rejected_by_policy | rejected | running | completed | failed | aborted
+    status: Mapped[str] = mapped_column(String(32))
+    policy_checks: Mapped[list] = mapped_column(JsonType, default=list)
+    diff: Mapped[str] = mapped_column(Text, default="")
+    # Exactly what the reviewer approves: baseline/candidate sandbox Deployments, extra objects, ConfigMaps to copy.
+    manifests: Mapped[dict] = mapped_column(JsonType, default=dict)
+    export: Mapped[dict] = mapped_column(JsonType, default=dict)  # patch + objects for the original workload
+    llm_error: Mapped[str | None] = mapped_column(Text)
+    decided_by: Mapped[str | None] = mapped_column(String(128))
+    decision_note: Mapped[str | None] = mapped_column(Text)
+    decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+    incident: Mapped[Incident] = relationship()
+
+
+class Experiment(Base):
+    """Before/after test of an approved plan in the sandbox namespace."""
+
+    __tablename__ = "experiments"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    plan_id: Mapped[int] = mapped_column(ForeignKey("action_plans.id"), unique=True)
+    status: Mapped[str] = mapped_column(String(32), default="running")  # running | completed | failed | aborted
+    trials_per_arm: Mapped[int] = mapped_column(Integer)
+    node: Mapped[str | None] = mapped_column(String(253))
+    prep: Mapped[dict] = mapped_column(JsonType, default=dict)  # one-off costs, e.g. prefetch_s
+    comparison: Mapped[dict] = mapped_column(JsonType, default=dict)
+    verdict: Mapped[str | None] = mapped_column(String(32))  # improved | no_change | regressed | failed
+    error: Mapped[str | None] = mapped_column(Text)
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+    plan: Mapped[ActionPlan] = relationship()
+    trials: Mapped[list["Trial"]] = relationship(back_populates="experiment", order_by="Trial.index")
+
+
+class Trial(Base):
+    __tablename__ = "trials"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    experiment_id: Mapped[int] = mapped_column(ForeignKey("experiments.id"), index=True)
+    index: Mapped[int] = mapped_column(Integer)
+    arm: Mapped[str] = mapped_column(String(16))  # baseline | candidate
+    warmup: Mapped[bool] = mapped_column(Boolean, default=False)
+    status: Mapped[str] = mapped_column(String(16))  # ok | failed
+    pod_name: Mapped[str | None] = mapped_column(String(253))
+    startup_id: Mapped[int | None] = mapped_column(ForeignKey("pod_startups.id"))
+    total_s: Mapped[float | None] = mapped_column(Float)
+    phases: Mapped[dict] = mapped_column(JsonType, default=dict)  # top-level phase -> seconds
+    guardrails: Mapped[dict] = mapped_column(JsonType, default=dict)
+    prep_s: Mapped[float | None] = mapped_column(Float)  # per-trial preparation, e.g. image pre-pull
+    error: Mapped[str | None] = mapped_column(Text)
+
+    experiment: Mapped[Experiment] = relationship(back_populates="trials")
+
+
+class AuditLog(Base):
+    """Append-only record of every decision and every cluster or node change KubeSage makes."""
+
+    __tablename__ = "audit_log"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, index=True)
+    actor: Mapped[str] = mapped_column(String(128))  # kubesage | a user name
+    event: Mapped[str] = mapped_column(String(64))
+    target: Mapped[str | None] = mapped_column(String(512))
+    details: Mapped[dict] = mapped_column(JsonType, default=dict)

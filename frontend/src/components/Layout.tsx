@@ -9,7 +9,12 @@ interface NavItem {
 }
 
 /** Top-level navigation. Phase 3+ pages (diagnoses, fixes, experiments) slot in here. */
-export const NAV_ITEMS: NavItem[] = [{ to: '/', label: 'Overview', end: true }]
+export const NAV_ITEMS: NavItem[] = [
+  { to: '/', label: 'Overview', end: true },
+  { to: '/experiments', label: 'Experiments' },
+  { to: '/audit', label: 'Audit' },
+  { to: '/llmops', label: 'LLMOps' },
+]
 
 export default function Layout() {
   const health = useHealth()

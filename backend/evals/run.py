@@ -56,9 +56,11 @@ def evaluate_scenario(scenario: dict, mode: str, settings) -> dict:
         recording = json.loads(recording_path.read_text(encoding="utf-8"))
         incident_id = recording["incident_id"]
         model = ScriptedModel(recording["responses"])
+        model_name = recording["model"]  # the model that produced the recorded responses
     else:
         incident_id = latest_incident_id(scenario["namespace"], scenario["workload"])
         model = create_chat_model(settings)
+        model_name = settings.llm_model
         if mode == "record":
             model = RecordingModel(model)
     if incident_id is None:
@@ -91,6 +93,7 @@ def evaluate_scenario(scenario: dict, mode: str, settings) -> dict:
     return {
         "scenario": scenario["name"],
         "incident_id": incident_id,
+        "model": model_name,
         "expected": scenario["expected"],
         "category": result.draft.category,
         "correct": result.draft.category == scenario["expected"],
@@ -123,9 +126,10 @@ def main() -> None:
 
     rows = [evaluate_scenario(s, args.mode, settings) for s in scenarios]
     scored = [r for r in rows if "error" not in r]
-    print(f"\nCopilot eval ({args.mode}, {settings.llm_model}, {PROMPT_VERSION})\n")
+    models = sorted({r["model"] for r in scored}) or [settings.llm_model]
+    print(f"\nCopilot eval ({args.mode}, {', '.join(models)}, {PROMPT_VERSION})\n")
     print(
-        f"{'scenario':<22}{'expected':<16}{'got':<16}{'ok':<5}{'source':<10}{'cites':<7}{'tools':<7}{'tokens':<14}{'s':>6}"
+        f"{'scenario':<22}{'expected':<16}{'got':<16}{'ok':<5}{'source':<10}{'cites':<7}{'tools':<7}{'tokens':<14}{'s':>6}  model"
     )
     for r in rows:
         if "error" in r:
@@ -134,7 +138,7 @@ def main() -> None:
         tokens = f"{r['input_tokens']}/{r['output_tokens']}"
         print(
             f"{r['scenario']:<22}{r['expected']:<16}{r['category']:<16}{'yes' if r['correct'] else 'NO':<5}"
-            f"{r['source']:<10}{'ok' if r['citations_valid'] else 'BAD':<7}{r['tool_calls']:<7}{tokens:<14}{r['seconds']:>6}"
+            f"{r['source']:<10}{'ok' if r['citations_valid'] else 'BAD':<7}{r['tool_calls']:<7}{tokens:<14}{r['seconds']:>6}  {r['model']}"
         )
     if scored:
         accuracy = sum(r["correct"] for r in scored) / len(scored)
@@ -148,7 +152,7 @@ def main() -> None:
     out = RESULTS / f"{stamp}-{args.mode}.json"
     out.write_text(
         json.dumps(
-            {"mode": args.mode, "model": settings.llm_model, "prompt_version": PROMPT_VERSION, "results": rows},
+            {"mode": args.mode, "model": ", ".join(models), "prompt_version": PROMPT_VERSION, "results": rows},
             indent=1,
         ),
         encoding="utf-8",

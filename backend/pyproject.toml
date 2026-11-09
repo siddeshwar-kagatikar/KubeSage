@@ -45,3 +45,5 @@ extend-immutable-calls = ["fastapi.Depends"]
 # Model and tool failures must degrade to the deterministic fallback, never crash a diagnosis run.
 "kubesage/copilot/*.py" = ["BLE001"]
 "kubesage/llm/*.py" = ["BLE001"]
+"kubesage/optimizer/*.py" = ["BLE001"]
+"kubesage/experiments/*.py" = ["BLE001"]

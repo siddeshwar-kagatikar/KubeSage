@@ -1,0 +1,58 @@
+# S4 — Slow app initialisation: CPU-bound startup work (~13 s of CPU) under a 250m CPU limit (~49 s throttled).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpu-init-svc
+  namespace: demo
+  labels:
+    app.kubernetes.io/name: cpu-init-svc
+    kubesage.io/scenario: s4-cpu-init
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cpu-init-svc
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: cpu-init-svc
+        kubesage.io/scenario: s4-cpu-init
+    spec:
+      nodeSelector:
+        kubesage.io/pool: workload
+      containers:
+        - name: app
+          image: localhost:5001/demo-ai-service:slim
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: POD_NAME
+              valueFrom: { fieldRef: { fieldPath: metadata.name } }
+            - name: POD_NAMESPACE
+              valueFrom: { fieldRef: { fieldPath: metadata.namespace } }
+            - name: NODE_NAME
+              valueFrom: { fieldRef: { fieldPath: spec.nodeName } }
+            - name: OTEL_SERVICE_NAME
+              value: cpu-init-svc
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: http://jaeger.kubesage-infra.svc.cluster.local:4318
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: k8s.pod.name=$(POD_NAME),k8s.namespace.name=$(POD_NAMESPACE),k8s.node.name=$(NODE_NAME)
+            - name: INIT_CPU_WORK
+              value: "250"
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 0
+            periodSeconds: 1
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 512Mi

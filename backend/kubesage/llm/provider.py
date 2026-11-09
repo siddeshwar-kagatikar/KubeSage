@@ -8,6 +8,29 @@ class LlmNotConfigured(RuntimeError):
     pass
 
 
+class UnavailableModel:
+    """Stands in for a model that could not be created: every call raises, so callers take their fallback."""
+
+    def __init__(self, exc: Exception):
+        self.exc = exc
+
+    def bind_tools(self, *_args, **_kwargs):
+        return self
+
+    def with_structured_output(self, *_args, **_kwargs):
+        return self
+
+    def invoke(self, *_args, **_kwargs):
+        raise self.exc
+
+
+def create_model_or_placeholder(settings: "Settings", factory=None):
+    try:
+        return (factory or create_chat_model)(settings)
+    except Exception as exc:
+        return UnavailableModel(exc)
+
+
 def create_chat_model(settings: Settings):
     provider = settings.llm_provider
     if provider == "google_genai":
