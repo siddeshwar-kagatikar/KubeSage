@@ -278,7 +278,12 @@ def calls_in_window(records: list[dict], now: datetime, hours: float = 24.0, key
 
 
 def daily_quota_exhausted(error: str | None) -> bool:
-    return bool(error) and "RESOURCE_EXHAUSTED" in error and "PerDay" in error
+    """The key cannot serve this model today: daily quota spent, or the key's project has no access to the model."""
+    if not error:
+        return False
+    return ("RESOURCE_EXHAUSTED" in error and "PerDay" in error) or any(
+        marker in error for marker in ("NOT_FOUND", "PERMISSION_DENIED", "API_KEY_INVALID")
+    )
 
 
 # --- commands ---------------------------------------------------------------------------------------------------

@@ -128,3 +128,12 @@ def test_eval_api_keys_prefers_the_list_and_falls_back_to_the_single_key():
     assert Settings(_env_file=None, GOOGLE_API_KEYS=" a, b ,a,,c").eval_api_keys() == ["a", "b", "c"]
     assert Settings(_env_file=None, GOOGLE_API_KEY="solo").eval_api_keys() == ["solo"]
     assert Settings(_env_file=None).eval_api_keys() == []
+
+
+def test_a_key_without_model_access_is_treated_as_spent():
+    from evals.rq2 import daily_quota_exhausted
+
+    assert daily_quota_exhausted("GoogleModelNotFoundError: (NOT_FOUND): 404")
+    assert daily_quota_exhausted("RESOURCE_EXHAUSTED ... PerDay")
+    assert not daily_quota_exhausted("RESOURCE_EXHAUSTED ... PerMinute")
+    assert not daily_quota_exhausted(None)
