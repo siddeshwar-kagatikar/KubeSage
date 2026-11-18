@@ -19,12 +19,21 @@ def new_api_client(context: str) -> client.ApiClient:
     Calls impersonate KubeSage's ServiceAccount (deploy/kubesage/rbac.yaml), so the API server enforces its
     least-privilege RBAC even though the local kubeconfig is cluster-admin.
     """
-    configuration = client.Configuration()
-    config.load_kube_config(context=context, client_configuration=configuration)
-    api_client = client.ApiClient(configuration)
+    api_client = new_admin_client(context)
     if impersonate := get_settings().kube_impersonate:
         api_client.set_default_header("Impersonate-User", impersonate)
     return api_client
+
+
+def new_admin_client(context: str) -> client.ApiClient:
+    """The kubeconfig identity itself (cluster-admin in the lab), without impersonation.
+
+    For lab tooling only (the fault-injection campaign driver, which plays the part of the operator who breaks
+    workloads on purpose). KubeSage's own services must use `new_api_client`.
+    """
+    configuration = client.Configuration()
+    config.load_kube_config(context=context, client_configuration=configuration)
+    return client.ApiClient(configuration)
 
 
 def to_dict(api_client: client.ApiClient, obj) -> dict:

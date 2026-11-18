@@ -162,7 +162,8 @@ class PolicyCheckOut(BaseModel):
 
 
 class ActionPlanOut(BaseModel):
-    """`source`: 'llm' = the agent chose the action; 'fallback' = deterministic default (model unavailable/invalid).
+    """`source`: 'llm' = the agent chose the action; 'fallback' = deterministic default (model unavailable/invalid);
+    'forced' = chosen by an evaluation control (policy checks still apply).
     `export` holds the patch for the original workload: {patch, objects, command}."""
 
     id: int
@@ -174,7 +175,7 @@ class ActionPlanOut(BaseModel):
     action_note: str
     params: dict
     rationale: str
-    source: Literal["llm", "fallback"]
+    source: Literal["llm", "fallback", "forced"]
     llm_error: str | None
     risk: str
     status: Literal["awaiting_approval", "rejected_by_policy", "rejected", "running", "completed", "failed", "aborted"]

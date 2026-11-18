@@ -202,7 +202,13 @@ export function PlanDetails({ plan: p }: { plan: ActionPlanOut }) {
         <PlanStatusBadge status={p.status} />
         <CategoryBadge category={p.category} />
         <Pill tone={p.risk === 'low' ? 'ok' : 'warn'}>{p.risk} risk</Pill>
-        {p.source === 'llm' ? <Pill tone="accent">AI-selected</Pill> : <Pill>Deterministic default</Pill>}
+        {p.source === 'llm' ? (
+          <Pill tone="accent">AI-selected</Pill>
+        ) : p.source === 'forced' ? (
+          <Pill>Evaluation control</Pill>
+        ) : (
+          <Pill>Deterministic default</Pill>
+        )}
         <code className="text-xs text-muted">{p.action}</code>
       </div>
 

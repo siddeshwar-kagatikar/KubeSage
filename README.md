@@ -105,6 +105,14 @@ Measured on the reference machine (medians; trials per arm 3, or 5 for probe and
 | S4 CPU-bound init | CPU 500m request / 1000m limit | 39 s | 14 s | improved | throttling ratio 0.81 before |
 | S6a slow readiness | readiness delay 0 s, period 2 s | 65 s | 6 s | improved | readiness detection, not app speed |
 
+## Evaluation
+
+`EVALUATION.md` is the runbook for the research evaluation: a fault-injection campaign (90 runs across the seven
+faults, compounds and controls) with ground truth derived from the injected knobs, three-way diagnosis comparison
+(rules / LLM-only / full system, with a validator ablation), before/after experiments with A/A, harmful and broken
+controls, safety matrices and overhead. `python -m evals.analyze` regenerates every table and figure under `paper/`
+from the raw data in `backend/evals/data`; `paper/OUTLINE.md` maps each result to a paper section.
+
 ## Security model
 
 - The backend impersonates the ServiceAccount `kubesage-system/kubesage` (`deploy/kubesage/rbac.yaml`,

@@ -263,12 +263,17 @@ def build_plan(
     settings: Settings,
     api_client: client.ApiClient | None,
     experiment_running: bool,
+    forced: Proposal | None = None,
 ) -> tuple[Proposal, Prepared | None, list[Check]]:
-    actions, facts = viable_actions(category, signals, deployment, registry, settings)
-    if not actions:
-        raise NoAutomatedAction(category)
-    container = deployment["spec"]["template"]["spec"]["containers"][0]
-    proposal = choose(actions, facts, diagnosis, container, model, calls)
+    """orced replaces only the choice of action (evaluation controls); preparation and every policy check still run."""
+    if forced is None:
+        actions, facts = viable_actions(category, signals, deployment, registry, settings)
+        if not actions:
+            raise NoAutomatedAction(category)
+        container = deployment["spec"]["template"]["spec"]["containers"][0]
+        proposal = choose(actions, facts, diagnosis, container, model, calls)
+    else:
+        proposal = forced
     prepared, clone_error = None, None
     try:
         prepared = prepare(deployment, proposal, plan_id, settings)

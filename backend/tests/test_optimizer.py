@@ -282,3 +282,24 @@ def test_compare_no_change_and_regressed():
 def test_candidate_guardrail_failure_fails_the_experiment():
     result = compare([trial("baseline", 30), trial("candidate", 5, status="failed"), trial("candidate", 6)])
     assert result["verdict"] == "failed" and "candidate failed" in result["reason"]
+
+
+def test_forced_proposal_skips_only_the_llm_choice_not_the_policy(settings):
+    from kubesage.optimizer.planner import build_plan
+
+    settings.lab_mode = True
+    forced = proposal("tune_probes", initial_delay_seconds=30, period_seconds=10)
+    forced.source = "forced"
+    deployment = scenario("s6a-slow-readiness")
+    kwargs = {
+        "plan_id": 9, "signals": {}, "diagnosis": {}, "deployment": deployment, "workload_kind": "Deployment",
+        "model": UnavailableModel(RuntimeError("the model must not be called")), "calls": calls(),
+        "registry": FakeRegistry({}), "settings": settings, "api_client": None, "experiment_running": False,
+        "forced": forced,
+    }  # fmt: skip
+    chosen, prepared, checks = build_plan(category="slow_readiness", **kwargs)
+    assert chosen is forced and prepared is not None and all(c.passed for c in checks)
+    assert "initialDelaySeconds: 30" in prepared.diff
+    # the same forced fix on a diagnosis it does not handle is still rejected by policy
+    _, _, rejected = build_plan(category="large_image", **kwargs)
+    assert not {c.name: c.passed for c in rejected}["category_supported"]

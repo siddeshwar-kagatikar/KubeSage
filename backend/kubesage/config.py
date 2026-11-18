@@ -37,6 +37,15 @@ class Settings(BaseSettings):
     llm_max_retries: int = 3
     llm_timeout_s: float = 90.0
     google_api_key: SecretStr | None = Field(None, validation_alias="GOOGLE_API_KEY")
+    # evaluation only: comma-separated keys, each from its own Google Cloud project (free-tier quota is per project)
+    google_api_keys: SecretStr | None = Field(None, validation_alias="GOOGLE_API_KEYS")
+
+    def eval_api_keys(self) -> list[str]:
+        raw = self.google_api_keys.get_secret_value() if self.google_api_keys else ""
+        keys = [k.strip() for k in raw.split(",") if k.strip()]
+        if not keys and self.google_api_key:
+            keys = [self.google_api_key.get_secret_value()]
+        return list(dict.fromkeys(keys))
 
     # Incident Copilot
     copilot_max_tool_calls: int = 6

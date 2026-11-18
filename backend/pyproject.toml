@@ -20,6 +20,8 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest==9.2.0", "ruff==0.17.3"]
+# Evaluation and paper figures (evals/analyze.py, evals/stats.py); not needed to run KubeSage itself.
+eval = ["numpy==2.5.5", "scipy==1.18.1", "matplotlib==3.11.2"]
 
 [build-system]
 requires = ["setuptools>=75"]
@@ -47,3 +49,8 @@ extend-immutable-calls = ["fastapi.Depends"]
 "kubesage/llm/*.py" = ["BLE001"]
 "kubesage/optimizer/*.py" = ["BLE001"]
 "kubesage/experiments/*.py" = ["BLE001"]
+# A failed campaign row is recorded as data, never allowed to stop the campaign.
+"evals/campaign.py" = ["BLE001"]
+"evals/rq2.py" = ["BLE001"]
+"evals/rq3.py" = ["BLE001"]
+"evals/rq4.py" = ["BLE001"]

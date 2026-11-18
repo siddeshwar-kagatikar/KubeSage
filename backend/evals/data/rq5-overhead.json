@@ -1,0 +1,15 @@
+{
+    "campaign_seconds":  600,
+    "campaign_cpu_mean_pct_of_one_core":  0.3,
+    "campaign_cpu_max_pct_of_one_core":  10.9,
+    "campaign_rss_mean_mb":  103.1,
+    "campaign_rss_max_mb":  144.6,
+    "campaign_peak_working_set_mb":  162.4,
+    "campaign_private_mb":  153.9,
+    "campaign_new_startups":  10,
+    "campaign_new_events":  87,
+    "campaign_db_growth_kb":  168,
+    "campaign_db_total_mb":  13,
+    "host_logical_cores":  16,
+    "campaign_db_kb_per_startup":  16.8
+}

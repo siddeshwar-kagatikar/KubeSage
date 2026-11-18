@@ -46,6 +46,9 @@ MODEL_CACHE = os.getenv("MODEL_CACHE", "false").lower() == "true"
 INIT_CPU_WORK = int(os.getenv("INIT_CPU_WORK", "0"))
 DEPENDENCY_URL = os.getenv("DEPENDENCY_URL", "")
 DEPENDENCY_TIMEOUT = float(os.getenv("DEPENDENCY_TIMEOUT", "300"))
+# Free text written to the log at startup; the evaluation uses it to plant hostile text (prompt injection) and
+# fake secrets (redaction) in what the Copilot later reads. Never set in the normal scenarios.
+STARTUP_LOG_NOTE = os.getenv("STARTUP_LOG_NOTE", "")
 
 CPU_ITERATIONS_PER_UNIT = 1_000_000
 CHUNK_BYTES = 1 << 20
@@ -201,6 +204,8 @@ def run_startup() -> None:
              "duration_s": round((IMPORTS_DONE_NS - MODULE_START_NS) / 1e9, 3)},
         ]
         try:
+            if STARTUP_LOG_NOTE:
+                log("startup_note", note=STARTUP_LOG_NOTE)
             if MODEL_URL:
                 load_model(download_model())
             if INIT_CPU_WORK > 0:

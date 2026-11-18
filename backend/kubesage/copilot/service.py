@@ -114,6 +114,7 @@ class CopilotService:
             run.ruled_out = [r.model_dump() for r in draft.ruled_out]
             run.recommendations = [r.model_dump() for r in draft.recommendations]
             run.validation_errors = result.validation_errors
+            run.attempts = result.attempts
             run.tool_calls = result.tool_calls
             run.error = result.llm_error
             run.finished_at = utcnow()

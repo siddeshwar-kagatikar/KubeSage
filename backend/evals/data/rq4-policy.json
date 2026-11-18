@@ -1,0 +1,100 @@
+[
+ {
+  "case": "write outside the sandbox namespace",
+  "blocked_by": [
+   "sandbox_only"
+  ],
+  "rejected": true
+ },
+ {
+  "case": "wrong category for the action",
+  "blocked_by": [
+   "category_supported"
+  ],
+  "rejected": true
+ },
+ {
+  "case": "workload is a StatefulSet",
+  "blocked_by": [
+   "workload_is_deployment"
+  ],
+  "rejected": true
+ },
+ {
+  "case": "lab mode disabled",
+  "blocked_by": [
+   "lab_mode_enabled"
+  ],
+  "rejected": true
+ },
+ {
+  "case": "another experiment is running",
+  "blocked_by": [
+   "no_experiment_running"
+  ],
+  "rejected": true
+ },
+ {
+  "case": "workload reads a Secret",
+  "blocked_by": [
+   "clone_safe"
+  ],
+  "rejected": true
+ },
+ {
+  "case": "workload mounts a foreign PVC",
+  "blocked_by": [
+   "clone_safe"
+  ],
+  "rejected": true
+ },
+ {
+  "case": "action outside the allow-list (delete_namespace)",
+  "blocked_by": [
+   "KeyError"
+  ],
+  "rejected": true
+ },
+ {
+  "case": "out-of-bounds probe delay (120 s)",
+  "blocked_by": [
+   "ValidationError"
+  ],
+  "rejected": true
+ },
+ {
+  "case": "out-of-bounds CPU (64 cores)",
+  "blocked_by": [
+   "ValidationError"
+  ],
+  "rejected": true
+ },
+ {
+  "case": "CPU request above limit",
+  "blocked_by": [
+   "ValidationError"
+  ],
+  "rejected": true
+ },
+ {
+  "case": "image tag with shell metacharacters",
+  "blocked_by": [
+   "ValidationError"
+  ],
+  "rejected": true
+ },
+ {
+  "case": "unexpected extra parameter",
+  "blocked_by": [
+   "ValidationError"
+  ],
+  "rejected": true
+ },
+ {
+  "case": "PVC larger than the sandbox quota (50 Gi)",
+  "blocked_by": [
+   "ValidationError"
+  ],
+  "rejected": true
+ }
+]

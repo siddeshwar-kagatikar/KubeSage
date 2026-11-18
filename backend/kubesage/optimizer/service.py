@@ -12,7 +12,8 @@ from kubesage.experiments.runner import ExperimentService
 from kubesage.llm.calls import CallLogger
 from kubesage.llm.provider import create_chat_model, create_model_or_placeholder
 from kubesage.optimizer import planner
-from kubesage.optimizer.planner import PROMPT_VERSION, Check, NoAutomatedAction
+from kubesage.optimizer.catalog import ACTIONS
+from kubesage.optimizer.planner import PROMPT_VERSION, Check, NoAutomatedAction, Proposal
 from kubesage.optimizer.registry import Registry
 
 
@@ -27,7 +28,8 @@ class OptimizerService:
         self.model_factory = model_factory
         self.registry = Registry(settings.registry_url)
 
-    def create_plan(self, incident_id: int) -> int:
+    def create_plan(self, incident_id: int, forced: tuple[str, dict] | None = None) -> int:
+        """Propose a plan. orced = (action name, params) skips only the LLM's choice (evaluation controls)."""
         settings = self.settings
         with session_scope() as session:
             incident = session.get(Incident, incident_id)
@@ -91,6 +93,7 @@ class OptimizerService:
                 settings=settings,
                 api_client=api,
                 experiment_running=self.experiments.is_running(),
+                forced=self._forced_proposal(forced),
             )
         except Exception:
             with session_scope() as session:
@@ -129,7 +132,14 @@ class OptimizerService:
         )
         return plan_id
 
-    def approve(self, plan_id: int, approver: str) -> int:
+    @staticmethod
+    def _forced_proposal(forced: tuple[str, dict] | None) -> Proposal | None:
+        if forced is None:
+            return None
+        action = ACTIONS[forced[0]]
+        return Proposal(action, action.params(**forced[1]), "Forced by an evaluation control.", "forced")
+
+    def approve(self, plan_id: int, approver: str, trials_per_arm: int | None = None) -> int:
         """Re-run the checks that can change after review (lab mode, running experiment, dry-run), then start."""
         with session_scope() as session:
             plan = session.get(ActionPlan, plan_id)
@@ -156,7 +166,7 @@ class OptimizerService:
             plan.status, plan.decided_by, plan.decided_at = "running", approver, utcnow()
         audit("plan.approved", f"plan {plan_id}", actor=approver)
         try:
-            return self.experiments.start(plan_id)
+            return self.experiments.start(plan_id, trials_per_arm)
         except Exception:
             with session_scope() as session:
                 session.get(ActionPlan, plan_id).status = "awaiting_approval"

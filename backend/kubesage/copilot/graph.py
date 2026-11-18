@@ -49,6 +49,9 @@ class DiagnosisResult:
     tool_calls: int
     validation_errors: list[str] = field(default_factory=list)
     llm_error: str | None = None
+    # Every synthesis draft in order, before and after validation: {attempt, draft, valid, errors}.
+    # The first entry is what an unvalidated pipeline would have returned (used by the evaluation).
+    attempts: list[dict] = field(default_factory=list)
 
 
 def message_text(message: AIMessage) -> str:
@@ -105,6 +108,7 @@ def run_copilot(
     max_calls = settings.copilot_max_tool_calls
     inc, wl = ctx.incident, ctx.workload
     baseline = f", baseline {inc['baseline_s']:.1f} s" if inc.get("baseline_s") else ""
+    attempts_log: list[dict] = []
 
     def investigate(state: State) -> State:
         try:
@@ -171,18 +175,25 @@ def run_copilot(
             return {"synthesis_attempts": attempts, "llm_error": f"{type(exc).__name__}: {exc}"}
         parsed, error = output.get("parsed"), output.get("parsing_error")
         if parsed is None:
-            return {
-                "synthesis_attempts": attempts,
-                "draft": None,
-                "validation_errors": [f"output did not parse: {error}"],
-            }
+            errors = [f"output did not parse: {error}"]
+            attempts_log.append({"attempt": attempts, "draft": None, "valid": False, "errors": errors})
+            return {"synthesis_attempts": attempts, "draft": None, "validation_errors": errors}
         return {"synthesis_attempts": attempts, "draft": parsed, "validation_errors": []}
 
     def check(state: State) -> State:
         draft = state.get("draft")
         if draft is None:
             return {}
-        return {"validation_errors": validate(draft, evidence.refs, ctx.top_candidate)}
+        errors = validate(draft, evidence.refs, ctx.top_candidate)
+        attempts_log.append(
+            {
+                "attempt": state.get("synthesis_attempts", 0),
+                "draft": draft.model_dump(),
+                "valid": not errors,
+                "errors": errors,
+            }
+        )
+        return {"validation_errors": errors}
 
     def after_check(state: State) -> str:
         if state.get("llm_error"):
@@ -243,4 +254,5 @@ def run_copilot(
         tool_calls=final.get("tool_calls_made", 0),
         validation_errors=final.get("validation_errors") or [],
         llm_error=final.get("llm_error"),
+        attempts=attempts_log,
     )

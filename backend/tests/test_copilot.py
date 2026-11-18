@@ -260,3 +260,19 @@ def test_daily_quota_and_repeated_limits_are_not_retried_forever(monkeypatch):
     with pytest.raises(RuntimeError):
         logger.call("investigate", always_per_minute)
     assert len(logger.records) == 1 + 3  # first try + 2 retries
+
+
+def test_attempts_keep_the_first_unvalidated_draft(settings):
+    fixed = draft(("E1",))
+    fixed["data"]["recommendations"][0]["evidence_ids"] = ["E3"]
+    result, _ = run(
+        "s3-model-weights",
+        settings,
+        [tool_turn(("get_runbook", {"category": "model_loading"})), DONE, draft(evidence_ids=("E9",)), fixed],
+    )
+    first, second = result.attempts
+    assert (first["attempt"], first["valid"]) == (1, False)
+    assert any("unknown evidence E9" in e for e in first["errors"])
+    assert first["draft"]["category"] == "model_loading"  # what an unvalidated pipeline would have returned
+    assert (second["attempt"], second["valid"], second["errors"]) == (2, True, [])
+    assert result.source == "llm"

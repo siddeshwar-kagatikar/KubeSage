@@ -15,6 +15,7 @@ SessionLocal = sessionmaker(engine, expire_on_commit=False)
 COLUMN_MIGRATIONS = [
     "ALTER TABLE pod_startups ADD COLUMN IF NOT EXISTS pod_snapshot JSONB",
     "ALTER TABLE pod_startups ADD COLUMN IF NOT EXISTS logs TEXT",
+    "ALTER TABLE diagnosis_runs ADD COLUMN IF NOT EXISTS attempts JSONB",
 ]
 
 

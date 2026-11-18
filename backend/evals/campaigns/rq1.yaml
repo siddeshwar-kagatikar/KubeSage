@@ -1,0 +1,2225 @@
+campaign: rq1
+rows:
+- id: large_image-20MBps-r1
+  fault: large_image
+  group: large_image
+  kind: single
+  severity: 20MBps
+  repeat: 1
+  cold: true
+  knobs:
+    image: fat
+    registry_mbps: 20
+  expect:
+    injected:
+    - large_image
+    dominant: large_image
+    acceptable:
+    - large_image
+    est_seconds:
+      large_image: 52.4
+    est_total_s: 55.4
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 32.4
+      hi: 82.26
+    incident: true
+- id: large_image-20MBps-r2
+  fault: large_image
+  group: large_image
+  kind: single
+  severity: 20MBps
+  repeat: 2
+  cold: true
+  knobs:
+    image: fat
+    registry_mbps: 20
+  expect:
+    injected:
+    - large_image
+    dominant: large_image
+    acceptable:
+    - large_image
+    est_seconds:
+      large_image: 52.4
+    est_total_s: 55.4
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 32.4
+      hi: 82.26
+    incident: true
+- id: large_image-20MBps-r3
+  fault: large_image
+  group: large_image
+  kind: single
+  severity: 20MBps
+  repeat: 3
+  cold: true
+  knobs:
+    image: fat
+    registry_mbps: 20
+  expect:
+    injected:
+    - large_image
+    dominant: large_image
+    acceptable:
+    - large_image
+    est_seconds:
+      large_image: 52.4
+    est_total_s: 55.4
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 32.4
+      hi: 82.26
+    incident: true
+- id: large_image-12MBps-r1
+  fault: large_image
+  group: large_image
+  kind: single
+  severity: 12MBps
+  repeat: 1
+  cold: true
+  knobs:
+    image: fat
+    registry_mbps: 12
+  expect:
+    injected:
+    - large_image
+    dominant: large_image
+    acceptable:
+    - large_image
+    est_seconds:
+      large_image: 74.0
+    est_total_s: 77.0
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 54.0
+      hi: 107.1
+    incident: true
+- id: large_image-12MBps-r2
+  fault: large_image
+  group: large_image
+  kind: single
+  severity: 12MBps
+  repeat: 2
+  cold: true
+  knobs:
+    image: fat
+    registry_mbps: 12
+  expect:
+    injected:
+    - large_image
+    dominant: large_image
+    acceptable:
+    - large_image
+    est_seconds:
+      large_image: 74.0
+    est_total_s: 77.0
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 54.0
+      hi: 107.1
+    incident: true
+- id: large_image-12MBps-r3
+  fault: large_image
+  group: large_image
+  kind: single
+  severity: 12MBps
+  repeat: 3
+  cold: true
+  knobs:
+    image: fat
+    registry_mbps: 12
+  expect:
+    injected:
+    - large_image
+    dominant: large_image
+    acceptable:
+    - large_image
+    est_seconds:
+      large_image: 74.0
+    est_total_s: 77.0
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 54.0
+      hi: 107.1
+    incident: true
+- id: large_image-8MBps-r1
+  fault: large_image
+  group: large_image
+  kind: single
+  severity: 8MBps
+  repeat: 1
+  cold: true
+  knobs:
+    image: fat
+    registry_mbps: 8
+  expect:
+    injected:
+    - large_image
+    dominant: large_image
+    acceptable:
+    - large_image
+    est_seconds:
+      large_image: 101.0
+    est_total_s: 104.0
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 81.0
+      hi: 138.14
+    incident: true
+- id: large_image-8MBps-r2
+  fault: large_image
+  group: large_image
+  kind: single
+  severity: 8MBps
+  repeat: 2
+  cold: true
+  knobs:
+    image: fat
+    registry_mbps: 8
+  expect:
+    injected:
+    - large_image
+    dominant: large_image
+    acceptable:
+    - large_image
+    est_seconds:
+      large_image: 101.0
+    est_total_s: 104.0
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 81.0
+      hi: 138.14
+    incident: true
+- id: large_image-8MBps-r3
+  fault: large_image
+  group: large_image
+  kind: single
+  severity: 8MBps
+  repeat: 3
+  cold: true
+  knobs:
+    image: fat
+    registry_mbps: 8
+  expect:
+    injected:
+    - large_image
+    dominant: large_image
+    acceptable:
+    - large_image
+    est_seconds:
+      large_image: 101.0
+    est_total_s: 104.0
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 81.0
+      hi: 138.14
+    incident: true
+- id: slow_registry-1MBps-r1
+  fault: slow_registry
+  group: slow_registry
+  kind: single
+  severity: 1MBps
+  repeat: 1
+  cold: true
+  knobs:
+    image: slim
+    registry_mbps: 1
+  expect:
+    injected:
+    - slow_registry
+    dominant: slow_registry
+    acceptable:
+    - slow_registry
+    est_seconds:
+      slow_registry: 55.3
+    est_total_s: 58.3
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 53.3
+      hi: 71.29
+    - type: static
+      signal: throughput_bytes_per_s
+      lo: 750000.0
+      hi: 1050000.0
+    incident: true
+- id: slow_registry-1MBps-r2
+  fault: slow_registry
+  group: slow_registry
+  kind: single
+  severity: 1MBps
+  repeat: 2
+  cold: true
+  knobs:
+    image: slim
+    registry_mbps: 1
+  expect:
+    injected:
+    - slow_registry
+    dominant: slow_registry
+    acceptable:
+    - slow_registry
+    est_seconds:
+      slow_registry: 55.3
+    est_total_s: 58.3
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 53.3
+      hi: 71.29
+    - type: static
+      signal: throughput_bytes_per_s
+      lo: 750000.0
+      hi: 1050000.0
+    incident: true
+- id: slow_registry-1MBps-r3
+  fault: slow_registry
+  group: slow_registry
+  kind: single
+  severity: 1MBps
+  repeat: 3
+  cold: true
+  knobs:
+    image: slim
+    registry_mbps: 1
+  expect:
+    injected:
+    - slow_registry
+    dominant: slow_registry
+    acceptable:
+    - slow_registry
+    est_seconds:
+      slow_registry: 55.3
+    est_total_s: 58.3
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 53.3
+      hi: 71.29
+    - type: static
+      signal: throughput_bytes_per_s
+      lo: 750000.0
+      hi: 1050000.0
+    incident: true
+- id: slow_registry-2MBps-r1
+  fault: slow_registry
+  group: slow_registry
+  kind: single
+  severity: 2MBps
+  repeat: 1
+  cold: true
+  knobs:
+    image: slim
+    registry_mbps: 2
+  expect:
+    injected:
+    - slow_registry
+    dominant: slow_registry
+    acceptable:
+    - slow_registry
+    est_seconds:
+      slow_registry: 28.6
+    est_total_s: 31.6
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 26.65
+      hi: 40.65
+    - type: static
+      signal: throughput_bytes_per_s
+      lo: 1500000.0
+      hi: 2100000.0
+    incident: true
+- id: slow_registry-2MBps-r2
+  fault: slow_registry
+  group: slow_registry
+  kind: single
+  severity: 2MBps
+  repeat: 2
+  cold: true
+  knobs:
+    image: slim
+    registry_mbps: 2
+  expect:
+    injected:
+    - slow_registry
+    dominant: slow_registry
+    acceptable:
+    - slow_registry
+    est_seconds:
+      slow_registry: 28.6
+    est_total_s: 31.6
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 26.65
+      hi: 40.65
+    - type: static
+      signal: throughput_bytes_per_s
+      lo: 1500000.0
+      hi: 2100000.0
+    incident: true
+- id: slow_registry-2MBps-r3
+  fault: slow_registry
+  group: slow_registry
+  kind: single
+  severity: 2MBps
+  repeat: 3
+  cold: true
+  knobs:
+    image: slim
+    registry_mbps: 2
+  expect:
+    injected:
+    - slow_registry
+    dominant: slow_registry
+    acceptable:
+    - slow_registry
+    est_seconds:
+      slow_registry: 28.6
+    est_total_s: 31.6
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 26.65
+      hi: 40.65
+    - type: static
+      signal: throughput_bytes_per_s
+      lo: 1500000.0
+      hi: 2100000.0
+    incident: true
+- id: slow_registry-3MBps-r1
+  fault: slow_registry
+  group: slow_registry
+  kind: single
+  severity: 3MBps
+  repeat: 1
+  cold: true
+  knobs:
+    image: slim
+    registry_mbps: 3
+  expect:
+    injected:
+    - slow_registry
+    dominant: slow_registry
+    acceptable:
+    - slow_registry
+    est_seconds:
+      slow_registry: 19.8
+    est_total_s: 22.8
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 17.77
+      hi: 30.43
+    - type: static
+      signal: throughput_bytes_per_s
+      lo: 2250000.0
+      hi: 3150000.0000000005
+    incident: true
+- id: slow_registry-3MBps-r2
+  fault: slow_registry
+  group: slow_registry
+  kind: single
+  severity: 3MBps
+  repeat: 2
+  cold: true
+  knobs:
+    image: slim
+    registry_mbps: 3
+  expect:
+    injected:
+    - slow_registry
+    dominant: slow_registry
+    acceptable:
+    - slow_registry
+    est_seconds:
+      slow_registry: 19.8
+    est_total_s: 22.8
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 17.77
+      hi: 30.43
+    - type: static
+      signal: throughput_bytes_per_s
+      lo: 2250000.0
+      hi: 3150000.0000000005
+    incident: true
+- id: slow_registry-3MBps-r3
+  fault: slow_registry
+  group: slow_registry
+  kind: single
+  severity: 3MBps
+  repeat: 3
+  cold: true
+  knobs:
+    image: slim
+    registry_mbps: 3
+  expect:
+    injected:
+    - slow_registry
+    dominant: slow_registry
+    acceptable:
+    - slow_registry
+    est_seconds:
+      slow_registry: 19.8
+    est_total_s: 22.8
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 17.77
+      hi: 30.43
+    - type: static
+      signal: throughput_bytes_per_s
+      lo: 2250000.0
+      hi: 3150000.0000000005
+    incident: true
+- id: model_loading-100MB-r1
+  fault: model_loading
+  group: model_loading
+  kind: single
+  severity: 100MB
+  repeat: 1
+  cold: true
+  knobs:
+    model_mb: 100
+  expect:
+    injected:
+    - model_loading
+    dominant: model_loading
+    acceptable:
+    - model_loading
+    est_seconds:
+      model_loading: 11.0
+    est_total_s: 18.7
+    intervals:
+    - type: static
+      signal: model_s
+      lo: 10.0
+      hi: 14.0
+    incident: true
+- id: model_loading-100MB-r2
+  fault: model_loading
+  group: model_loading
+  kind: single
+  severity: 100MB
+  repeat: 2
+  cold: true
+  knobs:
+    model_mb: 100
+  expect:
+    injected:
+    - model_loading
+    dominant: model_loading
+    acceptable:
+    - model_loading
+    est_seconds:
+      model_loading: 11.0
+    est_total_s: 18.7
+    intervals:
+    - type: static
+      signal: model_s
+      lo: 10.0
+      hi: 14.0
+    incident: true
+- id: model_loading-100MB-r3
+  fault: model_loading
+  group: model_loading
+  kind: single
+  severity: 100MB
+  repeat: 3
+  cold: true
+  knobs:
+    model_mb: 100
+  expect:
+    injected:
+    - model_loading
+    dominant: model_loading
+    acceptable:
+    - model_loading
+    est_seconds:
+      model_loading: 11.0
+    est_total_s: 18.7
+    intervals:
+    - type: static
+      signal: model_s
+      lo: 10.0
+      hi: 14.0
+    incident: true
+- id: model_loading-250MB-r1
+  fault: model_loading
+  group: model_loading
+  kind: single
+  severity: 250MB
+  repeat: 1
+  cold: true
+  knobs:
+    model_mb: 250
+  expect:
+    injected:
+    - model_loading
+    dominant: model_loading
+    acceptable:
+    - model_loading
+    est_seconds:
+      model_loading: 26.0
+    est_total_s: 33.7
+    intervals:
+    - type: static
+      signal: model_s
+      lo: 25.0
+      hi: 32.0
+    incident: true
+- id: model_loading-250MB-r2
+  fault: model_loading
+  group: model_loading
+  kind: single
+  severity: 250MB
+  repeat: 2
+  cold: true
+  knobs:
+    model_mb: 250
+  expect:
+    injected:
+    - model_loading
+    dominant: model_loading
+    acceptable:
+    - model_loading
+    est_seconds:
+      model_loading: 26.0
+    est_total_s: 33.7
+    intervals:
+    - type: static
+      signal: model_s
+      lo: 25.0
+      hi: 32.0
+    incident: true
+- id: model_loading-250MB-r3
+  fault: model_loading
+  group: model_loading
+  kind: single
+  severity: 250MB
+  repeat: 3
+  cold: true
+  knobs:
+    model_mb: 250
+  expect:
+    injected:
+    - model_loading
+    dominant: model_loading
+    acceptable:
+    - model_loading
+    est_seconds:
+      model_loading: 26.0
+    est_total_s: 33.7
+    intervals:
+    - type: static
+      signal: model_s
+      lo: 25.0
+      hi: 32.0
+    incident: true
+- id: model_loading-500MB-r1
+  fault: model_loading
+  group: model_loading
+  kind: single
+  severity: 500MB
+  repeat: 1
+  cold: true
+  knobs:
+    model_mb: 500
+  expect:
+    injected:
+    - model_loading
+    dominant: model_loading
+    acceptable:
+    - model_loading
+    est_seconds:
+      model_loading: 51.0
+    est_total_s: 58.7
+    intervals:
+    - type: static
+      signal: model_s
+      lo: 50.0
+      hi: 62.0
+    incident: true
+- id: model_loading-500MB-r2
+  fault: model_loading
+  group: model_loading
+  kind: single
+  severity: 500MB
+  repeat: 2
+  cold: true
+  knobs:
+    model_mb: 500
+  expect:
+    injected:
+    - model_loading
+    dominant: model_loading
+    acceptable:
+    - model_loading
+    est_seconds:
+      model_loading: 51.0
+    est_total_s: 58.7
+    intervals:
+    - type: static
+      signal: model_s
+      lo: 50.0
+      hi: 62.0
+    incident: true
+- id: model_loading-500MB-r3
+  fault: model_loading
+  group: model_loading
+  kind: single
+  severity: 500MB
+  repeat: 3
+  cold: true
+  knobs:
+    model_mb: 500
+  expect:
+    injected:
+    - model_loading
+    dominant: model_loading
+    acceptable:
+    - model_loading
+    est_seconds:
+      model_loading: 51.0
+    est_total_s: 58.7
+    intervals:
+    - type: static
+      signal: model_s
+      lo: 50.0
+      hi: 62.0
+    incident: true
+- id: app_init-100u-r1
+  fault: app_init
+  group: app_init
+  kind: single
+  severity: 100u
+  repeat: 1
+  cold: true
+  knobs:
+    cpu_work: 100
+  expect:
+    injected:
+    - app_init
+    dominant: app_init
+    acceptable:
+    - app_init
+    est_seconds:
+      app_init: 13.7
+    est_total_s: 21.4
+    intervals: []
+    incident: true
+- id: app_init-100u-r2
+  fault: app_init
+  group: app_init
+  kind: single
+  severity: 100u
+  repeat: 2
+  cold: true
+  knobs:
+    cpu_work: 100
+  expect:
+    injected:
+    - app_init
+    dominant: app_init
+    acceptable:
+    - app_init
+    est_seconds:
+      app_init: 13.7
+    est_total_s: 21.4
+    intervals: []
+    incident: true
+- id: app_init-100u-r3
+  fault: app_init
+  group: app_init
+  kind: single
+  severity: 100u
+  repeat: 3
+  cold: true
+  knobs:
+    cpu_work: 100
+  expect:
+    injected:
+    - app_init
+    dominant: app_init
+    acceptable:
+    - app_init
+    est_seconds:
+      app_init: 13.7
+    est_total_s: 21.4
+    intervals: []
+    incident: true
+- id: app_init-250u-r1
+  fault: app_init
+  group: app_init
+  kind: single
+  severity: 250u
+  repeat: 1
+  cold: true
+  knobs:
+    cpu_work: 250
+  expect:
+    injected:
+    - app_init
+    dominant: app_init
+    acceptable:
+    - app_init
+    est_seconds:
+      app_init: 34.2
+    est_total_s: 41.9
+    intervals: []
+    incident: true
+- id: app_init-250u-r2
+  fault: app_init
+  group: app_init
+  kind: single
+  severity: 250u
+  repeat: 2
+  cold: true
+  knobs:
+    cpu_work: 250
+  expect:
+    injected:
+    - app_init
+    dominant: app_init
+    acceptable:
+    - app_init
+    est_seconds:
+      app_init: 34.2
+    est_total_s: 41.9
+    intervals: []
+    incident: true
+- id: app_init-250u-r3
+  fault: app_init
+  group: app_init
+  kind: single
+  severity: 250u
+  repeat: 3
+  cold: true
+  knobs:
+    cpu_work: 250
+  expect:
+    injected:
+    - app_init
+    dominant: app_init
+    acceptable:
+    - app_init
+    est_seconds:
+      app_init: 34.2
+    est_total_s: 41.9
+    intervals: []
+    incident: true
+- id: app_init-400u-r1
+  fault: app_init
+  group: app_init
+  kind: single
+  severity: 400u
+  repeat: 1
+  cold: true
+  knobs:
+    cpu_work: 400
+  expect:
+    injected:
+    - app_init
+    dominant: app_init
+    acceptable:
+    - app_init
+    est_seconds:
+      app_init: 54.8
+    est_total_s: 62.5
+    intervals: []
+    incident: true
+- id: app_init-400u-r2
+  fault: app_init
+  group: app_init
+  kind: single
+  severity: 400u
+  repeat: 2
+  cold: true
+  knobs:
+    cpu_work: 400
+  expect:
+    injected:
+    - app_init
+    dominant: app_init
+    acceptable:
+    - app_init
+    est_seconds:
+      app_init: 54.8
+    est_total_s: 62.5
+    intervals: []
+    incident: true
+- id: app_init-400u-r3
+  fault: app_init
+  group: app_init
+  kind: single
+  severity: 400u
+  repeat: 3
+  cold: true
+  knobs:
+    cpu_work: 400
+  expect:
+    injected:
+    - app_init
+    dominant: app_init
+    acceptable:
+    - app_init
+    est_seconds:
+      app_init: 54.8
+    est_total_s: 62.5
+    intervals: []
+    incident: true
+- id: capacity-20s-r1
+  fault: capacity
+  group: capacity
+  kind: single
+  severity: 20s
+  repeat: 1
+  cold: true
+  knobs:
+    hog_release_s: 20
+  expect:
+    injected:
+    - capacity
+    dominant: capacity
+    acceptable:
+    - capacity
+    est_seconds:
+      capacity: 23.0
+    est_total_s: 30.7
+    intervals:
+    - type: static
+      signal: scheduling_s
+      lo: 20.0
+      hi: 28.0
+    incident: true
+- id: capacity-20s-r2
+  fault: capacity
+  group: capacity
+  kind: single
+  severity: 20s
+  repeat: 2
+  cold: true
+  knobs:
+    hog_release_s: 20
+  expect:
+    injected:
+    - capacity
+    dominant: capacity
+    acceptable:
+    - capacity
+    est_seconds:
+      capacity: 23.0
+    est_total_s: 30.7
+    intervals:
+    - type: static
+      signal: scheduling_s
+      lo: 20.0
+      hi: 28.0
+    incident: true
+- id: capacity-20s-r3
+  fault: capacity
+  group: capacity
+  kind: single
+  severity: 20s
+  repeat: 3
+  cold: true
+  knobs:
+    hog_release_s: 20
+  expect:
+    injected:
+    - capacity
+    dominant: capacity
+    acceptable:
+    - capacity
+    est_seconds:
+      capacity: 23.0
+    est_total_s: 30.7
+    intervals:
+    - type: static
+      signal: scheduling_s
+      lo: 20.0
+      hi: 28.0
+    incident: true
+- id: capacity-40s-r1
+  fault: capacity
+  group: capacity
+  kind: single
+  severity: 40s
+  repeat: 1
+  cold: true
+  knobs:
+    hog_release_s: 40
+  expect:
+    injected:
+    - capacity
+    dominant: capacity
+    acceptable:
+    - capacity
+    est_seconds:
+      capacity: 43.0
+    est_total_s: 50.7
+    intervals:
+    - type: static
+      signal: scheduling_s
+      lo: 40.0
+      hi: 48.0
+    incident: true
+- id: capacity-40s-r2
+  fault: capacity
+  group: capacity
+  kind: single
+  severity: 40s
+  repeat: 2
+  cold: true
+  knobs:
+    hog_release_s: 40
+  expect:
+    injected:
+    - capacity
+    dominant: capacity
+    acceptable:
+    - capacity
+    est_seconds:
+      capacity: 43.0
+    est_total_s: 50.7
+    intervals:
+    - type: static
+      signal: scheduling_s
+      lo: 40.0
+      hi: 48.0
+    incident: true
+- id: capacity-40s-r3
+  fault: capacity
+  group: capacity
+  kind: single
+  severity: 40s
+  repeat: 3
+  cold: true
+  knobs:
+    hog_release_s: 40
+  expect:
+    injected:
+    - capacity
+    dominant: capacity
+    acceptable:
+    - capacity
+    est_seconds:
+      capacity: 43.0
+    est_total_s: 50.7
+    intervals:
+    - type: static
+      signal: scheduling_s
+      lo: 40.0
+      hi: 48.0
+    incident: true
+- id: capacity-80s-r1
+  fault: capacity
+  group: capacity
+  kind: single
+  severity: 80s
+  repeat: 1
+  cold: true
+  knobs:
+    hog_release_s: 80
+  expect:
+    injected:
+    - capacity
+    dominant: capacity
+    acceptable:
+    - capacity
+    est_seconds:
+      capacity: 83.0
+    est_total_s: 90.7
+    intervals:
+    - type: static
+      signal: scheduling_s
+      lo: 80.0
+      hi: 88.0
+    incident: true
+- id: capacity-80s-r2
+  fault: capacity
+  group: capacity
+  kind: single
+  severity: 80s
+  repeat: 2
+  cold: true
+  knobs:
+    hog_release_s: 80
+  expect:
+    injected:
+    - capacity
+    dominant: capacity
+    acceptable:
+    - capacity
+    est_seconds:
+      capacity: 83.0
+    est_total_s: 90.7
+    intervals:
+    - type: static
+      signal: scheduling_s
+      lo: 80.0
+      hi: 88.0
+    incident: true
+- id: capacity-80s-r3
+  fault: capacity
+  group: capacity
+  kind: single
+  severity: 80s
+  repeat: 3
+  cold: true
+  knobs:
+    hog_release_s: 80
+  expect:
+    injected:
+    - capacity
+    dominant: capacity
+    acceptable:
+    - capacity
+    est_seconds:
+      capacity: 83.0
+    est_total_s: 90.7
+    intervals:
+    - type: static
+      signal: scheduling_s
+      lo: 80.0
+      hi: 88.0
+    incident: true
+- id: slow_readiness_probe-delay20-r1
+  fault: slow_readiness_probe
+  group: slow_readiness
+  kind: single
+  severity: delay20
+  repeat: 1
+  cold: true
+  knobs:
+    probe:
+      initial_delay: 20
+      period: 20
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 27.0
+    est_total_s: 34.7
+    intervals:
+    - type: readiness_bound
+      initial_delay: 20
+      period: 20
+    incident: true
+- id: slow_readiness_probe-delay20-r2
+  fault: slow_readiness_probe
+  group: slow_readiness
+  kind: single
+  severity: delay20
+  repeat: 2
+  cold: true
+  knobs:
+    probe:
+      initial_delay: 20
+      period: 20
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 27.0
+    est_total_s: 34.7
+    intervals:
+    - type: readiness_bound
+      initial_delay: 20
+      period: 20
+    incident: true
+- id: slow_readiness_probe-delay20-r3
+  fault: slow_readiness_probe
+  group: slow_readiness
+  kind: single
+  severity: delay20
+  repeat: 3
+  cold: true
+  knobs:
+    probe:
+      initial_delay: 20
+      period: 20
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 27.0
+    est_total_s: 34.7
+    intervals:
+    - type: readiness_bound
+      initial_delay: 20
+      period: 20
+    incident: true
+- id: slow_readiness_probe-delay45-r1
+  fault: slow_readiness_probe
+  group: slow_readiness
+  kind: single
+  severity: delay45
+  repeat: 1
+  cold: true
+  knobs:
+    probe:
+      initial_delay: 45
+      period: 20
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 52.0
+    est_total_s: 59.7
+    intervals:
+    - type: readiness_bound
+      initial_delay: 45
+      period: 20
+    incident: true
+- id: slow_readiness_probe-delay45-r2
+  fault: slow_readiness_probe
+  group: slow_readiness
+  kind: single
+  severity: delay45
+  repeat: 2
+  cold: true
+  knobs:
+    probe:
+      initial_delay: 45
+      period: 20
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 52.0
+    est_total_s: 59.7
+    intervals:
+    - type: readiness_bound
+      initial_delay: 45
+      period: 20
+    incident: true
+- id: slow_readiness_probe-delay45-r3
+  fault: slow_readiness_probe
+  group: slow_readiness
+  kind: single
+  severity: delay45
+  repeat: 3
+  cold: true
+  knobs:
+    probe:
+      initial_delay: 45
+      period: 20
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 52.0
+    est_total_s: 59.7
+    intervals:
+    - type: readiness_bound
+      initial_delay: 45
+      period: 20
+    incident: true
+- id: slow_readiness_probe-delay90-r1
+  fault: slow_readiness_probe
+  group: slow_readiness
+  kind: single
+  severity: delay90
+  repeat: 1
+  cold: true
+  knobs:
+    probe:
+      initial_delay: 90
+      period: 20
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 97.0
+    est_total_s: 104.7
+    intervals:
+    - type: readiness_bound
+      initial_delay: 90
+      period: 20
+    incident: true
+- id: slow_readiness_probe-delay90-r2
+  fault: slow_readiness_probe
+  group: slow_readiness
+  kind: single
+  severity: delay90
+  repeat: 2
+  cold: true
+  knobs:
+    probe:
+      initial_delay: 90
+      period: 20
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 97.0
+    est_total_s: 104.7
+    intervals:
+    - type: readiness_bound
+      initial_delay: 90
+      period: 20
+    incident: true
+- id: slow_readiness_probe-delay90-r3
+  fault: slow_readiness_probe
+  group: slow_readiness
+  kind: single
+  severity: delay90
+  repeat: 3
+  cold: true
+  knobs:
+    probe:
+      initial_delay: 90
+      period: 20
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 97.0
+    est_total_s: 104.7
+    intervals:
+    - type: readiness_bound
+      initial_delay: 90
+      period: 20
+    incident: true
+- id: slow_readiness_dependency-20s-r1
+  fault: slow_readiness_dependency
+  group: slow_readiness
+  kind: single
+  severity: 20s
+  repeat: 1
+  cold: true
+  knobs:
+    dependency_delay_s: 20
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 15.0
+    est_total_s: 22.7
+    intervals:
+    - type: dependency_end
+      lo: -1.5
+      hi: 4.0
+    incident: true
+- id: slow_readiness_dependency-20s-r2
+  fault: slow_readiness_dependency
+  group: slow_readiness
+  kind: single
+  severity: 20s
+  repeat: 2
+  cold: true
+  knobs:
+    dependency_delay_s: 20
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 15.0
+    est_total_s: 22.7
+    intervals:
+    - type: dependency_end
+      lo: -1.5
+      hi: 4.0
+    incident: true
+- id: slow_readiness_dependency-20s-r3
+  fault: slow_readiness_dependency
+  group: slow_readiness
+  kind: single
+  severity: 20s
+  repeat: 3
+  cold: true
+  knobs:
+    dependency_delay_s: 20
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 15.0
+    est_total_s: 22.7
+    intervals:
+    - type: dependency_end
+      lo: -1.5
+      hi: 4.0
+    incident: true
+- id: slow_readiness_dependency-40s-r1
+  fault: slow_readiness_dependency
+  group: slow_readiness
+  kind: single
+  severity: 40s
+  repeat: 1
+  cold: true
+  knobs:
+    dependency_delay_s: 40
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 35.0
+    est_total_s: 42.7
+    intervals:
+    - type: dependency_end
+      lo: -1.5
+      hi: 4.0
+    incident: true
+- id: slow_readiness_dependency-40s-r2
+  fault: slow_readiness_dependency
+  group: slow_readiness
+  kind: single
+  severity: 40s
+  repeat: 2
+  cold: true
+  knobs:
+    dependency_delay_s: 40
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 35.0
+    est_total_s: 42.7
+    intervals:
+    - type: dependency_end
+      lo: -1.5
+      hi: 4.0
+    incident: true
+- id: slow_readiness_dependency-40s-r3
+  fault: slow_readiness_dependency
+  group: slow_readiness
+  kind: single
+  severity: 40s
+  repeat: 3
+  cold: true
+  knobs:
+    dependency_delay_s: 40
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 35.0
+    est_total_s: 42.7
+    intervals:
+    - type: dependency_end
+      lo: -1.5
+      hi: 4.0
+    incident: true
+- id: slow_readiness_dependency-80s-r1
+  fault: slow_readiness_dependency
+  group: slow_readiness
+  kind: single
+  severity: 80s
+  repeat: 1
+  cold: true
+  knobs:
+    dependency_delay_s: 80
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 75.0
+    est_total_s: 82.7
+    intervals:
+    - type: dependency_end
+      lo: -1.5
+      hi: 4.0
+    incident: true
+- id: slow_readiness_dependency-80s-r2
+  fault: slow_readiness_dependency
+  group: slow_readiness
+  kind: single
+  severity: 80s
+  repeat: 2
+  cold: true
+  knobs:
+    dependency_delay_s: 80
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 75.0
+    est_total_s: 82.7
+    intervals:
+    - type: dependency_end
+      lo: -1.5
+      hi: 4.0
+    incident: true
+- id: slow_readiness_dependency-80s-r3
+  fault: slow_readiness_dependency
+  group: slow_readiness
+  kind: single
+  severity: 80s
+  repeat: 3
+  cold: true
+  knobs:
+    dependency_delay_s: 80
+  expect:
+    injected:
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      slow_readiness: 75.0
+    est_total_s: 82.7
+    intervals:
+    - type: dependency_end
+      lo: -1.5
+      hi: 4.0
+    incident: true
+- id: compound-fat-probe-r1
+  fault: compound-fat-probe
+  group: compound
+  kind: compound
+  severity: fat-probe
+  repeat: 1
+  cold: true
+  knobs:
+    image: fat
+    registry_mbps: 20
+    probe:
+      initial_delay: 90
+      period: 20
+  expect:
+    injected:
+    - large_image
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      large_image: 52.4
+      slow_readiness: 97.0
+    est_total_s: 152.4
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 32.4
+      hi: 82.26
+    - type: readiness_bound
+      initial_delay: 90
+      period: 20
+    incident: true
+- id: compound-fat-probe-r2
+  fault: compound-fat-probe
+  group: compound
+  kind: compound
+  severity: fat-probe
+  repeat: 2
+  cold: true
+  knobs:
+    image: fat
+    registry_mbps: 20
+    probe:
+      initial_delay: 90
+      period: 20
+  expect:
+    injected:
+    - large_image
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      large_image: 52.4
+      slow_readiness: 97.0
+    est_total_s: 152.4
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 32.4
+      hi: 82.26
+    - type: readiness_bound
+      initial_delay: 90
+      period: 20
+    incident: true
+- id: compound-fat-probe-r3
+  fault: compound-fat-probe
+  group: compound
+  kind: compound
+  severity: fat-probe
+  repeat: 3
+  cold: true
+  knobs:
+    image: fat
+    registry_mbps: 20
+    probe:
+      initial_delay: 90
+      period: 20
+  expect:
+    injected:
+    - large_image
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      large_image: 52.4
+      slow_readiness: 97.0
+    est_total_s: 152.4
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 32.4
+      hi: 82.26
+    - type: readiness_bound
+      initial_delay: 90
+      period: 20
+    incident: true
+- id: compound-model-cpu-r1
+  fault: compound-model-cpu
+  group: compound
+  kind: compound
+  severity: model-cpu
+  repeat: 1
+  cold: true
+  knobs:
+    model_mb: 250
+    cpu_work: 400
+  expect:
+    injected:
+    - app_init
+    - model_loading
+    dominant: app_init
+    acceptable:
+    - app_init
+    est_seconds:
+      model_loading: 26.0
+      app_init: 54.8
+    est_total_s: 88.5
+    intervals:
+    - type: static
+      signal: model_s
+      lo: 25.0
+      hi: 32.0
+    incident: true
+- id: compound-model-cpu-r2
+  fault: compound-model-cpu
+  group: compound
+  kind: compound
+  severity: model-cpu
+  repeat: 2
+  cold: true
+  knobs:
+    model_mb: 250
+    cpu_work: 400
+  expect:
+    injected:
+    - app_init
+    - model_loading
+    dominant: app_init
+    acceptable:
+    - app_init
+    est_seconds:
+      model_loading: 26.0
+      app_init: 54.8
+    est_total_s: 88.5
+    intervals:
+    - type: static
+      signal: model_s
+      lo: 25.0
+      hi: 32.0
+    incident: true
+- id: compound-model-cpu-r3
+  fault: compound-model-cpu
+  group: compound
+  kind: compound
+  severity: model-cpu
+  repeat: 3
+  cold: true
+  knobs:
+    model_mb: 250
+    cpu_work: 400
+  expect:
+    injected:
+    - app_init
+    - model_loading
+    dominant: app_init
+    acceptable:
+    - app_init
+    est_seconds:
+      model_loading: 26.0
+      app_init: 54.8
+    est_total_s: 88.5
+    intervals:
+    - type: static
+      signal: model_s
+      lo: 25.0
+      hi: 32.0
+    incident: true
+- id: compound-slowreg-model-r1
+  fault: compound-slowreg-model
+  group: compound
+  kind: compound
+  severity: slowreg-model
+  repeat: 1
+  cold: true
+  knobs:
+    image: slim
+    registry_mbps: 2
+    model_mb: 500
+  expect:
+    injected:
+    - model_loading
+    - slow_registry
+    dominant: model_loading
+    acceptable:
+    - model_loading
+    est_seconds:
+      slow_registry: 28.6
+      model_loading: 51.0
+    est_total_s: 82.6
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 26.65
+      hi: 40.65
+    - type: static
+      signal: throughput_bytes_per_s
+      lo: 1500000.0
+      hi: 2100000.0
+    - type: static
+      signal: model_s
+      lo: 50.0
+      hi: 62.0
+    incident: true
+- id: compound-slowreg-model-r2
+  fault: compound-slowreg-model
+  group: compound
+  kind: compound
+  severity: slowreg-model
+  repeat: 2
+  cold: true
+  knobs:
+    image: slim
+    registry_mbps: 2
+    model_mb: 500
+  expect:
+    injected:
+    - model_loading
+    - slow_registry
+    dominant: model_loading
+    acceptable:
+    - model_loading
+    est_seconds:
+      slow_registry: 28.6
+      model_loading: 51.0
+    est_total_s: 82.6
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 26.65
+      hi: 40.65
+    - type: static
+      signal: throughput_bytes_per_s
+      lo: 1500000.0
+      hi: 2100000.0
+    - type: static
+      signal: model_s
+      lo: 50.0
+      hi: 62.0
+    incident: true
+- id: compound-slowreg-model-r3
+  fault: compound-slowreg-model
+  group: compound
+  kind: compound
+  severity: slowreg-model
+  repeat: 3
+  cold: true
+  knobs:
+    image: slim
+    registry_mbps: 2
+    model_mb: 500
+  expect:
+    injected:
+    - model_loading
+    - slow_registry
+    dominant: model_loading
+    acceptable:
+    - model_loading
+    est_seconds:
+      slow_registry: 28.6
+      model_loading: 51.0
+    est_total_s: 82.6
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 26.65
+      hi: 40.65
+    - type: static
+      signal: throughput_bytes_per_s
+      lo: 1500000.0
+      hi: 2100000.0
+    - type: static
+      signal: model_s
+      lo: 50.0
+      hi: 62.0
+    incident: true
+- id: compound-fat-slowreg-r1
+  fault: compound-fat-slowreg
+  group: compound
+  kind: compound
+  severity: fat-slowreg
+  repeat: 1
+  cold: true
+  knobs:
+    image: fat
+    registry_mbps: 3
+  expect:
+    injected:
+    - large_image
+    - slow_registry
+    dominant: large_image
+    acceptable:
+    - large_image
+    - slow_registry
+    est_seconds:
+      large_image: 236.0
+      slow_registry: 236.0
+    est_total_s: 239.0
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 215.99
+      hi: 293.39
+    incident: true
+- id: compound-fat-slowreg-r2
+  fault: compound-fat-slowreg
+  group: compound
+  kind: compound
+  severity: fat-slowreg
+  repeat: 2
+  cold: true
+  knobs:
+    image: fat
+    registry_mbps: 3
+  expect:
+    injected:
+    - large_image
+    - slow_registry
+    dominant: large_image
+    acceptable:
+    - large_image
+    - slow_registry
+    est_seconds:
+      large_image: 236.0
+      slow_registry: 236.0
+    est_total_s: 239.0
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 215.99
+      hi: 293.39
+    incident: true
+- id: compound-fat-slowreg-r3
+  fault: compound-fat-slowreg
+  group: compound
+  kind: compound
+  severity: fat-slowreg
+  repeat: 3
+  cold: true
+  knobs:
+    image: fat
+    registry_mbps: 3
+  expect:
+    injected:
+    - large_image
+    - slow_registry
+    dominant: large_image
+    acceptable:
+    - large_image
+    - slow_registry
+    est_seconds:
+      large_image: 236.0
+      slow_registry: 236.0
+    est_total_s: 239.0
+    intervals:
+    - type: static
+      signal: pull_s
+      lo: 215.99
+      hi: 293.39
+    incident: true
+- id: compound-cpu-probe-r1
+  fault: compound-cpu-probe
+  group: compound
+  kind: compound
+  severity: cpu-probe
+  repeat: 1
+  cold: true
+  knobs:
+    cpu_work: 250
+    probe:
+      initial_delay: 90
+      period: 20
+  expect:
+    injected:
+    - app_init
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      app_init: 34.2
+      slow_readiness: 62.8
+    est_total_s: 104.7
+    intervals:
+    - type: readiness_bound
+      initial_delay: 90
+      period: 20
+    incident: true
+- id: compound-cpu-probe-r2
+  fault: compound-cpu-probe
+  group: compound
+  kind: compound
+  severity: cpu-probe
+  repeat: 2
+  cold: true
+  knobs:
+    cpu_work: 250
+    probe:
+      initial_delay: 90
+      period: 20
+  expect:
+    injected:
+    - app_init
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      app_init: 34.2
+      slow_readiness: 62.8
+    est_total_s: 104.7
+    intervals:
+    - type: readiness_bound
+      initial_delay: 90
+      period: 20
+    incident: true
+- id: compound-cpu-probe-r3
+  fault: compound-cpu-probe
+  group: compound
+  kind: compound
+  severity: cpu-probe
+  repeat: 3
+  cold: true
+  knobs:
+    cpu_work: 250
+    probe:
+      initial_delay: 90
+      period: 20
+  expect:
+    injected:
+    - app_init
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      app_init: 34.2
+      slow_readiness: 62.8
+    est_total_s: 104.7
+    intervals:
+    - type: readiness_bound
+      initial_delay: 90
+      period: 20
+    incident: true
+- id: compound-model-dependency-r1
+  fault: compound-model-dependency
+  group: compound
+  kind: compound
+  severity: model-dependency
+  repeat: 1
+  cold: true
+  knobs:
+    model_mb: 250
+    dependency_delay_s: 100
+  expect:
+    injected:
+    - model_loading
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      model_loading: 26.0
+      slow_readiness: 69.0
+    est_total_s: 102.7
+    intervals:
+    - type: static
+      signal: model_s
+      lo: 25.0
+      hi: 32.0
+    - type: dependency_end
+      lo: -1.5
+      hi: 4.0
+    incident: true
+- id: compound-model-dependency-r2
+  fault: compound-model-dependency
+  group: compound
+  kind: compound
+  severity: model-dependency
+  repeat: 2
+  cold: true
+  knobs:
+    model_mb: 250
+    dependency_delay_s: 100
+  expect:
+    injected:
+    - model_loading
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      model_loading: 26.0
+      slow_readiness: 69.0
+    est_total_s: 102.7
+    intervals:
+    - type: static
+      signal: model_s
+      lo: 25.0
+      hi: 32.0
+    - type: dependency_end
+      lo: -1.5
+      hi: 4.0
+    incident: true
+- id: compound-model-dependency-r3
+  fault: compound-model-dependency
+  group: compound
+  kind: compound
+  severity: model-dependency
+  repeat: 3
+  cold: true
+  knobs:
+    model_mb: 250
+    dependency_delay_s: 100
+  expect:
+    injected:
+    - model_loading
+    - slow_readiness
+    dominant: slow_readiness
+    acceptable:
+    - slow_readiness
+    est_seconds:
+      model_loading: 26.0
+      slow_readiness: 69.0
+    est_total_s: 102.7
+    intervals:
+    - type: static
+      signal: model_s
+      lo: 25.0
+      hi: 32.0
+    - type: dependency_end
+      lo: -1.5
+      hi: 4.0
+    incident: true
+- id: control-healthy-cold-r1
+  fault: control-healthy-cold
+  group: control
+  kind: control
+  severity: healthy-cold
+  repeat: 1
+  cold: true
+  knobs: {}
+  expect:
+    injected: []
+    dominant: null
+    acceptable: []
+    est_seconds: {}
+    est_total_s: 7.7
+    intervals: []
+    incident: false
+- id: control-healthy-cold-r2
+  fault: control-healthy-cold
+  group: control
+  kind: control
+  severity: healthy-cold
+  repeat: 2
+  cold: true
+  knobs: {}
+  expect:
+    injected: []
+    dominant: null
+    acceptable: []
+    est_seconds: {}
+    est_total_s: 7.7
+    intervals: []
+    incident: false
+- id: control-healthy-cold-r3
+  fault: control-healthy-cold
+  group: control
+  kind: control
+  severity: healthy-cold
+  repeat: 3
+  cold: true
+  knobs: {}
+  expect:
+    injected: []
+    dominant: null
+    acceptable: []
+    est_seconds: {}
+    est_total_s: 7.7
+    intervals: []
+    incident: false
+- id: control-healthy-warm-r1
+  fault: control-healthy-warm
+  group: control
+  kind: control
+  severity: healthy-warm
+  repeat: 1
+  cold: false
+  knobs: {}
+  expect:
+    injected: []
+    dominant: null
+    acceptable: []
+    est_seconds: {}
+    est_total_s: 3.0
+    intervals: []
+    incident: false
+- id: control-healthy-warm-r2
+  fault: control-healthy-warm
+  group: control
+  kind: control
+  severity: healthy-warm
+  repeat: 2
+  cold: false
+  knobs: {}
+  expect:
+    injected: []
+    dominant: null
+    acceptable: []
+    est_seconds: {}
+    est_total_s: 3.0
+    intervals: []
+    incident: false
+- id: control-healthy-warm-r3
+  fault: control-healthy-warm
+  group: control
+  kind: control
+  severity: healthy-warm
+  repeat: 3
+  cold: false
+  knobs: {}
+  expect:
+    injected: []
+    dominant: null
+    acceptable: []
+    est_seconds: {}
+    est_total_s: 3.0
+    intervals: []
+    incident: false
+- id: control-fat-warm-r1
+  fault: control-fat-warm
+  group: control
+  kind: control
+  severity: fat-warm
+  repeat: 1
+  cold: false
+  knobs:
+    image: fat
+  expect:
+    injected: []
+    dominant: null
+    acceptable: []
+    est_seconds: {}
+    est_total_s: 3.0
+    intervals: []
+    incident: false
+- id: control-fat-warm-r2
+  fault: control-fat-warm
+  group: control
+  kind: control
+  severity: fat-warm
+  repeat: 2
+  cold: false
+  knobs:
+    image: fat
+  expect:
+    injected: []
+    dominant: null
+    acceptable: []
+    est_seconds: {}
+    est_total_s: 3.0
+    intervals: []
+    incident: false
+- id: control-fat-warm-r3
+  fault: control-fat-warm
+  group: control
+  kind: control
+  severity: fat-warm
+  repeat: 3
+  cold: false
+  knobs:
+    image: fat
+  expect:
+    injected: []
+    dominant: null
+    acceptable: []
+    est_seconds: {}
+    est_total_s: 3.0
+    intervals: []
+    incident: false

@@ -60,13 +60,15 @@ class ExperimentService:
         with self._lock:
             return self._running is not None
 
-    def start(self, plan_id: int) -> int:
+    def start(self, plan_id: int, trials_per_arm: int | None = None) -> int:
         with self._lock:
             if self._running is not None:
                 raise ExperimentInProgress(f"experiment {self._running} is running; one at a time")
             with session_scope() as session:
                 plan = session.get(ActionPlan, plan_id)
-                experiment = Experiment(plan_id=plan_id, trials_per_arm=ACTIONS[plan.action].trials_per_arm)
+                experiment = Experiment(
+                    plan_id=plan_id, trials_per_arm=trials_per_arm or ACTIONS[plan.action].trials_per_arm
+                )
                 session.add(experiment)
                 session.flush()
                 experiment_id = experiment.id

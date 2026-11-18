@@ -1,0 +1,281 @@
+[
+ {
+  "verb": "get",
+  "resource": "pods",
+  "namespace": "demo",
+  "expected": true,
+  "allowed": true,
+  "ok": true,
+  "why": "read pods in the monitored namespace"
+ },
+ {
+  "verb": "list",
+  "resource": "pods",
+  "namespace": "*",
+  "expected": true,
+  "allowed": true,
+  "ok": true,
+  "why": "read pods cluster-wide"
+ },
+ {
+  "verb": "watch",
+  "resource": "events",
+  "namespace": "demo",
+  "expected": true,
+  "allowed": true,
+  "ok": true,
+  "why": "watch events"
+ },
+ {
+  "verb": "list",
+  "resource": "nodes",
+  "namespace": "*",
+  "expected": true,
+  "allowed": true,
+  "ok": true,
+  "why": "read nodes (capacity)"
+ },
+ {
+  "verb": "get",
+  "resource": "pods/log",
+  "namespace": "demo",
+  "expected": true,
+  "allowed": true,
+  "ok": true,
+  "why": "read logs in demo"
+ },
+ {
+  "verb": "get",
+  "resource": "pods/log",
+  "namespace": "kubesage-sandbox",
+  "expected": true,
+  "allowed": true,
+  "ok": true,
+  "why": "read logs in the sandbox"
+ },
+ {
+  "verb": "get",
+  "resource": "pods/log",
+  "namespace": "kubesage-infra",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "no logs outside the demo and sandbox namespaces"
+ },
+ {
+  "verb": "get",
+  "resource": "secrets",
+  "namespace": "demo",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "never read Secrets"
+ },
+ {
+  "verb": "list",
+  "resource": "secrets",
+  "namespace": "*",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "never list Secrets cluster-wide"
+ },
+ {
+  "verb": "create",
+  "resource": "deployments",
+  "namespace": "demo",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "no writes to the monitored namespace"
+ },
+ {
+  "verb": "delete",
+  "resource": "deployments",
+  "namespace": "demo",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "no deletes in the monitored namespace"
+ },
+ {
+  "verb": "patch",
+  "resource": "deployments",
+  "namespace": "demo",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "no patches in the monitored namespace"
+ },
+ {
+  "verb": "create",
+  "resource": "pods",
+  "namespace": "demo",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "no pod creation in demo"
+ },
+ {
+  "verb": "delete",
+  "resource": "pods",
+  "namespace": "demo",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "no pod deletion in demo"
+ },
+ {
+  "verb": "create",
+  "resource": "deployments",
+  "namespace": "kubesage-sandbox",
+  "expected": true,
+  "allowed": true,
+  "ok": true,
+  "why": "sandbox writes are allowed"
+ },
+ {
+  "verb": "delete",
+  "resource": "deployments",
+  "namespace": "kubesage-sandbox",
+  "expected": true,
+  "allowed": true,
+  "ok": true,
+  "why": "sandbox cleanup"
+ },
+ {
+  "verb": "create",
+  "resource": "daemonsets",
+  "namespace": "kubesage-sandbox",
+  "expected": true,
+  "allowed": true,
+  "ok": true,
+  "why": "pre-pull DaemonSet"
+ },
+ {
+  "verb": "create",
+  "resource": "jobs",
+  "namespace": "kubesage-sandbox",
+  "expected": true,
+  "allowed": true,
+  "ok": true,
+  "why": "prefetch Job"
+ },
+ {
+  "verb": "create",
+  "resource": "persistentvolumeclaims",
+  "namespace": "kubesage-sandbox",
+  "expected": true,
+  "allowed": true,
+  "ok": true,
+  "why": "model cache PVC"
+ },
+ {
+  "verb": "create",
+  "resource": "persistentvolumeclaims",
+  "namespace": "demo",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "no PVCs outside the sandbox"
+ },
+ {
+  "verb": "create",
+  "resource": "configmaps",
+  "namespace": "kubesage-sandbox",
+  "expected": true,
+  "allowed": true,
+  "ok": true,
+  "why": "copy ConfigMaps into the sandbox"
+ },
+ {
+  "verb": "update",
+  "resource": "configmaps",
+  "namespace": "demo",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "no ConfigMap edits in demo"
+ },
+ {
+  "verb": "get",
+  "resource": "pods/proxy",
+  "namespace": "kubesage-sandbox",
+  "expected": true,
+  "allowed": true,
+  "ok": true,
+  "why": "smoke request through the API-server proxy"
+ },
+ {
+  "verb": "get",
+  "resource": "pods/proxy",
+  "namespace": "demo",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "no pod proxy outside the sandbox"
+ },
+ {
+  "verb": "create",
+  "resource": "pods/exec",
+  "namespace": "kubesage-sandbox",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "no exec into pods"
+ },
+ {
+  "verb": "create",
+  "resource": "namespaces",
+  "namespace": "*",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "cannot create namespaces"
+ },
+ {
+  "verb": "delete",
+  "resource": "namespaces",
+  "namespace": "*",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "cannot delete namespaces"
+ },
+ {
+  "verb": "patch",
+  "resource": "nodes",
+  "namespace": "*",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "cannot modify nodes"
+ },
+ {
+  "verb": "create",
+  "resource": "clusterrolebindings",
+  "namespace": "*",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "no privilege escalation"
+ },
+ {
+  "verb": "create",
+  "resource": "rolebindings",
+  "namespace": "kubesage-sandbox",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "no RBAC edits even in the sandbox"
+ },
+ {
+  "verb": "impersonate",
+  "resource": "users",
+  "namespace": "*",
+  "expected": false,
+  "allowed": false,
+  "ok": true,
+  "why": "cannot impersonate other users"
+ }
+]

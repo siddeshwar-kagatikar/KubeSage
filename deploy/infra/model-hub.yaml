@@ -44,7 +44,10 @@ spec:
           command:
             - sh
             - -c
-            - head -c 262144000 /dev/urandom > /data/weights.bin && ls -l /data
+            # weights.bin (250 MB) is the default scenario file; the others are severity levels for the evaluation.
+            - head -c 104857600 /dev/urandom > /data/weights-100m.bin &&
+              head -c 262144000 /dev/urandom > /data/weights.bin &&
+              head -c 524288000 /dev/urandom > /data/weights-500m.bin && ls -l /data
           volumeMounts:
             - name: data
               mountPath: /data

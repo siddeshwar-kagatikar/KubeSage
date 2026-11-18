@@ -216,8 +216,8 @@ export interface ActionPlanOut {
   action_note: string
   params: Record<string, unknown>
   rationale: string
-  /** 'llm' = the agent chose the action; 'fallback' = deterministic default. */
-  source: 'llm' | 'fallback'
+  /** 'llm' = the agent chose the action; 'fallback' = deterministic default; 'forced' = evaluation control. */
+  source: 'llm' | 'fallback' | 'forced'
   llm_error: string | null
   risk: string
   status: PlanStatus

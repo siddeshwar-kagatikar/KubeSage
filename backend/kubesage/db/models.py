@@ -120,6 +120,7 @@ class DiagnosisRun(Base):
     ruled_out: Mapped[list] = mapped_column(JsonType, default=list)
     recommendations: Mapped[list] = mapped_column(JsonType, default=list)
     validation_errors: Mapped[list] = mapped_column(JsonType, default=list)
+    attempts: Mapped[list] = mapped_column(JsonType, default=list)  # every synthesis draft + its validation result
     tool_calls: Mapped[int] = mapped_column(Integer, default=0)
     error: Mapped[str | None] = mapped_column(Text)
     started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
