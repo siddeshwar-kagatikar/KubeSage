@@ -1,0 +1,68 @@
+{
+ "incident_id": 56,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "large_image",
+    "summary": "The pod startup was dominated by a 48.954-second image pull, which accounted for over 94% of the total 52.0-second startup time. The image size of 648 MB is the primary cause of the delay, as application initialisation and readiness checks were completed efficiently.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The image pull phase took 48.954 seconds to download a 648 MB image.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull accounted for 94% of the total startup duration.",
+      "evidence_ids": [
+       "E2"
+      ]
+     },
+     {
+      "statement": "Application initialisation and readiness phases were fast, taking 1.089 seconds and 0.691 seconds respectively.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "app_init",
+      "reason": "Application initialisation was completed in only 1.089 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "Scheduling took 0.0 seconds, indicating no resource or scheduling constraints.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe completed in 0.691 seconds, which is well within normal limits.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Optimise the container image size.",
+      "rationale": "The 648 MB image size is the primary bottleneck for cold starts, causing a 48.954-second delay.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

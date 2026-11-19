@@ -1,0 +1,47 @@
+{
+ "incident_id": 37,
+ "model": "gemini-3.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "app_init",
+    "summary": "The pod eval-svc-858548b554-c4xcl took 84.0 s to become Ready, exceeding the 10.0 s SLO threshold. The delay was primarily caused by slow application initialisation, which took 79.189 s in total, driven by 50.678 s spent in CPU-bound work (init.compute) under a low CPU limit of 250m. An additional 25.057 s was spent downloading model weights.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total pod startup time was 84.0 s against an SLO threshold of 10.0 s.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "Application initialisation spanned 79.189 s, with the longest step init.compute taking 50.678 s while configured with a 250m CPU limit.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "Model downloading (model.download) added 25.057 s to the overall startup time.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [],
+    "recommendations": [
+     {
+      "action": "Increase the container CPU limits or requests to allow faster completion of startup compute operations.",
+      "rationale": "The init.compute phase spent 50.678 s performing compute tasks under a low CPU limit of 250m.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

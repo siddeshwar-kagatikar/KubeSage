@@ -1,0 +1,103 @@
+{
+ "incident_id": 56,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "large_image",
+    "summary": "The pod startup exceeded its SLO of 10.0 s, taking 52.0 s to become Ready. The primary cause was a cold image pull of a large 648 MB image, which took 48.954 s. This phase accounted for 94.1% of the total startup time.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total startup time for the pod was 52.0 s, exceeding the SLO threshold of 10.0 s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull phase was the longest, lasting 48.954 s, which represents 94.1% of the total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image being pulled is large, with a size of 647991705 bytes (approximately 648 MB).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull occurred during a cold start.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The image pull throughput was 13236747 bytes/s (approximately 13.2 MB/s), which is a normal rate for a large image.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput of 13.2 MB/s is considered normal and does not indicate a slow registry or network issue.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "There was no time spent on model loading, as indicated by a model_s duration of 0.0 s.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "Application initialisation took only 1.089 s, which is a small fraction of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The pod did not experience any scheduling delays, with a scheduling duration of 0.0 s and no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe phase took only 0.691 s, and there were no probe failures after the application was ready.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Optimise the image size",
+      "rationale": "Reducing the image size will decrease the time required for image pulls, especially during cold starts, thereby improving startup performance.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "action": "Implement image caching on nodes",
+      "rationale": "Caching frequently used images on worker nodes can significantly reduce image pull times for subsequent pod starts on the same node.",
+      "evidence_ids": []
+     }
+    ]
+   }
+  }
+ ]
+}

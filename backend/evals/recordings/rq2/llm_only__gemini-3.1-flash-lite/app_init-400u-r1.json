@@ -1,0 +1,78 @@
+{
+ "incident_id": 40,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "app_init",
+    "summary": "The pod startup was delayed primarily by a long application initialisation phase, which accounted for 54.3 seconds of the total 61.0-second startup time. Specifically, the 'init.compute' task consumed 51.0 seconds of this duration. The application is constrained by a low CPU limit of 250m, which likely throttles the compute-intensive initialisation process.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The application initialisation phase took 54.281 seconds, significantly exceeding the total SLO threshold of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'init.compute' span was the primary bottleneck, lasting 51.003 seconds and processing 400 work units.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The container is restricted by a CPU limit of 250m, which is likely causing throttling during the compute-heavy initialisation phase.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was only 5.977 seconds for a 53.3 MB image, indicating normal pull performance.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "Scheduling duration was 0.0 seconds, indicating the pod was scheduled immediately without waiting for node resources.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe duration was 0.0 seconds, meaning the application was marked ready immediately after the app_init phase completed.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Increase the CPU limit for the pod.",
+      "rationale": "The 'init.compute' phase is CPU-bound and currently constrained by a 250m limit, which is causing the extended startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "action": "Optimise the 'init.compute' routine.",
+      "rationale": "The routine takes 51.0 seconds to process 400 work units, which is the primary contributor to the SLO breach.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,77 @@
+{
+ "incident_id": 103,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "app_init",
+    "summary": "The pod startup was delayed primarily by the application initialisation phase, which took 15.5 seconds. The compute-intensive init.compute task accounted for 12.7 seconds of this duration, likely exacerbated by the restrictive 250m CPU limit.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The app_init phase lasted 15.507 seconds, which is the primary contributor to the 21.0 second total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The init.compute span was the slowest component of the initialisation, taking 12.687 seconds to process 100 work units.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The container is restricted by a 250m CPU limit, which likely causes throttling during the compute-heavy initialisation phase.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was only 4.074 seconds for 53MB, indicating normal pull performance.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase duration was 0.0 seconds, indicating the pod was scheduled immediately.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The application was marked ready immediately after the initialisation phase completed.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Increase the CPU limit for the container.",
+      "rationale": "The current 250m limit is likely causing CPU throttling during the compute-intensive init.compute phase.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "action": "Profile and optimise the init.compute function.",
+      "rationale": "This function is the bottleneck of the startup process, consuming 12.7 seconds of the total time.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

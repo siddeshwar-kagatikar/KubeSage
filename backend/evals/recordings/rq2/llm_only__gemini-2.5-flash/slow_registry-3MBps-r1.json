@@ -1,0 +1,83 @@
+{
+ "incident_id": 69,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_registry",
+    "summary": "The pod startup exceeded its 10.0 s SLO, taking 21.0 s to become Ready. The primary cause was a slow image pull, which accounted for 19.391 s of the total startup time. The image, weighing 53.3 MB, was pulled at a rate of only 2.75 MB/s, which is below the expected throughput.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod startup took 21.0 s, exceeding the SLO threshold of 10.0 s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull phase was the longest contributor to startup time, lasting 19.391 s.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The image pull throughput was 2750189 bytes/s (approximately 2.75 MB/s), which is identified as slow compared to a 5 MB/s threshold.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image size was 53328919 bytes (approximately 53.3 MB).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "While the image is 53.3 MB, the primary issue is the low pull throughput of 2.75 MB/s, not the absolute size itself being unmanageable at a normal rate. If the throughput were normal (e.g., 5 MB/s), the pull would take approximately 10.6 s, still breaching the 10 s SLO, but the current throughput is significantly slower.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase had a duration of 0.0 s, and there were no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "There were no 'model.*' spans observed in the startup timeline.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "The application initialisation (`app_init`) took 0.952 s, which is a small fraction of the total startup time and well within the SLO.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe duration was 0.0 s, and there were no probe failures after the application reported ready.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": []
+   }
+  }
+ ]
+}

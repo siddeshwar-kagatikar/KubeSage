@@ -1,0 +1,56 @@
+{
+ "incident_id": 74,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod startup was delayed primarily by the application downloading model weights during initialisation. The model download process took 25.6 seconds, accounting for the majority of the 33.0-second total startup time. This exceeded the 10.0-second SLO threshold.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The model download phase took 25.648 seconds to complete, which is the dominant factor in the 33.0-second total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The model download involved fetching 262,144,000 bytes from the model hub, and the cache_hit attribute was false, indicating a full download was required.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase duration was 0.0 seconds, indicating no delay in pod placement.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.921 seconds for 53,328,919 bytes, which is not the primary contributor to the 33.0-second startup delay.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Implement model caching or pre-warming",
+      "rationale": "The current startup is blocked by a 25.6-second download of model weights because the cache_hit status was false.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

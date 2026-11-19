@@ -1,0 +1,56 @@
+{
+ "incident_id": 48,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod startup exceeded the 10.0 s SLO, taking 16.0 s in total. The primary delay was caused by the application downloading 100 MB of model weights during initialisation, which accounted for 10.15 s of the startup time.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The model.download span took 10.152 s to complete, which is the majority of the 11.25 s app_init phase.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The model download involved fetching 104,857,600 bytes from the model hub, with cache_hit set to false.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.272 s for 53,328,919 bytes, which is a reasonable performance for a cold pull.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "Scheduling and pod sandbox creation took 0.0 s, indicating no resource contention or scheduling delays.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Implement local caching or pre-warming for model weights.",
+      "rationale": "The model download is a cold start dependency that is currently fetching 100 MB over the network every time the pod starts.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,72 @@
+{
+ "incident_id": 104,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_readiness",
+    "summary": "The pod startup was delayed primarily by an overly conservative readiness probe configuration. The application completed its initialisation in under one second, but Kubernetes waited for the 90-second initial delay before marking the pod as ready.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The readiness probe has an initialDelaySeconds of 90, which accounts for the majority of the 95.95 s readiness phase duration.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The application reported startup completion in 0.86 s, well before the readiness probe began successfully polling.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The image pull took 50.72 s for a 648 MB image, which contributed to the total startup time but was not the primary cause of the SLO breach.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "While the image pull took 50.72 s, the readiness probe delay of 95.95 s was the dominant factor in the 149.0 s total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "Application initialisation was efficient, completing in only 0.86 s.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Reduce initialDelaySeconds in the readiness probe configuration.",
+      "rationale": "The current 90 s delay is significantly longer than the actual application startup time of 0.86 s, causing unnecessary waiting.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "action": "Implement a startupProbe.",
+      "rationale": "A startup probe would allow the application to finish its initialisation quickly and then transition to the readiness probe, reducing the total time to Ready.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

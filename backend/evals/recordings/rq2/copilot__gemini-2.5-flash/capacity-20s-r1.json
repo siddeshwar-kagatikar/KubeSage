@@ -1,0 +1,134 @@
+{
+ "incident_id": 88,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_node_capacity",
+     "args": {},
+     "id": "bfef0a81-7ce8-4550-8d95-48001bd4b8b7"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_pod_events",
+     "args": {
+      "reason": "FailedScheduling"
+     },
+     "id": "2b72cdf8-8dbf-4dc4-a0d9-a5938353d072"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "capacity"
+     },
+     "id": "5129c047-5d7b-46bb-b75b-cba9d4c9368f"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The root cause of the slow startup is `capacity`. The pod waited 20.0 seconds to be scheduled due to insufficient CPU on available nodes, as indicated by a `FailedScheduling` event.\", \"extras\": {\"signature\": \"CuAIAWkUfROoplwVdF5Yx2wN0sdZ9z1fJs9MIvQTeZwU5Jg/pZnSTZOmgSQhe5to9PO4Q74fQeJAimL0agBqozDJtKXJCOhNUErgq/enVJae+PJooE0iKgV+29Eben00Gac1CN+L2/Xu3IHR0eZfFRD/wQLHNTy0q6Ehj7iVvjwRaEHUv2u75SvCzzl2Eg3VMvVscAjWwVxNOZQD8U6bOAd8dEY9z4SwUp84ouVkee5QPweXu/HbrnPEkJFhDb1g/Y/f005ozkVr+vXhcZKIxHY02vkBstclWvIhvqpScWl48zWMZ96Bfh5kScZG82gGe/Xo5Q+GSWNRpOIqpMrPYDR3nGNKOfUXg16CeK7hZkcdR949X3GROnSEANlWXY+6NQV2OgTfD8H2p+MfpaPnisBaMWYW0vfYmSAjbQObtK8uflEyZUEsGOyAQJRI3wle+81lTb7qGUqbr5KRVEPWzNkKaAQtSQCInNq9HM+afGSC3igi5pQXDBJm1S6La6HxvcmLJXiBcqyWotPPIXlDY1/QroJc9c+gFx2kY/mIPDyXMlnwMWpyYYuQTXMHzrceP0HW7esoQEs2Z7pbcp3yGf3vYC02gsZM9Zi0NUQgAPj8RFzLnfq3TyTHGMYHvI8PWvz9hexaCdYp6itlLvBFgG3xsoBeUlyHVQ6Q9pxOpviONtrTtkC8UZVTjIw+T3x+/ABntwATOP5naT14AXXI1SO3pa5n7oYNDuGYMWDqg2VO/2gplfdcdv9y0fFXxLnHkqaN01QdYHpH1nJAbt1Q6yWrZvKOIbCmhBjyUzAT7jy0QSttuaOkczL6dklfVHGUGWUMkC2FPsfANutUx6v7Dxz3vPZCHACRIdvYwb40E+yg2Lv1SE+qjXXATsRUNEw1P5cdyZkeSO07WOgbm9tu7YDmZrTXUb7qPMxJot01OP8apSnpisUb3bYLJ/tzBcN7bkJyAsu0jkDpeZwRlUDwqxtKH3bI/VqdR7y2STIZDuq3JagCAIFXNYWQa3McbyRdN70IzNCJlhk7xppqd+t7trsHaIK1dSIO1S26eDTwCbwEYPqbEltgFn3Xu6NT/x0I5ZzrNosWWVj35VUzUN0FMp4Ev3aS4ktOs4fVGC3Fh6eJooT5TLHyEMMFmtOTb5q5Sy0+IpEv/+nAr18wTsnFqGYkqe6DAWa1Z53M9RcGTKLGysw30s9VBrBV4LZrg7KDy+4X5QRMyD/M28RfdL3MCUIZvKfwDJbwe9h5Wbd94DvCthLeHywMbrAzhjVKkvkWjfciS3nTQ5uG8phM6ANHMYuSqR21WMBEEbi3xxtP1As/ly5OnVxs2Dsd4dg9naSU5YcqdjEpMrP9nxnwYMYzJBzmDJdpGd3AExsWnZbsOtFtpp5dS/qNm3kofRCedvcf95cBpXwINNzxAl6RrkGvNKdNWfYgRxLyoWBmUqB1NB+FCS2NKVRmBN4IDtYe8fdA1iC8WyjLmegaA0qrtHc0CWnZ5g==\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "capacity",
+    "summary": "The pod startup took 26.0 seconds, exceeding the 10.0-second SLO. The primary delay was 20.0 seconds spent in the scheduling phase. This was due to insufficient CPU on available nodes, as indicated by a FailedScheduling event.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod startup took 26.0 seconds, which is above the 10.0-second SLO.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'scheduling' phase accounted for 20.0 seconds of the total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "A 'FailedScheduling' event occurred once, with a message indicating 'Insufficient cpu' on one of the nodes.",
+      "evidence_ids": [
+       "E2",
+       "E4"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.152 seconds for 53328919 bytes, which is not the primary cause of the 20.0-second scheduling delay.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput was 12844152 bytes/s, which is not indicative of a slow registry, and the pull duration was not the main bottleneck.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "The 'model_s' signal indicates 0.0 seconds spent on model loading.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "The 'app_init' phase took 0.848 seconds, which is a small fraction of the total startup time and not the primary cause of the SLO breach.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The 'readiness' phase took 0.0 seconds, and there were no probe failures after the application was ready.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Right-size requests from observed usage.",
+      "rationale": "The pod failed to schedule due to insufficient CPU, suggesting that current resource requests might be too high for available capacity or that the node's allocatable CPU is being fully utilised.",
+      "evidence_ids": [
+       "E4",
+       "E5"
+      ]
+     },
+     {
+      "action": "Relax placement constraints.",
+      "rationale": "The FailedScheduling event also mentioned 'node(s) didn't match Pod's node affinity/selector' and 'had untolerated taint(s)', indicating that placement constraints might be limiting the pool of available nodes.",
+      "evidence_ids": [
+       "E4",
+       "E5"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

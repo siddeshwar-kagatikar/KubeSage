@@ -1,0 +1,79 @@
+{
+ "incident_id": 93,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod startup exceeded the 10.0-second SLO, taking 61.0 seconds to become Ready. The primary delay was due to model loading, specifically the download of a 524 MB model, which took 53.369 seconds. This activity alone accounted for 87.5% of the total startup time.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod took 61.0 seconds to become Ready, exceeding the 10.0-second SLO.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The 'app_init' phase lasted 54.683 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "Within 'app_init', the 'model.download' span took 53.369 seconds to download 524288000 bytes (524 MB) from 'http://model-hub.kubesage-infra.svc.cluster.local/weights-500m.bin'.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The 'model.load' span took 0.462 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The combined model download and load time was 53.831 seconds.",
+      "evidence_ids": [
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull took 4.184 seconds for 53328919 bytes, which is a small fraction of the total startup time and indicates a reasonable pull throughput of 12745918 bytes/s.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput was 12745918 bytes/s, which does not indicate a slow registry.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase took only 1.0 second and there were no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe took 0.647 seconds, which is a minor part of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": []
+   }
+  }
+ ]
+}

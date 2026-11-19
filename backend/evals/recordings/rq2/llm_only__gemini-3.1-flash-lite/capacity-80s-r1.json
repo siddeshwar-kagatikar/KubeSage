@@ -1,0 +1,69 @@
+{
+ "incident_id": 53,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "capacity",
+    "summary": "The pod experienced a significant delay of 80.0 seconds during the scheduling phase, which accounts for the majority of the 86.0-second total startup time. This delay was caused by resource constraints, as evidenced by a FailedScheduling event. Once scheduled, the image pull and application initialisation completed efficiently.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod spent 80.0 seconds in the scheduling phase, which is the primary contributor to the total 86.0-second startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "There was 1 FailedScheduling event recorded, indicating that the pod could not be scheduled immediately due to resource capacity issues.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull took 4.509 seconds for a 53.3 MB image, and application initialisation took 0.937 seconds, both of which are within normal operational ranges.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was only 4.509 seconds for a 53.3 MB image, indicating efficient pull performance.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "Application initialisation was fast, taking only 0.937 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Review cluster resource requests and limits.",
+      "rationale": "The pod experienced a FailedScheduling event, suggesting that the node cluster lacks sufficient available resources to accommodate the pod's requirements immediately.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "action": "Consider horizontal pod autoscaling or adding more nodes to the cluster.",
+      "rationale": "Increasing cluster capacity will reduce the likelihood of scheduling delays caused by resource contention.",
+      "evidence_ids": [
+       "E2"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

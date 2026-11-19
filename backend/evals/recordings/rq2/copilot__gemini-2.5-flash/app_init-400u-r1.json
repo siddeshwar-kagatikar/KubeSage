@@ -1,0 +1,136 @@
+{
+ "incident_id": 40,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_throttling_ratio"
+     },
+     "id": "68260d4a-a03e-4c35-81da-23a7d6a3151f"
+    },
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_usage_cores"
+     },
+     "id": "fedb9a0b-98a3-418a-bd7b-e900b6121e42"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "app_init"
+     },
+     "id": "6d0c79b6-61a4-466b-ba9d-ad867d521880"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The pod's slow startup is caused by slow application initialization (`app_init`), specifically the `init.compute` phase, which took 51.0 seconds. This phase is severely CPU-throttled, with a `cpu_throttling_ratio` of nearly 1.0 (mean 0.9989). The container's `cpu_usage_cores` reached its limit of 250m (0.25 cores), indicating that the application requires more CPU during startup than it is allocated. The recommended remediation is to adjust CPU resources by raising the CPU limit/request.\", \"extras\": {\"signature\": \"CsUDAWkUfRPCtOM3nCFI8A1lbczoFb8PK0q6ILrP5Wh9ETJUgmx6GuHEzKapaA1MJ168JbIf5MxczWqnY7A4urbw0/6C5Nw8ozm/Y9Gg6/lLIeP0e0RSEXK55PTFplBaW6X8lIbvWQWeR1pl4/Px7jV9p4uBrWCBZ/xW6MHBv8ThE1SjywZdfGL6yjtKcG2YXvOCcmB7azFHNpTQQa++gJYUglplcRSfyMAf3gtecJlBSX5x1kIFZlJplWhddNlDh7KnWaYVg8vtftrY5+nqsAXfAlRLVDK8bevnCg4dqlP3kVLtlOBKlIYMJeuhTRpGWpBMgfuKOdLgH/8xMA4QLNq7APPReeQQUb8305w++PA2a8y5D7XPL8BlvxZ76EX+2nxMTPcbngoX9jJWtOMwS2NpWN8kzMmljE/BOVI6GzQb78oT9jyyR4jyM6kKouEgt+akuq+27NiMMhjkNwbrtAlIi6w55/QTh8jFrsZVnCw5fXD2ymZZVa+BXo9FlNPgxysPbqjlo5gxyNfCa5IHFVVAAc7rytLw2T+cUjtt90kCY4SJd3TqhJFdgVcEkGCSmqvKyavM07SOv3sMl1/emqEkr1oExOer\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "app_init",
+    "summary": "The pod's startup was slow, taking 61.0 seconds and exceeding the 10.0-second SLO. This was primarily due to a prolonged application initialization phase, specifically the 'init.compute' span, which lasted 51.0 seconds. The application experienced severe CPU throttling, with a mean throttling ratio of 0.9989, as its CPU usage reached the configured limit of 250m during startup.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod took 61.0 seconds to become Ready, significantly exceeding the SLO threshold of 10.0 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The 'app_init' phase was the longest, lasting 54.281 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "Within the 'app_init' phase, the 'init.compute' span was the primary contributor to the delay, taking 51.003 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "During startup, the container experienced severe CPU throttling, with a mean 'cpu_throttling_ratio' of 0.9989.",
+      "evidence_ids": [
+       "E3"
+      ]
+     },
+     {
+      "statement": "The container's 'cpu_usage_cores' reached a maximum of 0.2506 cores, which is at or slightly above its configured CPU limit of 250m (0.25 cores).",
+      "evidence_ids": [
+       "E1",
+       "E4"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 5.977 seconds for 53328919 bytes, which is not the primary bottleneck compared to the 54.281-second app_init phase.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull duration was 5.977 seconds, which is not the primary bottleneck compared to the 54.281-second app_init phase.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "The 'model_s' signal indicates 0.0 seconds spent on model loading.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The 'scheduling' phase duration was 0.0 seconds and there were no 'failed_scheduling_events'.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The 'readiness' phase duration was 0.0 seconds and there were no 'probe_failures_after_app_ready'. The delay occurred before the readiness probe could succeed.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "adjust_cpu_resources",
+      "rationale": "Raise the CPU limit/request for the container. Severe CPU throttling (mean 0.9989) was observed, and CPU usage reached the limit of 250m during the slow 'init.compute' phase, indicating insufficient CPU resources for startup work.",
+      "evidence_ids": [
+       "E1",
+       "E3",
+       "E4",
+       "E5"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

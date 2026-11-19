@@ -1,0 +1,126 @@
+{
+ "incident_id": 48,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_throttling_ratio"
+     },
+     "id": "ed1b30a0-4500-4f8a-b83b-577a9a2c4582"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "model_loading"
+     },
+     "id": "59b966dd-df97-4f37-bb8e-a6abc030d062"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The root cause of the slow startup is `model_loading`. The `model.download` phase took 10.152 seconds, which alone exceeds the 10.0 second SLO. There was no CPU throttling observed during the startup.\", \"extras\": {\"signature\": \"CtoCAWkUfROY2cTnTuJeWpOBVXEJgm/qNspE/4L31/PnlQqJc3Nz3pSciZcTOr68LcwL8ODk7bFMkQYalqjL8RdRZRplY3dGw0fkQwjk81rIGHkJ4m1fU4qHR3z+4LRlsl7dZC2xFxrSVzijA2NnNjcYTha1pWhO5CB0+yLfjrE0jRrENdAiEDcrAXrma4fm63szJOpeZkZkAoTAtYxqQsprgsVEq2Gh7HwEgGLLD2b6jL2ep/eI5lqBy8+vGUIwjc7X5E4uC9uHnEaz5Elc+t1V4eZYRbNjXJCbY+hvKLJ/xovHp1J3Lm16X2G0ghRCfnOUxos0t2Gr/MOnAmhF8zDVZcv5x0Pp858tJc7f4AgJTzQcIcb8hMnPW0xQ+rRIW2MIbufnJ/B/tluikU62r4IqJhz2YsNlP9HGq1kENimHHK8CCJ4C5pIBRorehVfnhingZQde2EHV+TbCcg==\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod eval-svc-688d987c7f-9b4d5 took 16.0 seconds to become Ready, exceeding the 10.0 second SLO. The primary cause was the model.download phase, which took 10.152 seconds to download 104857600 bytes. This indicates that model weights are being fetched from a remote store on every start without a local cache.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod startup took 16.0 seconds, exceeding the SLO of 10.0 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The model.download phase alone took 10.152 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "During the model.download phase, 104857600 bytes were downloaded, and the cache_hit attribute was false.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The total time for model download and load (model_s) was 10.214 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "No CPU throttling was observed during startup, with a mean throttling ratio of 0.0.",
+      "evidence_ids": [
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase duration was 0.0 seconds and there were no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "large_image",
+      "reason": "The image_pull phase took 4.272 seconds for 53328919 bytes, which is not the dominant factor in the 16.0 second startup.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput was 12483361 bytes/s, and image pull was not the main bottleneck.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "While app_init took 11.25 seconds, the dominant part was model.download. No CPU throttling was observed, ruling out CPU-bound work or throttling as the primary app_init issue.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness phase duration was 0.0 seconds and there were no probe failures after the app was ready.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "model_cache_pvc",
+      "rationale": "Keep weights on a persistent volume, pre-populated by a prefetch job, and enable the app's cache reuse. This will allow subsequent starts to load from local disk, avoiding repeated downloads.",
+      "evidence_ids": [
+       "E4"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

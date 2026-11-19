@@ -1,0 +1,126 @@
+{
+ "incident_id": 97,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_pod_spec",
+     "args": {},
+     "id": "5d8965f8-9848-4fa6-8c25-96a37d946659"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "slow_readiness"
+     },
+     "id": "42fb6225-07b9-415a-a572-7cb7b6fa34de"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The root cause of the slow startup is `slow_readiness` due to an over-conservative readiness probe configuration. The `initialDelaySeconds` is set to 90 seconds, which directly accounts for the 92.571-second `readiness` phase. The application itself initializes quickly (0.789 seconds).\\n\\nThe recommended remediation is `tune_probes`, specifically by using a `startupProbe` and a tighter `readinessProbe` with `initialDelaySeconds: 0`.\", \"extras\": {\"signature\": \"CswCAWkUfRNB2ouye+14sSPkCBaSboBFLdJbuR64MRL6wm6W4wnLknt9FpHLKkHQ1Pqv7/dgndJaj/GqOURrxBMkEVToF0VhC1HpVBcbmr9LCuOJN/Vj5RigeysAmwIELuMaO/wxslV8wFP8GKcDxtgFjzdwo4MrL+pOur4R5m7qnaufIjTg3op+rdVzGYuDYjhT2zoP2ikCltLNBlYDUr7RYu6gO2EAnp0fm3RsN+vykLtLJ+7hSRsMKVFfyOpT2tCyE4/AcXlCch9IzYYiGYHRXHntPSmokkMllVbsxYEOPWtSa15hEJQR3Gfh0eelkYhyyr9dI9+xsjOZqcqGwrsO4S8Bsb05+zCdr7mnR0UNbchSzMpTzPVuEUiZ2AfufWTgJ6LZHc5PJYqG+hFMqUaFqhpEtpgjsIoSBK9Ogd4LaIwEsYi5kBdSXwJDX7E=\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_readiness",
+    "summary": "The pod startup exceeded its SLO of 10.0 seconds, taking 98.0 seconds to become Ready. This was primarily due to an over-conservative readiness probe configuration, specifically an initialDelaySeconds of 90 seconds. The application itself initialised quickly, but Kubernetes was prevented from marking the pod Ready for an extended period.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod took 98.0 seconds to become Ready, breaching the SLO threshold of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'readiness' phase accounted for 92.571 seconds of the total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The readiness probe is configured with an 'initialDelaySeconds' of 90 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The application's initialisation ('app_init' phase) was very fast, completing in 0.789 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "There is no startup probe configured for the container.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.094 seconds for 53328919 bytes, which is not a significant portion of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput was 13026116 bytes/s, indicating a normal pull speed.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "The 'model_s' signal indicates 0.0 seconds spent on model loading.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "The 'app_init' phase completed quickly in 0.789 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The 'scheduling' phase duration was 0.0 seconds, and there were no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "tune_probes",
+      "rationale": "To address the configuration delay caused by the high 'initialDelaySeconds', implement a 'startupProbe' and a tighter 'readinessProbe' with 'initialDelaySeconds: 0'. This will allow Kubernetes to mark the pod Ready much sooner after the application is actually ready.",
+      "evidence_ids": [
+       "E4"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

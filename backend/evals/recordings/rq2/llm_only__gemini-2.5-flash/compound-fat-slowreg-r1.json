@@ -1,0 +1,89 @@
+{
+ "incident_id": 81,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_registry",
+    "summary": "The pod startup was slow due to a prolonged image pull, which took 238.502 seconds out of a total 240.0 seconds. The image, weighing 647991705 bytes, was pulled at a low throughput of 2716924 bytes/s. This throughput is below the expected threshold of 5 MB/s, indicating a slow registry or network connection.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total pod startup time was 240.0 seconds, significantly exceeding the SLO of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull phase was the dominant factor, lasting 238.502 seconds, which is 99% of the total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image size was 647991705 bytes (approximately 648 MB).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image was pulled at a throughput of 2716924 bytes/s (approximately 2.7 MB/s).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The detected throughput of 2.7 MB/s is below the typical threshold of 5 MB/s for normal image pulls.",
+      "evidence_ids": [
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "While the image is large (648 MB), the pull throughput of 2.7 MB/s is considered low against a 5 MB/s threshold, indicating the issue is not just image size but also slow transfer speed.",
+      "evidence_ids": [
+       "E2"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "Application initialisation was very fast, completing in 0.912 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "There was no time spent in the scheduling phase (0.0 seconds) and no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "No model loading activity was detected, with model_s reported as 0.0 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe completed instantly (0.0 seconds) after app initialisation, with no probe failures after the app was ready.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": []
+   }
+  }
+ ]
+}

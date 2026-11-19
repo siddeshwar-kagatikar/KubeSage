@@ -8,7 +8,7 @@
     every system complete. The rules baseline costs nothing and is always run.
 #>
 param(
-    [string[]]$Models = @('gemini-2.5-flash', 'gemini-3.5-flash'),
+    [string[]]$Models = @('gemini-2.5-flash', 'gemini-3.1-flash-lite'),
     [int]$Budget = 18   # free tier: 20 requests per model per day; leave a margin for other work
 )
 . "$PSScriptRoot\lib.ps1"

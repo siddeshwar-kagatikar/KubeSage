@@ -1,0 +1,95 @@
+{
+ "incident_id": 44,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod startup was slow primarily due to the application downloading a large model. The model download took 53.694 seconds for 524 MB, which was the longest phase of the 86.0-second startup. A slow image pull also contributed to the overall delay.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total startup time was 86.0 seconds, exceeding the SLO of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'model.download' span, part of application initialisation, took 53.694 seconds to download a 524288000-byte model, with no cache hit.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The 'model.load' span took 0.305 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The image pull phase took 29.47 seconds for an image of 53328919 bytes, resulting in a throughput of 1809600 bytes/s (1.8 MB/s).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "While the image pull was slow, the image size of 53 MB is not considered large enough to be the primary cause of a 29.47-second pull at 1.8 MB/s. The throughput is below the 5 MB/s threshold for a healthy pull.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase duration was 0.0 seconds, and there were no failed scheduling events, indicating no capacity issues.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe phase took only 0.218 seconds, indicating the application became ready quickly after its initialisation completed.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "The 'app_init' phase was indeed long (55.062 seconds), but the majority of this time (53.694 seconds) was specifically spent on 'model.download', making 'model_loading' a more precise category.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Optimise model download strategy",
+      "rationale": "The model download is the largest contributor to startup time. Consider pre-baking the model into the image, using a local cache, or optimising the download source/network path.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "action": "Investigate slow registry throughput",
+      "rationale": "The image pull throughput of 1.8 MB/s is below the typical healthy threshold of 5 MB/s, contributing significantly to the overall startup time. This could indicate network or registry performance issues.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,69 @@
+{
+ "incident_id": 88,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "capacity",
+    "summary": "The pod experienced a significant delay during the scheduling phase, which accounted for 20.0 seconds of the total 26.0-second startup time. This delay was caused by resource constraints, as confirmed by a FailedScheduling event.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The scheduling phase lasted 20.0 seconds, representing the majority of the total 26.0-second startup duration.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "There was 1 FailedScheduling event recorded, indicating that the pod could not be placed on a node immediately.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was only 4.152 seconds for a 53.3 MB image, which indicates normal pull performance.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "Application initialisation was efficient, completing in 0.848 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The application reached readiness immediately after the initialisation phase, with no additional delay.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Review node resource requests and limits",
+      "rationale": "The scheduling delay and FailedScheduling event suggest that the cluster lacked sufficient available resources to accommodate the pod's requirements at the time of request.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "action": "Investigate cluster autoscaler logs",
+      "rationale": "Checking autoscaler logs may reveal why the pod remained in a pending state for 20.0 seconds before being successfully scheduled.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

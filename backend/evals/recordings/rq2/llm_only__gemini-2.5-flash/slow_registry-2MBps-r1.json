@@ -1,0 +1,83 @@
+{
+ "incident_id": 106,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_registry",
+    "summary": "The pod startup was slow due to a prolonged image pull, which took 28.724 seconds out of a total 30.0 seconds. The image, sized at 53.3 MB, was pulled at a low throughput of 1.86 MB/s. This rate is significantly below the expected threshold, indicating a bottleneck with the registry or network.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total startup time was 30.0 seconds, exceeding the SLO threshold of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull phase was the dominant factor, lasting 28.724 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image size was 53,328,919 bytes (approximately 53.3 MB).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull throughput was 1,856,598 bytes/s (approximately 1.86 MB/s), which is below the expected threshold of 5 MB/s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image size of 53.3 MB is not considered excessively large; the primary issue is the low pull throughput rather than the absolute size.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "Application initialisation took only 1.689 seconds, which is a minor portion of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "No time was spent on model loading, as indicated by a duration of 0.0 seconds for model-related spans.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The pod did not experience any scheduling delays, with the scheduling phase duration being 0.0 seconds and no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe completed instantly (0.0 seconds duration) and there were no probe failures after the application was ready.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": []
+   }
+  }
+ ]
+}

@@ -1,0 +1,138 @@
+{
+ "incident_id": 53,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_pod_events",
+     "args": {
+      "reason": "FailedScheduling"
+     },
+     "id": "fa6b7c25-8c6a-4a61-96ac-863ffe92061a"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_node_capacity",
+     "args": {},
+     "id": "12fd32b2-3a4b-4684-bf18-482ab45f7207"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "capacity"
+     },
+     "id": "76c1ac91-6276-4a5e-aefb-fa3fb2482807"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The root cause of the slow startup is `capacity`. The pod experienced an 80-second delay in the `scheduling` phase, as evidenced by the startup timeline (E1) and a `FailedScheduling` event (E3) indicating \\\"Insufficient cpu\\\" and other node constraints on available nodes at the time of scheduling.\", \"extras\": {\"signature\": \"CtsKAWkUfRPw0BgQ4oiBa32eLGW9CiEAx24X+yfslidwMbNlHVjrPS9nPXTtM3kwNMpexfyThr+usqD+EQG8Mcubm7fqfEyk9KZlB+7OG22HLCwL7zdwfTwTKJX80sbVB0Qji7JNYn1p6x2GvgQ0+Ia68vMu6S+b+JE72Wln0Jy+CMevudGykpq4zg+dJhWhVhVtsJqJevi0B1MVz8S4mobb0vie5wsRY5j4Axpw3hFkucoRl4mwNemAzqb8GgkUzICU8K+aRtbPW3tJ2ARqGEPSgsr3X27+xZPNwZ2i45O8gMZUk1sHOuyKeli74iC3rKbqpbRdSsdvOY2+nywxeiMxtYHcZI8AtWkRXw9CHC8+aVmevh/G4+O8JXEiq7xd5K55+f28ksKLEz7UHdgM8UVzRMaSLfrm5482jot2I/xMidCZ0ve+xS7rP6OXmL4Spr2mqi48omjRqj9GwsBBfurrzz6OScyDMKxKfy3IDYeUAXcMllHymH6dpQsLzMEwfekv5Mx6tmfxVdcAJrWMkZsUT0+tGT99YuZkb+izUdtoWO5KaHl2EbW7AP4ByxptZ1UkVwesCVxDerj39nk0c43u+E3vT2vAIwz0IQtEZ2aaCI0iigjmpsD4Iin5sHqJDTG9PP2b9hDXkMECKnf9BAHz86KQdqsdihYdDhd0ofwEjigP4XLN+bEwsQ6FHsJA0QekzqmirCMiCYcq3Q/Xqugz3xeiMyv+0CL+L4+sZzxPgowrJUj/VCkWLQVhZLkcML3Jsnswwm+X72T8Hn6Uv7Z2X7r8OqADGrihvHOD2n4haDorm5mPxMYN5GiQgutopi4mb5//cbptmpGsYsAZetORuFEVS4U+Wh2NSCLsotIDOY4mhm6xDHHpDkyumJKnUpDjL3pSba67tpx7K+DEGxksO2JRL1rVFSD/tX6PuzLBQsM5anx9JO/u2KUDD0UCmu0y6NPvwr5gVXJcBZznR304kforH6WFTqgeRhgSZjSbA2722Gb1Ze/kUJvsGeQ8IZ04so1KV+83AYaGX9UcV3Hvm1KIzzpztjO60DHL8EuQ5Vbzw7nXEIK9T8wDqs/S0XJEYkCHY3BbHHpuQVDIJuG7Ikz4kga+gp7cxGQj5LzIIBko4Igw7ZXqvb+pB7050WAIIbPfAZwdrE9CER2hAOXmQSrAXT2jlbG4uG0heTS+sx8WyECMGjizR24hWFCXdBDXbdNZ68i1k3tCi+qU0EBzrN6GGd4swPnWYqCiN5v2FH+8gm+IlhyjKKSB7LYiE+2lh2d5LVNO0M7wOhCcXvkRcW2ZrTJmfKcfn+t2TrZm6qe3cXVSqfSLycZw+JB3vnFu92TMmHHIHJ0dDUt1sYkb1jTZSC/JSUDm0oZLfvcczxcQYYtvF6znNAQCwDSlEdOmx5gMLfRc7r/Xjr6Xe9rmAD8NxqYv6iqXLpFkWx7ePL08mmWUUTSOuCtaHCX+vRBzD5g4H62hxwmS/osGhKKPo/bPsax87Xz6QQLZ9aDUIE+UcBUImJsdmn2oB267ruj7ZsHjsCGr6H81uL/DCLfC8Qh9KxvWHtV6FBLFuct82+f1IlsXU1oY9NMtjXqMAvTfcEOq8SjJtyLYip2ZnWJqEH0sShijRmun8bjC7pgw94uzRnB2rEdqxY8cj1KzHFxKhiwjhLffDpVaCRPnx4HqYyyrmLE2wKqaaLQPPZRuWdA/CHLuxL3pNXHK4WHuCiZeg9+3Rhx931JtAouA1ymS7e3Hc26kCr2FXCD0MQyWD0/tiAowOuL5w8gK2nExU4IyAM90H4Ark+gCkS+VpagpYspQJTfXHDkplhu6\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "capacity",
+    "summary": "The pod experienced a significant delay during startup, taking 86.0 seconds to become Ready, well over the 10.0-second SLO. This was primarily due to an 80.0-second wait in the scheduling phase. The delay was caused by insufficient CPU and other node constraints, as indicated by a FailedScheduling event.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod took 86.0 seconds to become Ready, exceeding the SLO threshold of 10.0 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The 'scheduling' phase accounted for 80.0 seconds of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "A 'FailedScheduling' event occurred, indicating 'Insufficient cpu' and other constraints such as 'didn't match Pod's node affinity/selector' and 'had untolerated taint(s)' on available nodes.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The detector identified 'capacity' as the top candidate, attributing 80.0 seconds to this category.",
+      "evidence_ids": [
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.509 seconds for an image size of 53328919 bytes, which is a small fraction of the total startup time and indicates a reasonable pull throughput of 11827216 bytes/s.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull duration was 4.509 seconds for an image size of 53328919 bytes, which is a small fraction of the total startup time and indicates a reasonable pull throughput of 11827216 bytes/s.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "The 'model_s' signal indicates 0.0 seconds spent on model loading.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "The 'app_init' phase duration was 0.937 seconds, which is a negligible portion of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The 'readiness' phase duration was 0.0 seconds and there were no probe failures after the application was ready.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Right-size requests from observed usage.",
+      "rationale": "The 'FailedScheduling' event indicated 'Insufficient cpu', suggesting that the pod's resource requests might be too high for the available nodes or that node capacity is generally insufficient. Right-sizing requests can help prevent future scheduling delays.",
+      "evidence_ids": [
+       "E3",
+       "E5"
+      ]
+     },
+     {
+      "action": "Relax placement constraints.",
+      "rationale": "The 'FailedScheduling' event also mentioned 'didn't match Pod's node affinity/selector' and 'had untolerated taint(s)', indicating that node selectors, affinity, or tolerations might be overly restrictive, limiting the pool of eligible nodes.",
+      "evidence_ids": [
+       "E3",
+       "E5"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

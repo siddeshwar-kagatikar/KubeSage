@@ -1,6 +1,6 @@
 """RQ3: do the chosen fixes help, and does the A/B harness tell good fixes from no-ops and harmful ones?
 
-    python -m evals.rq3 main     --model gemini-3.5-flash    # 5 fixable faults x 2 severities, the agent picks the fix
+    python -m evals.rq3 main     --model gemini-2.5-flash    # 5 fixable faults x 2 severities, the agent picks the fix
     python -m evals.rq3 controls                              # forced fixes: A/A placebo, harmful, broken (no LLM calls)
     python -m evals.rq3 summary
 

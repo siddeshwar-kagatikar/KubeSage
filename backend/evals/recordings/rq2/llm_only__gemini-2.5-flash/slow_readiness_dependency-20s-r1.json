@@ -1,0 +1,91 @@
+{
+ "incident_id": 110,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_readiness",
+    "summary": "The pod startup exceeded its 10.0 s SLO, taking 20.0 s to become Ready. The primary cause was the application waiting 15.058 s to connect to a dependency, which repeatedly returned \"Connection refused\" errors. This delay occurred during the application's initialisation phase before it was marked as Ready.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod startup took 20.0 s, exceeding the SLO of 10.0 s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The application spent 15.058 s in the 'dependency.connect' phase, which was the longest sub-phase within the 'app_init' phase (16.778 s).",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "During the 'dependency.connect' phase, the application made 16 attempts to connect to 'http://slow-dependency.kubesage-infra.svc.cluster.local/', consistently receiving \"Connection refused\" errors.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The Kubernetes readiness probe itself did not introduce a delay, as the 'readiness' phase duration was 0.0 s and there were no probe failures after the application reported itself ready.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase duration was 0.0 s, and there were no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 3.701 s, which is a small fraction of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput was 14409327 bytes/s, which is not indicative of a slow registry or network.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "There was no 'model.*' span detected, and the 'model_s' signal was 0.0 s.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Configure an initialDelaySeconds for the readiness probe.",
+      "rationale": "This would prevent Kubernetes from checking the readiness probe until the dependency is expected to be available, allowing the application to complete its dependency connection attempts without prematurely failing the probe.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "action": "Investigate the 'slow-dependency.kubesage-infra.svc.cluster.local' service.",
+      "rationale": "The dependency itself is slow to respond or unavailable, causing the application to retry connections for an extended period. Addressing the dependency's availability or startup time would directly reduce the pod's startup time.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

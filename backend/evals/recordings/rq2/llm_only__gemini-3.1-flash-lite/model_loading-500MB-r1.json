@@ -1,0 +1,69 @@
+{
+ "incident_id": 93,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod startup was delayed primarily by the application downloading a 500 MB model file during initialisation. This model download process accounted for 53.4 seconds of the total 61.0-second startup time. The remaining phases, including scheduling and image pulling, were within expected performance bounds.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The model.download span took 53.369 seconds to complete, which is the dominant factor in the 61.0-second total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The model download involved transferring 524,288,000 bytes (approximately 500 MB) from the internal model hub.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The image pull phase was efficient, taking only 4.184 seconds for a 53 MB image.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was only 4.184 seconds for a 53 MB image, which is not the cause of the 61-second startup delay.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "Scheduling took only 1.0 second, indicating no significant delay in pod placement or resource allocation.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Implement model caching or pre-loading",
+      "rationale": "The application currently downloads the 500 MB model on every cold start, which is the primary bottleneck.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "action": "Use an InitContainer to fetch model weights",
+      "rationale": "Moving the model download to an InitContainer can separate the infrastructure-level data fetching from the application logic, potentially allowing for better caching strategies.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

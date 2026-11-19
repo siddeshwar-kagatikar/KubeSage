@@ -1,0 +1,82 @@
+{
+ "incident_id": 103,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "app_init",
+    "summary": "The pod startup exceeded the 10.0 s SLO, taking 21.0 s to become Ready. The primary cause was slow application initialisation, specifically the 'init.compute' phase, which consumed 12.687 s of the 15.507 s app_init duration. This phase alone accounts for more than the entire SLO.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total pod startup time was 21.0 s, exceeding the SLO of 10.0 s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'app_init' phase was the longest, taking 15.507 s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "Within 'app_init', the 'init.compute' span was the slowest, lasting 12.687 s.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The application reported 'startup_complete' after 15.507 s, which aligns with the 'app_init' duration.",
+      "evidence_ids": [
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase had a duration of 0.0 s, indicating no delay in pod scheduling.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.074 s for an image size of 53328919 bytes, resulting in a throughput of 13090064 bytes/s, which is not excessively slow and is a minor contributor to the total startup time compared to app_init.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput was 13090064 bytes/s, which is a reasonable speed and not indicative of a slow registry or network bottleneck.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "The 'model_s' signal was 0.0 s, indicating no time spent on model loading.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The 'readiness' phase duration was 0.0 s, and 'dependency_s' was 0.0 s, indicating the application was ready immediately when the probe checked and was not waiting for external dependencies.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": []
+   }
+  }
+ ]
+}

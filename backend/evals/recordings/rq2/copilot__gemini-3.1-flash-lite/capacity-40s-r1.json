@@ -1,0 +1,123 @@
+{
+ "incident_id": 70,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_pod_events",
+     "args": {
+      "reason": "FailedScheduling"
+     },
+     "id": "call_16951800883311428727"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_node_capacity",
+     "args": {},
+     "id": "call_5299040742304886885"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_pod_spec",
+     "args": {},
+     "id": "call_4719866116852383075"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "capacity"
+     },
+     "id": "call_5604779013588940891"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The pod `eval-svc-7c7bb667d5-xhvpb` experienced a 46.0s startup time, primarily due to a 40.0s delay in the `scheduling` phase. The `FailedScheduling` event confirms that the pod could not be scheduled immediately because of \\\"Insufficient cpu\\\" on the available nodes. The pod requests 3 CPU cores, which is a significant portion of the node's capacity. The scheduling delay is a classic capacity issue where the cluster lacked sufficient resources to accommodate the pod's request at the time of scheduling.\\n\\nConclusion: **capacity**\", \"extras\": {\"signature\": \"Eo8BCowBAWkUfROaVaVDeBPDsM5Mqnix6CsGG8TN4N11ZEWpDIkgaImBYGPrrKJ1GsYgiMk1k4Ot1imqv/srfMLebM9Cg65yVtqZVKzDcaM7KGZGkvxNGGWAQ+ypjHS91B4qanFm8DZKEUT5oC/eC2w8nL0CeWLjaYZuLX+shjD0PSqS/i8yAtyZQlvQ+r1WMpo=\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "capacity",
+    "summary": "The pod experienced a significant startup delay of 46.0 seconds, primarily due to a 40.0-second wait in the scheduling phase. This was caused by insufficient CPU resources on the available nodes, as confirmed by a FailedScheduling event citing insufficient CPU for the requested 3 cores.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod spent 40.0 seconds in the scheduling phase, which accounts for the majority of the 46.0-second total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "A FailedScheduling event occurred, indicating that the pod could not be scheduled due to 'Insufficient cpu' on the available nodes.",
+      "evidence_ids": [
+       "E3"
+      ]
+     },
+     {
+      "statement": "The pod requests 3 CPU cores, which is a significant portion of the node's allocatable capacity of 16000 millicores.",
+      "evidence_ids": [
+       "E4",
+       "E5"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was only 4.444 seconds, which is not the primary cause of the 46.0-second startup delay.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "Application initialisation took only 0.914 seconds, which is well within normal limits.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Right-size resource requests",
+      "rationale": "The pod requests 3 CPU cores; adjusting these requests based on actual observed usage can improve scheduling success, provided they are not lowered below actual requirements to avoid OOM kills.",
+      "evidence_ids": [
+       "E5",
+       "E6"
+      ]
+     },
+     {
+      "action": "Relax placement constraints",
+      "rationale": "The pod is restricted by node selectors; relaxing these constraints may allow the pod to be scheduled on nodes with more available capacity.",
+      "evidence_ids": [
+       "E5",
+       "E6"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

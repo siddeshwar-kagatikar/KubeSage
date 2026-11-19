@@ -1,0 +1,68 @@
+{
+ "incident_id": 115,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "large_image",
+    "summary": "The pod startup was dominated by a cold image pull, which accounted for 96.4 seconds of the total 98.0-second startup time. The image size was approximately 648 MB, and the pull throughput was 6.7 MB/s. Application initialisation was efficient, completing in under 2 seconds.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The image pull phase took 96.357 seconds, representing the vast majority of the 98.0-second total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The image size is 647,991,705 bytes (approx. 648 MB) with a pull throughput of 6,724,905 bytes per second.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "Application initialisation was relatively fast, taking only 1.888 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "app_init",
+      "reason": "Application initialisation only took 1.888 seconds, which is a small fraction of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "Scheduling duration was 0.0 seconds, indicating no delay in pod placement.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe was satisfied immediately after the application finished its startup sequence.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Optimise container image size",
+      "rationale": "The image pull is the primary bottleneck; reducing the image size will directly decrease the cold start time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,160 @@
+{
+ "incident_id": 56,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_workload_history",
+     "args": {},
+     "id": "34130c89-d15f-4bd9-80e8-e0b62331ae0e"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_pod_spec",
+     "args": {},
+     "id": "42d4b24f-d43f-4eba-ae84-637cee3d8d7c"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_pod_events",
+     "args": {
+      "reason": "FailedScheduling"
+     },
+     "id": "1e06dc0a-cbfc-4e61-b795-431314e7acae"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "large_image"
+     },
+     "id": "2e9ca768-2a87-4738-bfb5-89662fea9725"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The root cause of the slow startup is `large_image`. The image pull phase took 48.954 seconds, accounting for 94% of the total startup time. The image size is 648 MB, and the pull throughput was 13.2 MB/s, which is considered normal (>= 5 MB/s) according to the runbook. The image name `demo-ai-service:fat` also suggests an intentionally large image. There were no scheduling delays or other significant initialization phases.\\n\\nRunbook for `large_image`:\\n# Runbook: large container image\\n\\n## Symptoms\\n- Cold starts dominated by the `image_pull` phase; warm starts (image cached on the node) are fast.\\n- `Pulled` event reports a large image size (hundreds of MB or more compressed) and a long pull duration.\\n\\n## Evidence to check\\n- Startup timeline: `image_pull` duration and share of total; `cold_start` true.\\n- Pod events: `Pulled` message (duration, `Image size`).\\n- Workload history: warm vs cold startup totals for the same image.\\n- Pull throughput (`throughput_bytes_per_s`): if it is normal (\\u2265 5 MB/s) the problem is size, not the registry.\\n\\n## Likely causes\\n- Full OS base images (e.g. `python:3.x` instead of `-slim`), build toolchains left in the final stage.\\n- Large unused dependencies (ML frameworks such as torch/tensorflow installed but not imported).\\n- Model weights or datasets baked into the image.\\n\\n## Remediations (approved catalogue actions)\\n- `switch_image_variant` \\u2014 move the workload to a slimmer, pre-built image variant (multi-stage build, slim base,\\n  only runtime dependencies). Removes the cost permanently. Verify the variant runs the same code.\\n- `prepull_daemonset` \\u2014 pre-pull the image on nodes ahead of scale-up. Hides the pull from startup but moves the\\n  cost (bandwidth, disk) rather than removing it; report the pre-pull time alongside the startup gain.\\n\\n## Advisory (not automated)\\n- Restructure the Dockerfile: multi-stage build, `--no-cache-dir`, remove unused packages, order layers so that\\n  rarely-changing layers are cached.\\n\\n## Do not\\n- Do not set `imagePullPolicy: IfNotPresent` and call it a fix: it does nothing for a genuinely cold node.\", \"extras\": {\"signature\": \"CsgEAWkUfRPIwaFq9oe1mQBpLKl5aTanHxQHKlnrgVMjvVFXxrqeoiDQGEWyicPzuaXvDNvwK7Ze+GqJraczEqD1Yg/tIm+DI86x4opkUKqy4qlIR23KNcoK1hKFO9grGO+oiL7vxns0yNiaVzQ3E9maZ50LIjrWbSz8RIcA5vMGmQ4J2c+xfws/gAmIWtPggB1HGJ+cdR7g9396AtlCbRFYJDgC0tQDYGx0CJlqGuQpxwQe/TiqdyVEd6F//u5RKoZVEN/C887dX8vH57Sd3ASwvuc3tzDaqrCAylsX3JojKkYQZdez6gNhcHGCB1eho/NAtrYXvTCddq0FG1NYU9Wfvh0WUZTSH1UutZ6gtUWjCn/HB5EI4BcrgmeKS3YeLp6axCcZejXet8/x/ikf/hB1gWwEq8ka5dcO11Paf3EgOrf+tiPKgzd4zwTkKTKjzt38TH5VPqQ5Nvpq9nghLeT7ul4NVtJ/A5bzu27xgPro7zTEXWkHDZMNv/6EVmJ3FVuiSI0CYYoI63Syq9j9xoEiHQDcUpuxGGlDtNL1t2siLNZF6XzE86kY/K15SjEK5p0nDZDAp0dZ5Px5rU8pp6CTCJKHM4AkdIyZfMwqhUBzEepgLTq1VV6B8D61s80RGi2DlYdJCUi7ngTHBj9VlyZL27TgBefpxMHXwmf+aXJTi7W6amv8dVr4e4ZHMB8XTmzTtq28OHO7bVZPYJXd/1Pjf3rZOI6wzMtCWRfUjnpO1CRBUOfKOLCe1ihighW/BP25ybzCYUzjuVM=\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "large_image",
+    "summary": "The slow startup of the `eval-svc` pod was primarily caused by a large container image. The image pull phase took 48.954 seconds, accounting for 94% of the total 52.0-second startup time. Despite the long duration, the image pull throughput of 13.2 MB/s was normal, indicating the issue is the image size of 648 MB rather than a slow registry.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod startup took 52.0 seconds, exceeding the SLO threshold of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The `image_pull` phase was the dominant factor, lasting 48.954 seconds and representing 94% of the total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The container image `localhost:5001/demo-ai-service:fat` has a size of 647991705 bytes (approximately 648 MB).",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E4"
+      ]
+     },
+     {
+      "statement": "The image pull throughput was 13236747 bytes/s (approximately 13.2 MB/s), which is considered normal (>= 5 MB/s) according to the runbook.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E6"
+      ]
+     },
+     {
+      "statement": "This was a cold start, meaning the image was not cached on the node.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput of 13.2 MB/s is normal (>= 5 MB/s), indicating that the registry or network was not the bottleneck.",
+      "evidence_ids": [
+       "E1",
+       "E6"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "There was no scheduling delay (0.0 seconds) and no `FailedScheduling` events were observed.",
+      "evidence_ids": [
+       "E1",
+       "E5"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "The `model_s` signal is 0.0, and no `model.*` spans were recorded during `app_init`.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "The `app_init` phase took only 1.089 seconds, which is a small fraction of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The `readiness` phase took 0.691 seconds, which is a small fraction of the total startup time, and no `dependency.connect` spans were observed.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "switch_image_variant",
+      "rationale": "Move the workload to a slimmer, pre-built image variant to permanently reduce the image pull cost.",
+      "evidence_ids": [
+       "E6"
+      ]
+     },
+     {
+      "action": "prepull_daemonset",
+      "rationale": "Pre-pull the image on nodes ahead of scale-up to hide the image pull time from the pod startup duration.",
+      "evidence_ids": [
+       "E6"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

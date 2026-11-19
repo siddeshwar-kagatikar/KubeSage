@@ -1,0 +1,158 @@
+{
+ "incident_id": 70,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_pod_events",
+     "args": {
+      "reason": "FailedScheduling"
+     },
+     "id": "fc73ba2a-259f-4157-a1c2-8e1bae579779"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_node_capacity",
+     "args": {},
+     "id": "2b0b8683-09c5-4a5b-8070-1acc7eecbfb2"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_pod_spec",
+     "args": {},
+     "id": "561d929b-f09c-419f-bac3-cf71718c067a"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "capacity"
+     },
+     "id": "0b367c39-fba8-4a69-b43e-54232a11541e"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The pod experienced a slow startup due to a capacity issue. It waited 40.0 seconds to be scheduled because no suitable nodes were available. This was caused by a combination of node selector constraints and insufficient CPU on the only matching node at the time of scheduling.\", \"extras\": {\"signature\": \"CoMOAWkUfROZHXlel/BD+I4D7oC0XlN+JhXDmmmSumKdEMTyX99QxiFbYpX2hIgLdtZRcry/POojeO8onjhiwSO42e26fnYTL/zqBR6xcET02UvQ9zhuRnAS05BXxip0pggav55RO7p22f3/FnAwkNCfGjQWL+HoiK/SvgkBcGddCwuYAm9d6kWn25RFC7Xhc0pBEbYk4aA5IYlNz6r9cUzTLm1l43eli5YJeUpZX5QzBHAkPmpiz/PfoGAd/jb3aEMv5+xbhEaK/LvAre47e/U5o6U5sVDxZxPQ394gU6/lFRJtwceJ0Yr/lQI/V+Nv+0ZSua3zb3cqeUsVeVRXtRlu93dxCVVW4lwLgMFjldwmIjjM7xB87ZdokSNth5FJd4FX+nCBUVCXmy5eCbVtRPf5IdaK4a7V+pg7VvgW1Zr4keeWTNeMALoPOVCdyne2P6qrzgvtgCxO1ASvCWwCXzdVD6UUxkH88o/zo8x5u9PVFRw/bgq0b8b9nEfLZI3cg1qsigmDcowuNqLhbH+/fOh7QaCGQEx0zSE/leiaKSeKN/lhIMiQqgiMR1k9a/ZCuCJBUlxOl4eOXcsGp+X2YdfPlyYo9+d8cA4LjbUVS8fJpNoaw51I+ae6ls859seo1dtS8mX/Zc0uSMJzLvp7EaxHzTe8Ju+4F6kr/4bJ0hDeF9JcmT1ukjiQZM6m4LHuAnwOymmTHzCacnJi8UzP2jBjs1loAGg6NfdFoKrCLwyWG20c152t65t32sI6c1rnXwxljBKsDUCGsNk0CxL7QGMA0+0hyju6nf+GFn/wrhLdrSBMAqkEkH9MI0vPRBKsW++pVHBFv+yW8MmrTAWHYc4vxiS2nx65pTk9fusE3DNaYkLFmtBv0i4PS7tT2K5OwampE8UHByH4y+QfLLohREBHMk92nCnLg/LO6dhXW2dz/JIHUkyEhtHElRPmqj7CS6JwWOrBxLT58Kw0P5RGjFkkyjlu1PeDo88pOCqmG5T2BLirNhz95ga+7RiFUmV9BERgPKc+mJEXGkc/wOiAnuKUNY3OlynRTfMmtRYKRT3/T9hQG6xvtCRYs0YodGLd9M0Z2d1N081j/YvnMEfC+lMtV9lFPtW6k27yqUWYnmJKjx+jHAn/CrvcC9puIoYi4C4r5gdA7g1GSn97zwZLXnGRUqnmjzZzUkyxyZOaAnxHo2iO4PpjnlDa2+TFcgugklcaGIXK4r8W0qBgKr+a+HaSQdVoTDb/BXnAEXYMUAEqp2y0B2oSKiGN6lS6Xhzg+h+OhooQwsO0Wd5u5kl/HEjmsqC8J0CkdU6zgpIpFLhmWUuYv6IUbIV+ZCbBlnyAIuTMIdNyzRP2iPb6vZ8PootgAB7hm1zUrJpJtgThT+qAjiHUyINDOekrYSt9DmrPp+ttZHo5I4R7OeU/mtNkKwGIHVRvt5QUmB7jO6DtYkcdFJhpwUsfeppFUFFp6tagNjO4lLYHVC7Al8zKsZ0IYo0xFO6OjEkB4Yz5nqD8Kmw1+M4WdGR/WRPlwgfaJGF8Z4kEDV5Z36imAVT2gjv0hKLXeNiD8ozTmSmLFVOB3ViHcYmqTwgfH/95oFc+Gkh3SKFIBlbwj4fA7B6TFXuFhw+ajsdenJHgst023Sb2GKk3Nl7Gi6n8t8MQE+CpuIDsBHgkWpEsu3p7IGe9occzkbtLWdeVEJjboa8FSv0kCN/h8RUJyf2jamkZOSeAIhxkJabu6GP88/dKHhkj24YfXluHpGa+Zgt1GH6YGQp2bvoHAqu8ZOqBBhJ/UlWiJjFI3NJ4HsK9IfUv+MF1bctoEo9aBthrgLhW0JR/zdUltsNWreblHXGAjhA03oHlDfVZtkALURJZQUddlJFVE0lNwzmAfJAs3Y4qJgVdUGNxWCawlnB3YKc1dHzTctF3hGvpBpa5A2RWfdFxdoB3Bg0gxl2XdEIvyr2Wkdz6FnG1Dx1bbsv2tHm1OVO+T+vx2CE9Xh4kHRQS9sBLxqHE1vQ8VhInymPyfvMvqjOkwB1hoHQefs0nGvP1dY+CmNeUTzwRRHwD+R+3ugHJOR62WG682rzYhdsNdcphRWa1xZPfdzsKz6WWFHjP/NN3TDBkI+XcIsno2/TXNRW8OOOzTCLdYY5Z01m+75IjCLYqSUVbecEss/Vdmo5WOxG/EgpNJXLCv6G5oF2y35QNSHHDoNJQpOjwhs5gN4Ak2IALnj5WyI/CwcelvmnwyM9lvPum0mcRXdehgzRi0M7tddC+jVMLaJG7r4bGB1HdyskYMV1KcsPcBCF17DR3cCVk7vk0UMvtkF8Fn0G8J4HLIJz8w44sFynXCgtU2ljk6DmXXs9WFgN3/fn7jWX7J7k7NQSmE/F+tzThwPPrHQ7CFeKb4u7Z7ulTQcVAfg==\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "capacity",
+    "summary": "The pod experienced a slow startup, taking 46.0 seconds to become Ready, significantly exceeding the 10.0-second SLO. The primary cause was a 40.0-second delay in the scheduling phase. This delay was due to a combination of the pod's node selector constraints and insufficient CPU on the only matching node at the time of scheduling.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod startup took 46.0 seconds, which breached the 10.0-second SLO.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'scheduling' phase was the longest, lasting 40.0 seconds, accounting for the majority of the startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "A 'FailedScheduling' event occurred, indicating that 0 out of 3 nodes were available for scheduling.",
+      "evidence_ids": [
+       "E2",
+       "E3"
+      ]
+     },
+     {
+      "statement": "Reasons for node unavailability included '1 Insufficient cpu' and '1 node(s) didn't match Pod's node affinity/selector'.",
+      "evidence_ids": [
+       "E3"
+      ]
+     },
+     {
+      "statement": "The pod had a node selector 'kubesage.io/pool: workload' and requested 3 CPU.",
+      "evidence_ids": [
+       "E5"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.444 seconds for 53328919 bytes, which is not the primary cause of the 46.0-second startup.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput was 12000207 bytes/s, indicating a normal pull speed.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "The 'model_s' signal was 0.0 seconds, indicating no time spent on model loading.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "The 'app_init' phase lasted only 0.914 seconds, which is a small fraction of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The 'readiness' phase duration was 0.0 seconds, and there were no probe failures after the application was ready.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Relax placement constraints",
+      "rationale": "The node selector 'kubesage.io/pool: workload' restricted the pod to a specific pool, contributing to the scheduling delay when combined with insufficient CPU. Relaxing this constraint could allow the pod to be scheduled on more nodes.",
+      "evidence_ids": [
+       "E3",
+       "E5",
+       "E6"
+      ]
+     },
+     {
+      "action": "Right-size requests from observed usage",
+      "rationale": "The pod requested 3 CPU, and 'Insufficient cpu' was a reason for scheduling failure. Reviewing actual CPU usage and adjusting requests could prevent future capacity issues, ensuring the pod can be scheduled on available nodes.",
+      "evidence_ids": [
+       "E3",
+       "E5",
+       "E6"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -86,7 +86,7 @@ the paper. All results can be replayed offline with `--replay` (same command, no
 
 **4. RQ3: before/after experiments (cluster; about 4 hours plus about 1.6 hours of controls).**
 ```powershell
-python -m evals.rq3 main --model gemini-3.5-flash       # 10 experiments, the agent picks the fix, n=8 per arm
+python -m evals.rq3 main --model gemini-2.5-flash       # 10 experiments, the agent picks the fix, n=8 per arm
 python -m evals.rq3 controls                            # A/A x6, harmful x3, broken x3 (forced fixes, no LLM)
 python -m evals.rq3 summary
 ```

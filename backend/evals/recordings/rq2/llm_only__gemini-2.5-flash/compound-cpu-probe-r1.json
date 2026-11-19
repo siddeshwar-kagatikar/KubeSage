@@ -1,0 +1,100 @@
+{
+ "incident_id": 96,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_readiness",
+    "summary": "The pod took 109.0 seconds to become Ready, significantly exceeding the 10.0-second SLO. The primary cause was the Kubernetes readiness probe, which had an initial delay of 90 seconds, causing the pod to be marked Ready 68.791 seconds after the application itself reported startup complete. Additionally, the application's initialisation phase, specifically the 'init.compute' step, contributed 31.079 seconds to the overall startup time.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod took 109.0 seconds to become Ready, breaching the SLO threshold of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'readiness' phase, controlled by Kubernetes, accounted for 68.791 seconds of the total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The readiness probe was configured with an initialDelaySeconds of 90 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The application reported 'startup_complete' after 34.399 seconds, which is when the 'app_init' phase finished.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The 'app_init' phase itself took 34.399 seconds, with the 'init.compute' span being the longest at 31.079 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was only 4.442 seconds for 53328919 bytes, indicating a normal pull throughput of 12005610 bytes/s, which is not a significant contributor to the overall 109.0-second startup.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull duration was only 4.442 seconds for 53328919 bytes, indicating a normal pull throughput of 12005610 bytes/s, which is not a significant contributor to the overall 109.0-second startup.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "The 'model_s' signal is 0.0 seconds, indicating no time was spent loading models.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The 'scheduling' phase duration was 0.0 seconds and there were no 'failed_scheduling_events', indicating no delays due to capacity issues.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Reduce the readiness probe's initialDelaySeconds.",
+      "rationale": "The current initialDelaySeconds of 90 seconds is the primary cause of the extended readiness phase. Reducing this value will allow the pod to be marked Ready sooner after the application starts.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "action": "Optimise the 'init.compute' phase.",
+      "rationale": "The 'init.compute' phase takes 31.079 seconds, which is a significant portion of the application's initialisation. Optimising this step could further reduce the overall startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

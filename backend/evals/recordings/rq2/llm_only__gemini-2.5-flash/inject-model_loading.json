@@ -1,0 +1,82 @@
+{
+ "incident_id": 34,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod startup exceeded its SLO of 10.0 s, taking 31.0 s to become Ready. The primary cause was the application's model loading phase, which took 25.164 s. This duration was dominated by the download of a 262 MB model, which took 25.006 s.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod startup took 31.0 s, exceeding the SLO threshold of 10.0 s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'app_init' phase was the longest, lasting 26.09 s.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "Within 'app_init', the 'model.download' span took 25.006 s to download a 262144000 byte model, and 'model.load' took 0.158 s.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The combined 'model_s' signal, representing model download and load, was 25.164 s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "capacity",
+      "reason": "The pod did not experience any scheduling delays, with the 'scheduling' phase duration being 0.0 s and no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.269 s for an image of 53328919 bytes, which is not the dominant factor in the 31.0 s startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput was 12492134 bytes/s, which is not indicative of a slow registry or network for image pulls, and the image pull duration was not the primary cause of the slow startup.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The 'readiness' phase duration was 0.0 s, indicating the application was marked Ready immediately after its initialisation.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "While 'app_init' was long, its duration was almost entirely accounted for by 'model_loading' (25.164 s out of 26.09 s), making 'model_loading' the more specific root cause.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": []
+   }
+  }
+ ]
+}

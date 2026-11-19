@@ -1,0 +1,77 @@
+{
+ "incident_id": 80,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "app_init",
+    "summary": "The pod startup was delayed primarily by the app_init phase, which took 34.4 seconds. Within this phase, the init.compute task accounted for 31.3 seconds of processing time. Given the low CPU limit of 250m, this compute-intensive initialisation is likely being throttled.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The app_init phase took 34.362 s, which represents the majority of the 39.0 s total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The init.compute span was the slowest component of the initialisation, lasting 31.299 s.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The container is restricted by a low CPU limit of 250m, which likely throttles the compute-heavy startup task.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull took only 4.228 s for 53 MB, indicating normal pull performance.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "Scheduling duration was 0.0 s, showing no issues with node capacity or scheduling.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "Readiness probe duration was 0.0 s, meaning the application was ready immediately after app_init completed.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Increase the CPU limit for the container.",
+      "rationale": "The current 250m limit is likely causing CPU throttling during the compute-intensive init.compute phase.",
+      "evidence_ids": [
+       "E2"
+      ]
+     },
+     {
+      "action": "Optimise the init.compute logic.",
+      "rationale": "Reducing the number of work units or improving the efficiency of the initialisation code will directly reduce startup time.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

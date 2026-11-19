@@ -1,0 +1,108 @@
+{
+ "incident_id": 37,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "app_init",
+    "summary": "The pod startup exceeded its SLO of 10.0 s, taking 84.0 s to become Ready. The primary cause was slow application initialisation, specifically a compute-intensive phase named 'init.compute' which took 50.678 s. Additionally, downloading a 262 MB model contributed 25.057 s to the startup time.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod took 84.0 s to become Ready, significantly exceeding the SLO of 10.0 s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'app_init' phase was the longest, lasting 79.189 s.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "Within 'app_init', the 'init.compute' span was the most time-consuming, taking 50.678 s.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The 'model.download' span took 25.057 s to download a 262144000 byte (262 MB) model.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The container has a low CPU limit of 250m, which can impact CPU-bound operations like 'init.compute'.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "capacity",
+      "reason": "There was no time spent in the scheduling phase and no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe completed instantly (0.0 s) after application startup, with no probe failures.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was only 4.274 s for a 53328919 byte image, which is not a significant portion of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput was 12477520 bytes/s, indicating a normal pull speed.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Optimise the 'init.compute' phase to reduce its duration.",
+      "rationale": "The 'init.compute' phase is the single largest contributor to the slow startup, taking 50.678 s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "action": "Increase the CPU limit for the container.",
+      "rationale": "The current CPU limit of 250m is low and could be throttling the CPU-bound 'init.compute' phase.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "action": "Optimise model download or consider pre-packaging the model.",
+      "rationale": "Downloading the 262 MB model takes 25.057 s, which is a significant portion of the startup time. Reducing this time, perhaps by caching or bundling the model, would improve startup.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

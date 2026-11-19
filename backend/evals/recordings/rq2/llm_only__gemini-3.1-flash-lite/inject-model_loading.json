@@ -1,0 +1,52 @@
+{
+ "incident_id": 34,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod startup was delayed primarily by the application downloading 262 MB of model weights during initialisation. This process took 25.0 seconds, accounting for the majority of the 31.0-second total startup time. The scheduling and image pull phases were completed within expected timeframes.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The model.download span accounted for 25.006 seconds of the total 31.0-second startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The application downloaded 262,144,000 bytes of model weights from the internal model hub.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The image pull phase was efficient, taking 4.269 seconds for a 53.3 MB image.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase duration was 0.0 seconds, and there were no failed scheduling events reported.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Implement model caching or pre-loading",
+      "rationale": "The current startup is blocked by a synchronous download of 262 MB of weights on every cold start.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,92 @@
+{
+ "incident_id": 97,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_readiness",
+    "summary": "The pod startup was slow because the readiness probe had a long initial delay. The application reported itself as ready after only 0.788 seconds of application initialisation, but Kubernetes waited for 90 seconds before starting readiness checks. This caused the pod to take 98.0 seconds to become Ready, breaching the 10.0-second SLO.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total pod startup time was 98.0 seconds, significantly exceeding the SLO threshold of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'readiness' phase accounted for 92.571 seconds of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The readiness probe was configured with an 'initialDelaySeconds' of 90 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The application reported 'startup_complete' after 0.788 seconds of application initialisation, indicating it was ready much earlier than the readiness probe allowed.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.094 seconds for 53328919 bytes, which is a small fraction of the total startup time and indicates a reasonable pull speed.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput was 13026116 bytes per second, which is not indicative of a slow registry or network.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "The 'model_s' signal indicates 0.0 seconds spent on model loading.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "The 'app_init' phase lasted only 0.789 seconds, and the application reported startup complete after 0.788 seconds, which is very fast.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The 'scheduling' phase duration was 0.0 seconds, and there were no 'failed_scheduling_events'.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Adjust the 'initialDelaySeconds' for the readiness probe.",
+      "rationale": "The application is ready significantly faster than the current 90-second initial delay. Reducing or removing this delay will allow the pod to become Ready much sooner.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

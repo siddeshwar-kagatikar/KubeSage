@@ -1,0 +1,69 @@
+{
+ "incident_id": 81,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_registry",
+    "summary": "The pod startup was dominated by an image pull that took 238.5 seconds. Although the image size is 648 MB, the throughput was only 2.7 MB/s, which is significantly below the expected performance threshold. Consequently, the pod failed to meet the 10-second SLO.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The image pull phase accounted for 238.5 seconds of the total 240.0 second startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The image size is 647,991,705 bytes (approximately 648 MB), and the pull throughput was 2,716,924 bytes per second (2.7 MB/s).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "While the image is 648 MB, the primary issue is the low throughput of 2.7 MB/s, which indicates a network or registry bottleneck rather than just the image size.",
+      "evidence_ids": [
+       "E2"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "Application initialisation was efficient, taking only 0.912 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "Scheduling took 0.0 seconds, indicating no capacity-related delays.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Investigate registry network throughput and latency.",
+      "rationale": "The pull throughput of 2.7 MB/s is below the 5 MB/s threshold, suggesting a bottleneck in the registry connection or network infrastructure.",
+      "evidence_ids": [
+       "E2"
+      ]
+     },
+     {
+      "action": "Implement image pre-pulling or caching.",
+      "rationale": "Reducing the reliance on cold pulls for large images can mitigate the impact of slow registry throughput on pod startup times.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

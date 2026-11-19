@@ -1,0 +1,104 @@
+{
+ "incident_id": 88,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_pod_events",
+     "args": {
+      "reason": "FailedScheduling"
+     },
+     "id": "call_16953619332997982543"
+    },
+    {
+     "name": "get_node_capacity",
+     "args": {},
+     "id": "call_16953619332997980488"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "capacity"
+     },
+     "id": "call_5545356106061297772"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The pod `eval-svc-688bf44fff-srz67` experienced a 26.0s startup time, primarily due to a 20.0s delay in the `scheduling` phase. The `FailedScheduling` event confirms that the pod could not be scheduled immediately because of insufficient CPU on one node, node affinity/selector mismatches on another, and untolerated taints on the third. This confirms the root cause as **capacity**.\\n\\n**Recommendations:**\\n- Review the pod's resource requests to ensure they are not over-provisioned, which may be causing the \\\"Insufficient cpu\\\" errors.\\n- Evaluate the necessity of the current node affinity, selectors, and taints, as these constraints are limiting the available pool of nodes for scheduling.\\n- If the cluster is frequently hitting capacity limits, consider increasing the cluster size or implementing low-priority placeholder pods to maintain headroom for critical workloads.\", \"extras\": {\"signature\": \"EpUDCpIDAWkUfRM5OBqEG06uyeJnUdQ5yrIbNwUeesxntkZXBw58gjkM3PRqGqUUq2y5RqROyNqQc6smrYT0RnajJmN+QBJ5VS9Q01HWom8j7QqZpII6KiRdFY/OY97bLJ+8QuHyCzyJ3BL45NJlzJjLYu5UGNZyyhiEDJ3jp6UfvRcsUKPp8vAf9wRmRY4M98gYNAoMfzBUgx9Nc9QH5VLbgZgHRX/UHnO9/xoM13J6TFt8dOaSqekjuiMcCPUTYeQB8IXZZQRrybE5uvgbbTPl+Tyc7udTPrVEi9xbBCAdahG36nuq7kq/5eHaqynOT1ALDlDQUhV0pi2ttawtPQUMd3DqFmiOz0NKIRkemhnbN8i/3PmWY+h0b7BitCA8w2NdFDpAlQXSjgcazLfdPBz3FKwCOE9tA5dDclumFX2f4PehL2Hx6GcJB8lZELeTGJViotwggy+IXjEjxwzAqhl5aacyW1oX8MqKbuwzvWKsV+Gv0B5lQUvJ0bMpfaBpe1ITVtrBZPGrI4s0cPb8UFtZJMZsKDMK\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "capacity",
+    "summary": "The pod experienced a 26.0s startup time, with 20.0s spent in the scheduling phase due to resource and placement constraints. The FailedScheduling event confirms that the pod could not be placed immediately because of insufficient CPU, node affinity mismatches, and untolerated taints on available nodes.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod spent 20.0 s in the scheduling phase, which was the primary contributor to the 26.0 s total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "A FailedScheduling event occurred, citing insufficient CPU, node affinity/selector mismatches, and untolerated taints as reasons for the scheduling delay.",
+      "evidence_ids": [
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was only 4.152 s for a 53 MB image, indicating the image size was not the bottleneck.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "Application initialisation was efficient, taking only 0.848 s.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput was 12.8 MB/s, which is reasonable for the image size.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Review resource requests",
+      "rationale": "Ensure requests are not over-provisioned, which may be causing the insufficient CPU errors.",
+      "evidence_ids": [
+       "E5"
+      ]
+     },
+     {
+      "action": "Evaluate placement constraints",
+      "rationale": "Assess the necessity of current node affinity, selectors, and taints, as these are limiting the available pool of nodes for scheduling.",
+      "evidence_ids": [
+       "E5"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

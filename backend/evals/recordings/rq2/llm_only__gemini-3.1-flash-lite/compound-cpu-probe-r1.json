@@ -1,0 +1,50 @@
+{
+ "incident_id": 96,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_readiness",
+    "summary": "The pod startup was delayed primarily by an overly conservative readiness probe configuration. Although the application completed its initialisation in 34.4 seconds, the Kubernetes readiness probe's initialDelaySeconds of 90 seconds forced the pod to wait unnecessarily before being marked as Ready.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The application completed its initialisation in 34.4 seconds, with the 'init.compute' phase taking 31.1 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "Kubernetes marked the pod as Ready 68.8 seconds after the application reported startup completion, due to the readiness probe's initialDelaySeconds setting of 90 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "app_init",
+      "reason": "While application initialisation took 34.4 seconds, the primary contributor to the total 109-second startup time was the readiness probe delay, not the application code itself.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Reduce the readiness probe initialDelaySeconds.",
+      "rationale": "The current 90-second delay is significantly longer than the actual application startup time of 34.4 seconds, causing an unnecessary delay in the pod becoming ready.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,77 @@
+{
+ "incident_id": 80,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "app_init",
+    "summary": "The pod startup exceeded its SLO of 10.0 seconds, taking 39.0 seconds to become Ready. The primary cause was slow application initialisation, specifically the init.compute phase, which consumed 31.299 seconds. This phase accounts for the majority of the total startup time.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total startup time was 39.0 seconds, exceeding the SLO of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'app_init' phase was the longest, taking 34.362 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     },
+     {
+      "statement": "Within 'app_init', the 'init.compute' span was the dominant factor, lasting 31.299 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.228 seconds for 53328919 bytes, which is a normal throughput of 12613273 bytes/s and a small fraction of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull duration was 4.228 seconds with a throughput of 12613273 bytes/s, indicating normal registry performance.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "The 'model_s' signal was 0.0 seconds, indicating no time spent loading models.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The 'scheduling' phase took 0.0 seconds and there were 0 'failed_scheduling_events', indicating no capacity issues.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The 'readiness' phase took 0.0 seconds and there were 0 'probe_failures_after_app_ready', indicating the application was marked ready immediately after initialisation.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": []
+   }
+  }
+ ]
+}

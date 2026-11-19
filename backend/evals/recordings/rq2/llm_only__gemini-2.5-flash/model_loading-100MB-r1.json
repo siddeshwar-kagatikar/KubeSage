@@ -1,0 +1,98 @@
+{
+ "incident_id": 48,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod startup exceeded its 10.0 s SLO, taking 16.0 s to become Ready. The primary cause was the application's initialisation phase, specifically the downloading of a model. The model download took 10.152 s, accounting for the majority of the startup time.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod startup took 16.0 s, exceeding the SLO of 10.0 s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'app_init' phase was the longest, lasting 11.25 s.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "Within 'app_init', the 'model.download' span took 10.152 s to download 104857600 bytes (100 MB) from 'http://model-hub.kubesage-infra.svc.cluster.local/weights-100m.bin'.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The model download was not cached, as indicated by 'cache_hit: false'.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The 'model.load' span was very short, taking only 0.062 s.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull took 4.272 s for 53328919 bytes, which is significantly less than the 10.152 s spent downloading the model.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput was 12483361 bytes/s, which is not indicative of a slow registry or network for the image pull phase.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase duration was 0.0 s, and there were no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe duration was 0.0 s, indicating the application was ready immediately after its initialisation.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "While 'app_init' was the longest phase, the majority of its duration (10.152 s out of 11.25 s) was specifically due to model downloading, making 'model_loading' a more precise category.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Optimise model download strategy",
+      "rationale": "The model download is the longest part of the startup. Consider pre-baking the model into the image, using a local cache, or optimising the model hub's performance.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

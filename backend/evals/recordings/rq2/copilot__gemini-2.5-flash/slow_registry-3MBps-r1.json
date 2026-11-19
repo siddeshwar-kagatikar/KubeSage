@@ -1,0 +1,118 @@
+{
+ "incident_id": 69,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "slow_registry"
+     },
+     "id": "edbf3a04-72f6-413b-b986-d03647f15a44"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The root cause is `slow_registry`. The image pull took 19.4 seconds for a 53 MB image, resulting in a throughput of 2.8 MB/s, which is below the typical 5 MB/s threshold. This slow image pull accounts for the majority of the 21.0-second startup time, causing the SLO breach.\", \"extras\": {\"signature\": \"CqEFAWkUfROkYwKzabSYYZIBTrM6TQL2q5Mnj3UDUn8jJ/WldBM4ZDjwy8+CGcIxpPVKgg5dqjE2aqmyvpy3JaszaM5UmgS/UpVOBeQGh4a4sF8tspBM3kt+4rF1nXRgh0Whrpv/TDNj6Ih0JYMA0y09soxRhAl3FcbJm2mCJveuXu+HMOuTDkNYPuf6UU1C2kHMFXXpUmgpPvm8l4s97HDRa4WBjrdexxYaltUddOB5jZPaky9JwZwaBPi1N82oFmkxqiEnw+hZ+vSjhb9ibcPiIU10FGXaEfRa3NbMeL068FugqSl4hdhjjzLK2GpJIbPCEx0xPyL2gJyba3jRb1d6LJHDbs/W/RDVqweZn+ZnAo59qDSgJzgibuakgjx2xuoSH6Jh/mNBe+e39H1LWsPAYgcY1ITMCmpJ0GuL453n9cnvu6DfFavGbLOd7lcJ9RVUY6erUYTv9J8vVnOmmWXc2LNERBn9Oby5fZ5dPoFcGNrAxPp3IHNj346rSD9zGIUxsGQhuoBey1boaJJ2WXtEA2pxxbVvLILCKANFss1aWsosEgcSrvCBxbau0kB0YVKD3KeT3LIS/3Qao2Q9ZRtxlgN5K+OKsY714V7Qqb8ORUGmvn6eICdS1GuJQ3TgH/vdQU9yYt6NVa3q5LlzGCV8zGhUGqOkepQSx4y5s6Fe8hHn77ESt9c38X51QqvF1XDAt4gmhzR1nxbH5EQzxxi+JRSLzhkMBR0PgMnRoNyqYmym6KaBptgecfEO1r2DiFJsQHGnSXRkZNiTI1wLttD/VzFIvqVmHqEVUkhRM3Avn0QUk+vIlMgaDI/FFEj0Muez3Rr+gMQjyQwtTm/ZmfnFPWkgwd/y6De7/CNpsLEGOdWL1wdKT3dEYrIGXi6bGgsDbA==\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_registry",
+    "summary": "The pod startup exceeded the 10.0-second SLO, taking 21.0 seconds to become Ready. This was primarily due to a slow image pull, which took 19.391 seconds for a 53 MB image. The observed throughput of 2.8 MB/s was well below the typical 5 MB/s threshold, indicating a bottleneck with the registry or network.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total pod startup time was 21.0 seconds, exceeding the SLO threshold of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image_pull phase was the longest phase, lasting 19.391 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image size was 53,328,919 bytes (approximately 53 MB).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull throughput was 2,750,189 bytes/s (2.8 MB/s), which is below the typical 5 MB/s threshold for a healthy registry.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image size of 53 MB is not considered large enough to be the primary cause when throughput is significantly degraded, as indicated by the slow_registry runbook.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "The model loading time (model_s) was 0.0 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "The app_init phase took 0.952 seconds, which is a small fraction of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase took 0.0 seconds, and there were no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness phase took 0.0 seconds, and there were no probe failures after the app was ready.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "prepull_daemonset",
+      "rationale": "Pre-pulling the image can prevent scale-up from being dependent on real-time registry throughput.",
+      "evidence_ids": [
+       "E3"
+      ]
+     },
+     {
+      "action": "Advisory: use a registry mirror or pull-through cache close to the cluster; check registry rate limits.",
+      "rationale": "Improving the network path to the registry or mitigating rate limits can increase image pull throughput.",
+      "evidence_ids": [
+       "E3"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

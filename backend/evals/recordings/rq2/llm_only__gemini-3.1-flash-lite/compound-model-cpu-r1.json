@@ -1,0 +1,76 @@
+{
+ "incident_id": 37,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "app_init",
+    "summary": "The pod startup was delayed primarily by a compute-intensive initialisation phase that took 50.7 seconds. While model loading also contributed 25.6 seconds to the startup time, the application's CPU-bound computation was the dominant factor in the 84.0-second total duration. The low CPU limit of 250m likely exacerbated the duration of this compute-heavy task.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The application initialisation phase (app_init) lasted 79.189 seconds, with the init.compute step accounting for 50.678 seconds of that time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "Model loading (download and load) contributed 25.56 seconds to the total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The pod is constrained by a low CPU limit of 250m, which likely impacts the performance of the compute-intensive initialisation tasks.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was only 4.274 seconds for a 53.3 MB image, which is efficient.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "Scheduling duration was 0.0 seconds, indicating no delay in pod placement.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe duration was 0.0 seconds, meaning the application was marked ready immediately upon completing its internal startup.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Increase CPU resource limits",
+      "rationale": "The init.compute phase is CPU-bound and currently constrained by a 250m limit, which is significantly extending the startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "action": "Implement model caching",
+      "rationale": "The model download took 25.057 seconds; caching these weights would reduce the startup time for future cold starts.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

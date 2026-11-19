@@ -1,0 +1,47 @@
+{
+ "incident_id": 106,
+ "model": "gemini-3.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_registry",
+    "summary": "The pod eval-svc-bdf548d94-zkxr2 took 30.0 s to become Ready, breaching the 10.0 s SLO threshold. The delay was caused by a slow image pull, which took 28.724 s for a relatively small image of 53,328,919 bytes due to a low throughput of 1.9 MB/s.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total pod startup time was 30.0 s, exceeding the SLO threshold of 10.0 s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull phase took 28.724 s to download 53,328,919 bytes (approx 53 MB).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The transfer throughput during the image pull was low at 1,856,598 bytes/s (approx 1.9 MB/s).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [],
+    "recommendations": [
+     {
+      "action": "Investigate registry and network throughput",
+      "rationale": "The throughput of 1.9 MB/s was below the expected threshold of 5 MB/s, causing the image pull to consume 28.724 s of the startup duration.",
+      "evidence_ids": [
+       "E2"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

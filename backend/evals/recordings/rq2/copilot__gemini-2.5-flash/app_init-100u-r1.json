@@ -1,0 +1,148 @@
+{
+ "incident_id": 103,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_throttling_ratio"
+     },
+     "id": "7738d530-fbdf-4731-a0dd-7a3994e54e5b"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_usage_cores"
+     },
+     "id": "30a2108c-44ba-4051-945a-b1695b5ac7b1"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "app_init"
+     },
+     "id": "b14ba1c3-6e8c-41eb-a933-009695baf19d"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The root cause of the slow startup is `app_init`. The application's initialization phase, specifically the `init.compute` span, took 12.687 seconds, contributing significantly to the total startup time of 21.0 seconds. This is likely exacerbated by the low CPU limit of 250m, which can lead to CPU throttling during compute-intensive startup tasks. Other potential causes like large image, slow registry, model loading, capacity issues, or slow readiness have been ruled out.\", \"extras\": {\"signature\": \"CrsIAWkUfRPJpNsZ41PGa/vQ8jINmCChx4fsbHHwM0f3X8xmBocz7ABqqDVrTfCnrRVRr7xG/9x/ey+3X7Alm2UGJdX8y66dSo1Dj0BCV7RCI9AR27IzYMR+doMUwGZdRs55y+rDyOc6682IhxpyBlze+joCiMX75TzEbmKXRPgsJ/CoaL3/lTo8jjS5pMISaAYJTykObXw/sv2kUO7MfbeQ43rk2ZcX/ZW/tIKyQdlGRa+deXt8Gt6qdVepbSfgT0YpVwUSvpP20TaeWYfmj4SPl+0314+UmOVpA9ve3IXyA/D97u4Z0pAkCKbEU3k0XzcYFUhL8YZMHhptJG2qKFLVK6CofKDGn3X31LFWiieGBtECePOb2BwdYQFMqasvQGzPguNmJAdX3hShSkYjsarKjkNMLJxCsiVPrCuX8zXVIl6/0yj5M0nxyv8VY/sqYq95xFzAIFsbrncFM2/ithghSNkL1swb9b227YdSiL+E8M2NpzhqX/R0+JIqdyilsi6+weczlZiXo0m0nReN8Ztc5zw+q4ULZ6Yn60UUDbbZsfwRC+qvIpxvJAIMotayxfDVCXPr1PClW0CW82vmW68ShWjIof4fER2MPiYmMsl1pO/o6FdjmQZoTCurvyPMWWhzqLZevm4AolALJqUa7aMWgy4RzwB6zs6UVMxCuD/3375y8pWQHgtkiKjw//KGohpX7P8lUC2dshymgTIbvp139de0RumZ9DgNsT86tJ5POriYfAlLF6Oh7fKqAr8CIEi/zIapOtXf3gM3g7oFyPP3NbKO9VAzqgWE6TKcYOXFxrcuCvSfk8xAtBHNlTss7BY2NbzGf8Fe9Jm6qidjchdWvnND6Zec0SQ+j+n5A9ADTmoMVhWhHr9YoVhnQN08FTxVElBjkgFONRbf4svxsqhPm/GKhKS2DwSMVBmXLfX3lvg+6qo00ILwm3sbm0AYj6yIwORBSgRG2Cdpf2GZWPuSTIbZfFIbZnsEVawF7+TjuL8bXuDIR8Gwqtdi9A4YvcZA24pOAdSU/cv57jP/Pi39wkDWyT3//UfTVPOdZuXvcdR7l01poWhku2mqKB9eNe47h+8yAvaUSx3sC3kSaLASWKkVxpt0K8Zc6qAqPWS6T0OiIC2U3rjw6Bz0X+eJgz79nebvQNcKd1TUf0MVRR1rY1n/CoI6HEz+LNEc8ZyyCjIMTrRJBT0qGbsiNpKfQHiU89JNeVCD5vAPRKQ8WVKtoYulUKDqVwB+8QtpEYBXGjXKZOWVkX/sUy2f9wV+WryhoHDOfPK+FMdPOcjYDAOSXd9AQM1x3oW/0S27U7usDtKHiDp8mfINXJ/uymkW5S6ctPhTvjXPgrlsjNjnCxK5QFxGb36g3ZB0g0zF+xCjHTsGspNg8Y0/comkUdzMzrzF5Xvg3PFMLeduXIDp4VX7H6n9Wokw6RaQZSqM\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "app_init",
+    "summary": "The pod 'eval-svc-694994d755-msdwl' took 21.0 seconds to become Ready, exceeding the 10.0-second SLO. The primary cause was the application's initialisation phase, which lasted 15.507 seconds. Specifically, the 'init.compute' span within this phase contributed 12.687 seconds. The low CPU limit of 250m is a likely exacerbating factor, potentially leading to CPU throttling during this compute-intensive startup.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod startup took 21.0 seconds, exceeding the SLO of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'app_init' phase accounted for 15.507 seconds of the total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "Within the 'app_init' phase, the 'init.compute' span was the longest, lasting 12.687 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The container has a CPU limit of 250m.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "There was no CPU throttling data available during the startup window.",
+      "evidence_ids": [
+       "E3"
+      ]
+     },
+     {
+      "statement": "There was no CPU usage data available during the startup window.",
+      "evidence_ids": [
+       "E4"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.074 seconds for an image of 53328919 bytes, which is not the primary contributor to the 21.0-second startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput was 13090064 bytes/s, which does not indicate a slow registry.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "There was no time spent on model loading, indicated by 'model_s' being 0.0 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The pod did not spend any time scheduling ('scheduling_s': 0.0 seconds) and had no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe duration was 0.0 seconds, and there were no probe failures after the application was ready, indicating the app became ready immediately after initialisation.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "adjust_cpu_resources",
+      "rationale": "The 'app_init' phase, particularly 'init.compute', is lengthy and CPU-bound. Although no throttling data was available, the low CPU limit of 250m is a potential bottleneck. Raising the CPU limit/request could mitigate this, especially if CPU usage during startup approaches or exceeds the current limit.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E5"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

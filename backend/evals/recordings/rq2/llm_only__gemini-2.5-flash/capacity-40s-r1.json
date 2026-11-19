@@ -1,0 +1,84 @@
+{
+ "incident_id": 70,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "capacity",
+    "summary": "The pod startup was slow, taking 46.0 seconds, significantly exceeding the 10.0-second SLO. The primary cause was a prolonged scheduling phase, which lasted 40.0 seconds. This delay indicates insufficient cluster capacity to accommodate the pod promptly.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total pod startup time was 46.0 seconds, which breached the SLO threshold of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The pod spent 40.0 seconds in the 'scheduling' phase, which was the dominant factor in the slow startup.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "There was 1 'FailedScheduling' event recorded for the pod.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.444 seconds for an image size of 53,328,919 bytes, which is a small fraction of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput was 12,000,207 bytes per second, indicating a normal pull speed, and the duration was not the primary cause.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "There was no time spent on model loading, as indicated by 'model_s' being 0.0 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "Application initialisation ('app_init') was very fast, taking only 0.914 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe completed immediately with a duration of 0.0 seconds, and there were no probe failures after the application was ready.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Increase cluster capacity or adjust resource requests/limits.",
+      "rationale": "The prolonged scheduling phase and 'FailedScheduling' event indicate that the cluster lacked sufficient resources to schedule the pod promptly.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

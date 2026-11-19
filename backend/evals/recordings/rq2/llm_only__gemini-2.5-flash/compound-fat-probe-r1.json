@@ -1,0 +1,86 @@
+{
+ "incident_id": 104,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_readiness",
+    "summary": "The pod startup was slow because Kubernetes waited for 95.95 seconds during the readiness phase. This delay is primarily due to a 90-second initial delay configured in the readiness probe. The application itself completed its startup in just 0.86 seconds.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total pod startup time was 149.0 seconds, exceeding the SLO of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The readiness phase accounted for 95.95 seconds of the total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The readiness probe is configured with an initialDelaySeconds of 90 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The application reported 'Application startup complete' and an internal startup duration of 0.86 seconds, indicating it was ready quickly.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "While the image pull took 50.72 seconds for a 647991705 byte image, the throughput of 12775862 bytes/s is normal, and the readiness probe delay is the dominant factor in the SLO breach.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "The application's internal initialisation (app_init) was very fast, completing in 0.86 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "There was no scheduling delay, with the scheduling phase duration being 0.0 seconds and no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "There was no model loading activity detected, with model_s reported as 0.0 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Reduce the readiness probe's initialDelaySeconds.",
+      "rationale": "The current 90-second initial delay is the primary cause of the extended readiness phase, as the application is ready much sooner. Reducing this delay will allow Kubernetes to mark the pod Ready earlier.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

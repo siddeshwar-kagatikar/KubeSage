@@ -1,0 +1,48 @@
+{
+ "incident_id": 41,
+ "model": "gemini-3.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_readiness",
+    "summary": "The workload demo/eval-svc took 65.0 s to become Ready against an SLO threshold of 10.0 s due to slow readiness probe configuration. The application completed its initialisation in 0.928 s, but Kubernetes waited 58.931 s before marking the pod Ready because of a high initialDelaySeconds of 45 s and periodSeconds of 20 s.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total startup duration was 65.0 s, breaching the 10.0 s SLO threshold.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The application finished initialisation in 0.928 s and logged startup completion at 1.079 s.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "Kubernetes readiness phase spent 58.931 s waiting due to a readiness probe configured with initialDelaySeconds=45 and periodSeconds=20.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [],
+    "recommendations": [
+     {
+      "action": "Adjust the readiness probe configuration by reducing initialDelaySeconds and periodSeconds or using a startup probe.",
+      "rationale": "The application is ready in around 1 second, but the readiness probe introduces an artificial delay of nearly 59 seconds before marking the pod Ready.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

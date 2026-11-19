@@ -1,0 +1,88 @@
+{
+ "incident_id": 72,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "large_image",
+    "summary": "The pod startup took 82.0 seconds, significantly exceeding the 10.0-second SLO. The primary cause was a cold image pull of a 648 MB image, which took 79.457 seconds. This image pull phase accounted for 97% of the total startup time.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total pod startup time was 82.0 seconds, which breached the SLO threshold of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull phase was the longest, taking 79.457 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The image being pulled was large, at 647991705 bytes (approximately 648 MB).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull throughput was 8155250 bytes/s (approximately 8.2 MB/s).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull phase constituted 97% of the total startup duration.",
+      "evidence_ids": [
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "slow_registry",
+      "reason": "While the throughput was 8.2 MB/s, the evidence does not indicate this is abnormally low for the registry or network; the primary factor for the long pull time is the large image size.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase duration was 0.0 seconds, and there were no failed scheduling events, indicating no capacity issues.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "There are no 'model.*' spans in the startup timeline, indicating no model loading activity.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "The app_init phase took only 1.022 seconds, which is a small fraction of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe phase took only 0.228 seconds, and there were no probe failures after the application reported ready.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": []
+   }
+  }
+ ]
+}

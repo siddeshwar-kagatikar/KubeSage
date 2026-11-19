@@ -1,0 +1,97 @@
+{
+ "incident_id": 53,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_pod_events",
+     "args": {
+      "reason": "FailedScheduling"
+     },
+     "id": "call_795508224385743028"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_node_capacity",
+     "args": {},
+     "id": "call_6159930677863101670"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "capacity"
+     },
+     "id": "call_15246102444407685212"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The pod `eval-svc-f5895544f-v6dmm` experienced a total startup time of 86.0 seconds, with 80.0 seconds spent in the `scheduling` phase. The `FailedScheduling` event confirms that the pod could not be scheduled immediately due to \\\"Insufficient cpu\\\" on one node, node affinity/selector mismatches on another, and untolerated taints on a third.\\n\\nThe root cause is **capacity**. The pod's resource requirements (specifically CPU) could not be met by the available nodes at the time of scheduling, leading to a delay until a node became available or the scheduler found a suitable placement.\\n\\n**Conclusion:**\\nThe pod startup was delayed by 80 seconds due to capacity constraints. The `FailedScheduling` event indicates that the cluster lacked sufficient CPU resources or placement compatibility at the time of request. I recommend reviewing the pod's resource requests and node affinity/tolerations to ensure they align with the cluster's available capacity.\", \"extras\": {\"signature\": \"Eo8BCowBAWkUfRPjczE7cE8tISJzH2MNDrxZZQ/rDaYYWFyqCGriXVQ4bJuds5zwXbZAcWG8CKDO7YlZd2Cz5l7zZqyIKzNmoIJjcRhLKl22SCEPmktqkbhYOjl6ZaKHrNujlH1q8M9TbaAVWiD6uwX/okFdq7aYfl8uQ8nY32X3nsvfML42BL9wJeT1+9nkzIU=\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "capacity",
+    "summary": "The pod experienced a significant startup delay of 86.0 seconds, with 80.0 seconds spent in the scheduling phase. This was caused by insufficient cluster capacity and placement constraints, as evidenced by a FailedScheduling event citing insufficient CPU and node affinity mismatches.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod spent 80.0 seconds in the scheduling phase, which accounts for the majority of the 86.0-second total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "A FailedScheduling event occurred, indicating that the pod could not be placed due to insufficient CPU, node affinity mismatches, and untolerated taints on available nodes.",
+      "evidence_ids": [
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was only 4.509 seconds, which is not the primary contributor to the 86.0-second startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "Application initialisation was efficient, taking only 0.937 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Review and right-size resource requests and relax placement constraints.",
+      "rationale": "The pod failed to schedule due to resource and affinity constraints; aligning these with cluster capacity is recommended to improve scheduling success.",
+      "evidence_ids": [
+       "E3",
+       "E5"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

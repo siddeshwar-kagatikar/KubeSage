@@ -1,0 +1,47 @@
+{
+ "incident_id": 66,
+ "model": "gemini-3.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_readiness",
+    "summary": "The pod eval-svc-7db66b7dc9-69nf4 took 80.0 s to reach Ready status, breaching the 10.0 s SLO threshold. The delay was primarily caused by the application waiting for an external dependency during initialisation, taking 74.176 s across 75 attempts. Once the dependency became available, the readiness probe succeeded immediately.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod eval-svc-7db66b7dc9-69nf4 took 80.0 s to become Ready against an SLO threshold of 10.0 s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The dependency.connect span accounted for 74.176 s of the total 75.097 s app_init phase, performing 75 retries due to Connection refused errors.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The image pull phase took only 4.484 s for 53,328,919 bytes (throughput 11,893,158 B/s), and scheduling took 0.0 s.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "ruled_out": [],
+    "recommendations": [
+     {
+      "action": "Investigate and resolve startup latencies or availability issues for the dependent service at http://slow-dependency.kubesage-infra.svc.cluster.local/.",
+      "rationale": "The application initialisation spent 74.176 s retrying connections to this dependency before completing startup.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

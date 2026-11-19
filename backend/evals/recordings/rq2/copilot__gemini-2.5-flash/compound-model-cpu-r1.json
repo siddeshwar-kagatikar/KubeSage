@@ -1,0 +1,100 @@
+{
+ "incident_id": 37,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_throttling_ratio"
+     },
+     "id": "8392fb57-31ae-46f6-95a5-770670a14d46"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "app_init"
+     },
+     "id": "f50324e1-7c98-497d-9d5d-4fd9b7af539a"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The slow startup is caused by application initialization being throttled by a low CPU limit. The `init.compute` phase, which takes 50.7 seconds, experiences significant CPU throttling, with a mean throttling ratio of 0.66 and a maximum of 1.0, while the CPU limit is set to 250m. This indicates that the allocated CPU resources are insufficient for the application's startup workload.\", \"extras\": {\"signature\": \"CtcHAWkUfRPs7cTk/yvJ4OxHGY0aFjORbVbSUdlyka7i/gXanLn1rnlori9wb3p2GJ1NUxMdFiGuRPnlkIXCQnNAq5g90Z/8fHmPwNdtvLhKHBIzOWJE2KZ2CAVVwGQNMmcJLbCpHjIrs0U60NLG8D7dYPcp2daCw9+2PG+cXgYPl0sMNfzhnAsyfAwTXmErToWJzaw9mu0edsIV9nM7wDW0aP9VR7ieWx+haHWKsFcwH1XMyGpVr5/q6ArfW0i4A27IRcz6Bcw2Fv+dcqGoyIYuJDzoo9eK3y0D5IFs97lqvfEd6Sw13YM9uwTawBK4DgEHeOXrHMsoQwAGf0PQ7Gp/SRJfs5XvAr7dSlvPq+BrS6LJCIeMB6V9/lEJVmwGzjdd5/BZPfxKCeePgKpjkZcHQHqxSuyrZ8Ji3yNwAnf6F8zME3qAha3lqDG6DR7UfaOJBUekAr2rLdcrzOBh6ESY8UPPh0b7iP3AAf5dNB4wybrg1QEh2luYO5FJCcLprmvuJTJLpr0CMY151ozbdWxk2Snx2e78nQlHS6NhMP5Ddy9WCfI1GtE7JwC93z974nw4h/vK3QHHl8YywRqfmgcLdMG6lXDp14MmGX49wWNsayf0MJrY7BfmLoFIbAm+m1W0oOYBP6II1WVX1mcjzjYG0ZdhhaXXCz4HmrVfOY2XPmECPTLnplkkEOJk/SVNm6XmW7L6rDnOjw66ZmP++/EwwWvEJ7S7zL3sHcFypH9iT0njpv+6v9BAjHLc0Blge9aimpQLU5cBUM/wWGGMkpbnqGq25ccAbNkoz/Tve0WfAm7Lt1s8TKOaVJadDn2C6HEpCxmtYC57Aqc7o2QcnW7ySkyZJKy5ZRYh5+jXvCRtCIawEnU0dqN1JNekYtRSBr4IObPEg4llqyl+BsFum9846jYC6vMfw6zUqUHlCnS+q46FjGvaK8uEIoqrMi53SCpj787olSS/2wKubo3rK49YTWqEno3/pbUmQ1viUuY5l7AysR0uPGNzMaYUbtoWkUlY7E5VcfLG+zBPFoAgUEXaYPz0dpbNx94Lnsht5uj7KZSY4pkzT5D7h5JN+O8kKK/0QxU8iMuQsFN/OgEKYmGExvPuXLR236dvTXOjOM2cqd9EHOqVLKQj0LfBNdryzUlxGAKT79v8yowB1+ZaKcAlrAXJCPtcGFmWPWoJDb1SL34rwgPQFSV3KT5DQkDgaiJvau1dZqrWz2dbxgQShO2seukD5rZh+jE+Iwm/GJKblw19MkmY5JSs1iOa52x+AXylfbVY4J04rE8T+NRqV60CZudXLY11iIE=\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "app_init",
+    "summary": "The pod startup was slow, taking 84.0 seconds, significantly exceeding the 10.0-second SLO. This was primarily due to the application's 'init.compute' phase, which lasted 50.678 seconds, experiencing severe CPU throttling. The container's CPU limit of 250m was insufficient, leading to a mean throttling ratio of 0.66.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total startup time was 84.0 seconds, breaching the SLO of 10.0 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The 'app_init' phase was the longest, lasting 79.189 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "Within 'app_init', the 'init.compute' span took 50.678 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "During startup, the CPU throttling ratio had a mean of 0.66 and a maximum of 1.0.",
+      "evidence_ids": [
+       "E3"
+      ]
+     },
+     {
+      "statement": "The container's CPU limit was set to 250m.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "model_loading",
+      "reason": "While model download and load took 25.56 seconds, the 'init.compute' phase, which is part of 'app_init', was significantly longer at 50.678 seconds and showed clear evidence of CPU throttling as the primary bottleneck.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "adjust_cpu_resources",
+      "rationale": "Raise the CPU limit and request for the container to mitigate the observed CPU throttling during application initialization.",
+      "evidence_ids": [
+       "E3",
+       "E4"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}
