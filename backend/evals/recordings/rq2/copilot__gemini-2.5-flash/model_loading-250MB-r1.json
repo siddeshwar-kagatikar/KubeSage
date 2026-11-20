@@ -1,0 +1,120 @@
+{
+ "incident_id": 74,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "model_loading"
+     },
+     "id": "c5e16202-e865-4995-a25a-67881358e94e"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_pod_spec",
+     "args": {},
+     "id": "34c1ee7d-d881-495a-a30f-83d554b9532b"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_workload_history",
+     "args": {},
+     "id": "67d862a9-360d-4028-9f84-2c15fb456c05"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The root cause of the slow startup is `model_loading`. The pod spends 25.6 seconds downloading a 262 MB model because the `MODEL_DIR` is mounted on an `emptyDir` volume, which does not persist across pod restarts. As a result, the model is downloaded on every cold start (`cache_hit: false`). The image pull time (4.9 seconds) is not the primary contributor to the SLO breach.\", \"extras\": {\"signature\": \"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\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod startup is slow, taking 33.0 seconds to become Ready, which breaches the 10.0-second SLO. This is primarily due to the application spending 25.648 seconds downloading a 262 MB model. The model is downloaded on every cold start because the MODEL_DIR is configured on an emptyDir volume, preventing persistence across pod restarts.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod startup took 33.0 seconds to become Ready, exceeding the 10.0-second SLO.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'model.download' span within the 'app_init' phase took 25.648 seconds, contributing significantly to the overall startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "A 262144000 byte (262 MB) model was downloaded during startup, as indicated by the 'model.download' span attributes.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The 'model.download' operation reported 'cache_hit: false', confirming the model was fetched remotely rather than from a local cache.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The 'MODEL_DIR' is mounted on an 'emptyDir' volume named 'work', which does not persist data across pod restarts, necessitating repeated model downloads.",
+      "evidence_ids": [
+       "E4"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.921 seconds for 53328919 bytes, which is not the primary contributor to the 33.0-second startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase duration was 0.0 seconds, and there were no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe duration was 0.0 seconds, and there were no probe failures after the application was ready.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "model_cache_pvc",
+      "rationale": "Keep model weights on a persistent volume, pre-populated by a prefetch job, and enable the application's cache reuse. This will allow subsequent starts to load the model from local disk, avoiding repeated downloads.",
+      "evidence_ids": [
+       "E3"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

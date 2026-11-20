@@ -1,0 +1,128 @@
+{
+ "incident_id": 44,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_throttling_ratio"
+     },
+     "id": "7a1bc3e4-ebe3-49fc-8e72-7593562c73c5"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "model_loading"
+     },
+     "id": "5d3afa31-9937-46be-b062-eea02e83245d"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The root cause of the slow startup is `model_loading`. The `model.download` span took 53.7 seconds, which is the largest contributor to the total startup time of 86.0 seconds. There was no significant CPU throttling during the startup.\", \"extras\": {\"signature\": \"CtQBAWkUfRN6BIVLQLmBDyb7RH3MEQosqcGcJGh6JUAtAOQDhbah7hszUz2UPrqxdyP9egwD5g9zttoBrm9gmHVUMl+5Dzy+0XdMkImhiRZ4M/gpCcrSrpiXuJFI7y7B9fac9jB4Hm6OcRs0Rvff62xZBfkUGuCg1AzSSFKNSs5Q5jS1Typ57cIf65otwqmJg4py+vPfHNoPjutQrDAtOPj+4sgWE83jhcZn2CyKNXbuDvO4laC44KW4REKvK45/t9cZQXSvOtXogsYUY5+jRyTOdZMNaY0=\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod took 86.0 seconds to become Ready, significantly exceeding the 10.0-second SLO. The primary cause was the `model.download` span, which consumed 53.7 seconds of the startup time. This indicates that downloading model weights was the main bottleneck for the application's initialisation.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total startup time for the pod was 86.0 seconds, which breached the SLO threshold of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The `model.download` span was the largest contributor to the startup time, taking 53.694 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The `app_init` phase, which includes model loading, lasted 55.062 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The model downloaded was 524,288,000 bytes.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The `model.load` span was relatively short, at 0.305 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "slow_registry",
+      "reason": "While the image pull was slow at 1.8 MB/s and took 29.47 seconds for 53 MB, the `model.download` phase was significantly longer at 53.7 seconds, making it the primary bottleneck.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase duration was 0.0 seconds, and there were no failed scheduling events, indicating no capacity issues related to scheduling.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "Although model loading is part of `app_init`, the specific cause is identified as `model_loading` rather than general application initialisation. CPU throttling was also minimal, with a maximum ratio of 0.0066.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "category": "large_image",
+      "reason": "The image size was 53 MB, which is not excessively large, and the image pull duration of 29.47 seconds was less than the model download duration of 53.7 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness probe phase took only 0.218 seconds, indicating that the application became ready quickly after its initialisation tasks were complete.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "model_cache_pvc",
+      "rationale": "To prevent repeated downloads of model weights on every pod restart, a persistent volume should be used to cache the model files. This allows subsequent starts to load from local disk, significantly reducing startup time.",
+      "evidence_ids": [
+       "E4"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

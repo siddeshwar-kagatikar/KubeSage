@@ -1,0 +1,103 @@
+{
+ "incident_id": 44,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_throttling_ratio"
+     },
+     "id": "call_15113178490109701073"
+    },
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "memory_working_set_bytes"
+     },
+     "id": "call_15113178490109701520"
+    },
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "model_loading"
+     },
+     "id": "call_15113178490109701967"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The pod `eval-svc-794b6b5df-7bc42` took 86.0s to become ready, primarily due to two factors:\\n\\n1.  **Model Loading (54.0s):** The application spends 53.7s downloading 524MB of model weights on every startup (`model.download` span). The `model_loading` runbook confirms this is a common issue where weights are not cached across pod restarts.\\n2.  **Slow Image Pull (29.5s):** The image pull for 53MB was slow (1.8 MB/s), contributing significantly to the total startup time.\\n\\nCPU throttling and memory constraints were not significant factors (mean CPU throttling ratio was 0.0025).\\n\\n**Recommendations:**\\n*   **Model Loading:** Implement a persistent volume (PVC) for model weights to allow the application to reuse cached files across restarts, as suggested in the `model_loading` runbook.\\n*   **Image Pull:** Investigate the registry throughput or network latency to improve the image pull speed, as 1.8 MB/s is below the expected performance.\", \"extras\": {\"signature\": \"EsMECsAEAWkUfRO9SpSX2dgkZKGI289Ozw2tkZ2xKIAJunGC45rGIhQoPgiyyFb+MD0KmRfk41DFv6Ca1l4jy5/+AVB8OG+6Ln0V46QImhbAylcKN7q7UJKiwMsXvEMof/b1GvTGvh9VCEYpJsZqMstzcZssOBNHJkV1DufVFf9ZQ2uUrVVvKpegIX3MulGncQK5vijK+aLBjCOr/83h+aEl86218SR/mkIh3Z09kgwZArJJqZCCE9Z6aIoC9IFMT0iQBGo7rqTjNj1n7sZNYm8/jN0Mkz30urZt3aNGnR2nR3cpLNxUFFB3Y0Wh92M/d480DwPoYHteacNC0I97lqbwalmVAP2+Zc+zFjzu2o1zoBWSiMJSp2qNEN1fjTadhua/8bgI9HjWVzRFC+pjVhibMa7rhavAiKVRAC2JieMTZySNsDiTxkDgID6gC0ve+x5HbJIXHYXaiJZ1EIpnxIat0C6fHEQMliHS/rncuWDAL70MMxtYYcKh+tPFasQCMQpt7/Y+sAANQF8ofmzhVF6cz1rqanq3JA6AFuO8mPO+1klZUk4eGXwju8v5PGe63dbpKqpmmFBTXkFNKY9yvPrFaimHy7awiEeFyzJlYXQ26zGZ2OSFnXXPrQndAwTB4uYeC+JpDxburAiyGpT+LI9dDFSrivB7B6XPDJ83kQ9LAybxwXhwY2UU1VV6IITOgTQyjtpnNuj1/8FQiZonq2w6ABcBVBjlbEeE1HGQKoSzM3hqp5RIpN7sim1q5j8L4kuMJjaq\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod startup was significantly delayed by a 54-second model weight download, which occurred because the application does not cache weights across restarts. Additionally, the image pull was slow, taking 29.5 seconds at a throughput of 1.8 MB/s. These two factors combined to cause a breach of the 10-second startup SLO.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The model.download span accounted for 53.7 s of the startup time to fetch 524 MB of weights, with cache_hit marked as false.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull took 29.5 s for 53 MB, resulting in a low throughput of 1.8 MB/s.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "CPU throttling was negligible with a mean ratio of 0.0025, indicating it was not a bottleneck for application initialisation.",
+      "evidence_ids": [
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase duration was 0.0 s, indicating no delay in pod placement.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "While the app_init phase was slow, the delay was specifically attributed to the model.download span rather than general CPU-bound initialisation.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Implement a persistent volume (PVC) for model weights",
+      "rationale": "This allows the application to reuse cached files across restarts, avoiding the 53.7 s download penalty on every startup.",
+      "evidence_ids": [
+       "E1",
+       "E5"
+      ]
+     },
+     {
+      "action": "Investigate registry throughput or network latency",
+      "rationale": "The current image pull throughput of 1.8 MB/s is below the expected performance, contributing to the slow startup.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

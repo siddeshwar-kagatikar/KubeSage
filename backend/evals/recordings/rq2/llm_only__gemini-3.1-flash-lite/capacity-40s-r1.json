@@ -1,0 +1,68 @@
+{
+ "incident_id": 70,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "capacity",
+    "summary": "The pod experienced a significant delay during the scheduling phase, accounting for 40.0 seconds of the total 46.0-second startup time. This was caused by resource constraints, as evidenced by a FailedScheduling event. Other phases, including image pulling and application initialisation, completed within expected timeframes.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod spent 40.0 seconds in the scheduling phase, which is the primary contributor to the total 46.0-second startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "There was 1 FailedScheduling event recorded, indicating the pod could not be scheduled immediately due to capacity constraints.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull phase took 4.444 seconds for a 53.3 MB image, which is efficient and does not indicate a registry or network bottleneck.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was only 4.444 seconds for a 53.3 MB image, indicating normal throughput.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The pull throughput was approximately 12 MB/s, which is reasonable for a standard container registry pull.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "Application initialisation completed in 0.914 seconds, which is well within normal limits.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Review cluster resource requests and limits.",
+      "rationale": "The pod experienced scheduling delays due to capacity issues, suggesting that the node pool may be undersized or resource requests are too high for the available capacity.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

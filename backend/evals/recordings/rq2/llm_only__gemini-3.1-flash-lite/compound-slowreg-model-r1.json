@@ -1,0 +1,71 @@
+{
+ "incident_id": 44,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod startup was delayed primarily by the application downloading 500 MB of model weights during initialisation. This process took 53.7 seconds, accounting for the majority of the 86.0-second total startup time. While the image pull was also slower than expected, the model download is the dominant factor in the SLO breach.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The model download phase took 53.7 seconds to retrieve 524 MB of data.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The total application initialisation time was 55.1 seconds, which is significantly higher than the 10.0-second SLO threshold.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The image pull took 29.5 seconds for 53 MB, indicating a throughput of 1.8 MB/s, which is below the 5 MB/s threshold.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "slow_registry",
+      "reason": "Although the image pull was slow at 1.8 MB/s, the model download duration of 53.7 seconds was the primary contributor to the total startup time of 86.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "Scheduling duration was 0.0 seconds, indicating no delay in pod placement.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Implement model caching or pre-loading.",
+      "rationale": "The application currently downloads 524 MB of weights on every cold start, which is the primary bottleneck.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "action": "Investigate registry network performance.",
+      "rationale": "The image pull throughput was only 1.8 MB/s, which is below the expected 5 MB/s threshold.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

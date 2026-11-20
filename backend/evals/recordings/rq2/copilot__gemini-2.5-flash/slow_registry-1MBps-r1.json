@@ -1,0 +1,139 @@
+{
+ "incident_id": 71,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_pod_events",
+     "args": {
+      "reason": "Pulled"
+     },
+     "id": "d9479c90-e6a0-4de1-b1f9-b2f9991f983a"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "slow_registry"
+     },
+     "id": "0a2dd7e6-1ee9-4001-9079-f57ad4089b5d"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The root cause of the slow startup is `slow_registry`. The image pull took 56.5 seconds for a 53 MB image, with a throughput of only 0.9 MB/s, which is significantly below normal. Other startup phases were negligible.\", \"extras\": {\"signature\": \"Co8HAWkUfRNcbsg7v7WshpSTWEwAyE2jxmbpiuMX3kQjB6uTPE2EfVq25LmjjH1r6MLF6JOQ9zyqTm2GG1n0fkkFrWfPJrTZJlz8uyxDQZuwVwi7uZGzE/nU1i31O7ft2bm8WOYr6n+0Diz0422mSdp3/76m4qKK+lZSnVW3ZonwPWwf0sWGD4LQ33NK84Tc65Oh0dYICytrVq9mArkYXScKlnOO42bcMnhOZ+WVMJ5LQzQ8cHDtWNZEcge3kjjj55GJ4cAHsC338md5l/Y8xO8lqpIlIMtayov+jxZALxTLA9RcIiwXxjGp6CCPDKg6MJorrpoGG0Mgwh9syEu2ubh4efmVb+c/8AnmysOa7bPsctbCzIlgLbJyQVvI6bWwyhAHcFA1n/IFF1TJp3g/O2mKwkVa/K9aSen3cP7ksreptf2KeHEutj0poMlHONSM/AhCb76HN2jR0fo0IYTZ6qxCUwnrIBlF50H2kMdkF7Cv+DJtRdxnHXbUIC6NPH3LvqyY4ACYixpMObAGrzYYOPhnRjC6DzTM1Skw7kzKS6J+ontG/GcQVmhp/lCpffWPJrjxHPqJvdhDdWFsTd5dmE8JHGi3TXisz72825u9G4IIZH2yFX0js32x85sfgmT45IA2EvtD211So5NR+LyojukUmjLaCYeKPJPgC3jaA47ltKg/RdRoGMmz7RMpE8Mn4g89lZ4acPQs5DBKb/Cgthid90rpn0gn+1Zzna1wO5pBekzIokFAPztyvu438q2qfRg4SxMxsHGJ4tNyBsTUO3nRvsrHH9QD6QwZEItLKNHMpes5yCJAQ26vWF9DDWkLn+jpY2YGBntgqkL4zvTegD2voOjyVy4J3rIOsF0dmmcXT4NT3r59nKdHvScYt3GOpZXu6DJaMHlqR/niMDI+HLXaTiykr77oAv4AiDAG96D0AJP9s1IsY21uDRTnEBmxp/MwT1FfopqEUd4qPGQZvUyEMu0AJMh5+7i7NV0AG+ZTRTU64XZ9b1vkL9708e6wfThAVGvLmnWtHpbvUQEXN/NcfGWWbIjjXutu5bxk8M7DjpeUAfyEiQGTJeqlmFb+0Aeg20MOs4TVzwGVwSVY8kNvyfBWqhCclwi07qS2nI97YbhzMF8N1o6RLBKsGwKK1uvCal/tetuQ0Gw2xWqyE3EehjNTuekn+TOtwM8wcG+QFgiB1ShNL2VAYaxofFR95qQ=\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_registry",
+    "summary": "The pod startup was slow due to a prolonged image pull, which took 56.5 seconds for a 53 MB image. This resulted in a low throughput of 0.9 MB/s, significantly below the normal threshold of 5 MB/s. The slow image pull caused the total startup time of 57.0 seconds to breach the 10.0-second SLO.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total pod startup time was 57.0 seconds, exceeding the SLO threshold of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image_pull phase was the dominant factor, lasting 56.488 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The image size was 53,328,919 bytes (approximately 53 MB).",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     },
+     {
+      "statement": "The image pull throughput was 944,075 bytes/s (0.9 MB/s).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "This throughput is well below the normal threshold of approximately 5 MB/s for image pulls.",
+      "evidence_ids": [
+       "E2",
+       "E4"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "While the image is 53 MB, the primary issue is the low pull throughput of 0.9 MB/s, not the absolute size itself. The runbook for slow_registry advises against shrinking the image as a primary fix when throughput is the problem.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3",
+       "E4"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "The 'model_s' signal is 0.0 seconds, indicating no time spent on model loading.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "The 'app_init' phase took only 0.909 seconds, which is a negligible portion of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The 'scheduling' phase duration was 0.0 seconds, and there were no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The 'readiness' phase duration was 0.0 seconds, and there was no time spent on dependency connection.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "prepull_daemonset",
+      "rationale": "Pre-pulling the image can ensure that scale-up operations do not depend on real-time registry throughput, mitigating the impact of a slow registry.",
+      "evidence_ids": [
+       "E4"
+      ]
+     },
+     {
+      "action": "Advisory: use a registry mirror or pull-through cache close to the cluster; check registry rate limits.",
+      "rationale": "Improving the registry path by using a local mirror or cache, or addressing rate limits, can increase image pull throughput.",
+      "evidence_ids": [
+       "E4"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,94 @@
+{
+ "incident_id": 40,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_throttling_ratio"
+     },
+     "id": "call_16497286975757278866"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "app_init"
+     },
+     "id": "call_17949523051311379578"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The pod `eval-svc-696ccc9cd7-hwznx` experienced a slow startup primarily due to the `app_init` phase, which took 54.3 seconds. The `init.compute` span accounted for 51.0 seconds of this time. Analysis of the `cpu_throttling_ratio` metric during the startup window shows a mean throttling ratio of 0.9989, indicating that the container was severely throttled by its 250m CPU limit.\\n\\n**Conclusion:** The root cause is **app_init** (specifically CPU-bound initialization being throttled).\\n\\n**Recommendation:** Increase the CPU limit for the `eval-svc` container to reduce throttling during the startup phase. If the higher CPU usage is only required during startup, consider using a startup probe or moving non-critical initialization tasks to be performed asynchronously after the pod is marked Ready.\", \"extras\": {\"signature\": \"EpcDCpQDAWkUfRPCLNDxvsLVMcG55dBuDAzdqYOKzEscgddb9ItnGaSFlwM6PMlkBQjOm3FjiYszupgNhZRPzdYI0KlPkE30GVW2W3Fy4cuL34m3eEbV9npBfNrGcCADzKBNdPEA6hgVBohTnIP8/0BYhUsGSVlFyow6jL1Nfs/szjlqh26uFcn3grmLjQl9iSzvVqe6ssbvPt/+iDG88EQlbBh7nEhBViMRY0h9q04vbphuW65dv4sK1Jn2a77iG+PBfHNmS8i8VvzI8XsDB/XQ1SlYI0G8TqqafcTKQGMKmSRXseMop1khrj/l7O4ynrqbD3XeOvamWVFOuJN+rNQl+iyp55393aVyq06N3jX+pWoWNA83nBenq36sAhWOZoCt/KGWFcgdrHEwBTg2xz+fkEz1rTJts4dRcdP3D86s0EIxlZWhX66WBxyidI67HKlmTkVZSthL9hOyILUISnM7OUbD16viP27vQTuSyZ9XwcbHgfIUIV3yR4v7EKXpJCkwd0N2yfS/o/kT/6W++HPzDXRQfghfSkQ=\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "app_init",
+    "summary": "The pod startup was delayed primarily by a 54.3-second application initialisation phase. The `init.compute` span accounted for 51.0 seconds of this duration, during which the container experienced severe CPU throttling due to a restrictive 250m CPU limit. The mean CPU throttling ratio of 0.9989 confirms that the resource limit was the bottleneck for the startup process.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The application initialisation phase took 54.3 seconds, with the `init.compute` span consuming 51.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The container was severely throttled during startup, with a mean `cpu_throttling_ratio` of 0.9989 against a 250m CPU limit.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was only 5.977 seconds for a 53.3 MB image, indicating normal throughput.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "There were no scheduling delays or failed scheduling events recorded.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness phase duration was 0.0 seconds, indicating the app was ready immediately after the initialisation phase completed.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "adjust_cpu_resources",
+      "rationale": "The container is experiencing severe CPU throttling during startup, which is directly causing the SLO breach.",
+      "evidence_ids": [
+       "E3",
+       "E4"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

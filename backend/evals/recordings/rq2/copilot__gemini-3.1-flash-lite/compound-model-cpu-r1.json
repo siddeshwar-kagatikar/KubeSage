@@ -1,0 +1,78 @@
+{
+ "incident_id": 37,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_throttling_ratio"
+     },
+     "id": "call_4816313947418803332"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "app_init"
+     },
+     "id": "call_17538965094846051860"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The pod `eval-svc-858548b554-c4xcl` experienced a slow startup primarily due to CPU throttling during the `init.compute` phase. \\n\\n- **Evidence:** The `init.compute` span accounted for 50.7 seconds of the 84.0-second startup time. During this period, the `cpu_throttling_ratio` metric showed a mean of 0.66 and a maximum of 1.0, indicating that the container was heavily throttled by its 250m CPU limit.\\n- **Conclusion:** The root cause is `app_init` being constrained by an insufficient CPU limit during the compute-intensive startup phase.\\n- **Recommendation:** Follow the `app_init` runbook by adjusting the CPU resources (`adjust_cpu_resources`) to provide more headroom during the application's initialization phase.\", \"extras\": {\"signature\": \"EsUDCsIDAWkUfROi3/3McG95YAQMktK46VdPjRqaIsjqMT0lasLLgFleaRgjPqut6lvyQrLhTBZTvD299t3zWXmHBMXG9PHNirxjdKIwgYMOqhTRTxEzX2nc1LDNGzBww8kXNgtNbFHOl6iXc/YZb3OedDS/KVadFjoNhnS+3aZ1lc0xVnzi7LMc0GF8/O2wGx1GmHLAa1VyeLIk3zFC71OXsFeNfUre/WNwi+m3jjbUzUCw7gXO1e2wnTrFhqpZxVYxWzvlsAIzCkW3wAAaavF5M1VNo2awFHQnV7i3jT5I5N6/B9Bp2HVrPeae8weaEMNIbwZoo7jbBKbKLt9k+iJHLN+Z12oHfh/ON0FzGl3uSieLGw1TR+0g+8DrQaY3UDm0xLDJeYQYgkaWL9KDUu6WrR/QjQumPRXq75hlYzsOUvri1pjv5RIbwJPXButph3RTGR9gfZAKGy1QpG1qw/Ta7bJ3NPdpfmJJ+QG3tZzxgWEkKXPHMOpCLC+cX9kb/ezGtpqbad9XEpxET2g6GILXzJfk94B68a/rgM0d/n9f+EFC6wMeXvzaQ7Cgl4c6ZGtqJ9NALn3j+Em7ozPr+1lu2UVqkxLM\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "app_init",
+    "summary": "The pod startup was delayed primarily by a 50.7-second init.compute phase, which was significantly impacted by CPU throttling. With a mean cpu_throttling_ratio of 0.66 and a maximum of 1.0 under a 250m CPU limit, the container lacked sufficient resources for its initialisation tasks.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The init.compute span accounted for 50.7 seconds of the total 84.0-second startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The cpu_throttling_ratio metric reached a maximum of 1.0 with a mean of 0.66, indicating severe CPU throttling under the 250m limit.",
+      "evidence_ids": [
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "model_loading",
+      "reason": "Although model.download took 25.1 seconds, the init.compute phase was the primary bottleneck at 50.7 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "adjust_cpu_resources",
+      "rationale": "Increase the CPU limit to provide more headroom for the compute-intensive initialisation phase, as suggested by the runbook.",
+      "evidence_ids": [
+       "E4"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

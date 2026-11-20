@@ -1,0 +1,101 @@
+{
+ "incident_id": 96,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_throttling_ratio"
+     },
+     "id": "call_10597276691054119922"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "slow_readiness"
+     },
+     "id": "call_1170552822922409328"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The incident was primarily caused by an overly conservative `readinessProbe` configuration and, to a lesser extent, CPU throttling during application initialization.\\n\\n1.  **Slow Readiness (Primary Cause):** The pod took 109.0s to become Ready, but the application finished its initialization (`app_init`) at 40.2s. The `readinessProbe` has an `initialDelaySeconds` of 90s, which forces a significant, unnecessary wait before Kubernetes even begins checking if the application is ready. This accounts for the majority of the delay.\\n2.  **App Initialization (Secondary Cause):** The `app_init` phase took 34.4s, with the `init.compute` step taking 31.1s. The `cpu_throttling_ratio` metric shows a mean of 0.35, indicating that the application is being throttled by its 250m CPU limit, which contributes to the slow initialization.\\n\\n**Recommendations:**\\n*   **Tune Probes:** Implement a `startupProbe` to allow for a faster transition to the `readinessProbe` once the application is actually ready. Reduce the `initialDelaySeconds` of the `readinessProbe` to 0 or a much smaller value, relying on the `startupProbe` to protect the application during its initial boot phase.\\n*   **Resource Tuning:** Evaluate if the 250m CPU limit is appropriate for the `init.compute` workload. Increasing the CPU limit may reduce the initialization time, though this should be balanced against cost and resource constraints.\", \"extras\": {\"signature\": \"EsQGCsEGAWkUfROZGvbudDo2uDb5Yxc8WTv/TF3/66X9e42fGlRm892547ZVoJntBVVCb6JgOXooDg+v/7+q381+MBRNfvmG4InNISCTZGqy3YTPI4T2bHg4l7LmhjnL7ZRiH37/MZV/Dk37uOSoe8PqLkBZ87DUaK7yvww3RfSSkEDAPHVqqjd1OSCAy5nGU9gnGzJu3gBkhuRBo0Nb6ZZlGNlVFc/STk2Tb4Fas0xf00J7DlQ6SA7uCbP8g+2WRJl/p5syiz3EmCZrIsa47qh40eVTVq8F6yvDcXnzHPjFU6vM6/7mGYijag/a2h0TMwSeL9wkOa0sDJexDh/w5ydrwbNY9w2QB+x9LmSemL7fixDiuzxk3GtGvzyBbgyUcE7lg+Cmaz0HogtoMQbAzUQ4r3g8mTiPllxvdGErG2LL4cARZj3s0ZXpfnhrZhIdFeallg6dfA+nHsIUt8zPTFMW+tNS+mXwbs2yXAnNNSI+/Sbl3wXvJ0XvVYsbk6cIInZ40wCPUmABq0aAi1X6BtOYAQ8ge1H2jztIa7qSm4ce93ejNV/YYvV944GmJhGKqvQvHSkSXABunogrfao73Ghn061OWBTnAUEfiB2ohg+e+Oj2uN5Amtdk1NYpB2CnU2BJkwny7jMwc63eEoCXwDuQnjXa8NNu8JLXZTS06Bn+GML+eundWO3Fwrv4pZKA/cVKQe+ORFw0RWru5Ws/r9LWLuo9AMHvt5tZ+4x5egRmyiAaTm7zM5m/WpyBfJhlwmTAJ+ETTUBCqKQ0CSLTeTvHlNJhaW9JyYZAhjuPO5qosaFxEc1LCv8QdADAfIRmF1jOLIj2liPjNEGP+6rvR+vqfeyWMGEl6lDPU1+6Jo+Q6GMuKa9B2UVMbXF5/Z7C1/o679rjg3tvjCkBoUCJhgTdge2AYGAyYXsXIYnzXqEAlaM9i1rwz5jY/drQUfR+xJTvLLSYEAs/FmT6BftZEPb5XEqGZEbXROrja6bJuTUh5yL7PzYmvJav+70yIIHFTEWdIz/QpEAxCR+lEmNX8JXO1JabPVjSjCsnrpSj6u3P/6BruZ0EtRqbACMNeKwpvshizTzwt422I79JQs3IJKTMaAtA6m0=\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_readiness",
+    "summary": "The pod startup was primarily delayed by an overly conservative readiness probe configuration, which included a 90-second initial delay. Although the application completed its initialization in 40.2 seconds, the pod remained unready for an additional 68.8 seconds due to this probe delay. CPU throttling during the initialization phase also contributed to the overall startup time.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The application finished initialization at 40.2s, but the pod was only marked Ready at 109.0s, resulting in a 68.8s readiness phase.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The readiness probe is configured with an initialDelaySeconds of 90s and no startupProbe, causing a significant configuration delay.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "Application initialization took 34.4s, with the init.compute step accounting for 31.1s of that duration.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The application experienced CPU throttling with a mean throttling ratio of 0.35 under a 250m CPU limit.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "app_init",
+      "reason": "While app_init was slow due to CPU throttling, the primary delay was the readiness probe configuration which kept the pod unready for 68.8s, significantly longer than the 34.4s initialization time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "tune_probes",
+      "rationale": "Implement a startupProbe to protect the application during boot and reduce the readinessProbe initialDelaySeconds to 0 to allow faster detection of readiness.",
+      "evidence_ids": [
+       "E4"
+      ]
+     },
+     {
+      "action": "Resource Tuning",
+      "rationale": "Evaluate increasing the 250m CPU limit to reduce the duration of the init.compute phase, which is currently being throttled.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

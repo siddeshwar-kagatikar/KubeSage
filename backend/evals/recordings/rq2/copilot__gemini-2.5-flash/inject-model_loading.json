@@ -1,0 +1,106 @@
+{
+ "incident_id": 34,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "model_loading"
+     },
+     "id": "dec1bf4f-48dd-4c5e-a033-343d05acb491"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The root cause of the slow startup is `model_loading`. The `model.download` phase took 25.006 seconds, and `model.load` took 0.158 seconds, accounting for the majority of the 31.0-second total startup time. The `model.download` span indicates `cache_hit: false`, meaning the model weights were downloaded from a remote store on every start.\", \"extras\": {\"signature\": \"CrIDAWkUfRPf1ZQd78MVTkKqZ4Cz8jMGbu7GO4OG0VW8a0xYvl1K3fS1iaPIgUhu1/FIF1mu0BCMbNY+u1n8yBsbwvV5tVLlGOjP+eAFjgO/8CE7E+H3T7hkd/LXuOhWN2ndhTXIkpSAmYfpSJmv6VWyMFtJFF9HmxHoxkvsclY0ME8dUlDAvIePrXgnHxA7osjX34JxfMOMUd3OGFGpv2L2pMKe2qf8vAkxfStzzExON5yAEufzRrS6Ybm58CcolD0IuzguEe40NHjr1dyT1XJBiOkWA0NFoocThcsSGwzEAUCwyGjKTtlh0A26WvWhhm5X4zqgeo1Pv5MXk0hlqNwAzMDfNObHjzEoYmXGJP/NMRHwmT7G8qYuZtFrytGRGKaEyFRcf7fAL90Ee2tIUxPVbBXYL6L3VpAsA5+MkAYoSNMWHxur6t2q2h+R2QaM1kDBGwbvcw0io/uS6Gboi2wi1ZYj7MNPjcP570JDbQwac3LDbvV+IWp1p7yIxzfvX1MAqdFZ5adcMZEfHcVm3CE46ADj3Z27idfFIEyWyV5mN/6wLWwp5psYRRHHXcVU6OCw5Hk=\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod startup for eval-svc-75fdff78d5-jkxm7 took 31.0 seconds, significantly exceeding the 10.0-second SLO. This delay was primarily caused by the model.download phase, which consumed 25.006 seconds. The model weights were downloaded from a remote store on every start, as indicated by a cache miss.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod startup took 31.0 seconds, exceeding the SLO of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The `model.download` phase was the longest contributor to the startup time, taking 25.006 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The `model.load` phase took 0.158 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The `model.download` operation reported `cache_hit: false`, indicating the model weights were downloaded from a remote store on every start.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The `app_init` phase, which encompasses model loading, lasted 26.09 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "capacity",
+      "reason": "The `scheduling` phase duration was 0.0 seconds, and there were 0 `failed_scheduling_events`, indicating no capacity issues prevented scheduling.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "large_image",
+      "reason": "The `image_pull` duration was 4.269 seconds for an image of 53328919 bytes, which is not the primary cause of the 31.0-second startup.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The `image_pull` throughput was 12492134 bytes/s, which is a normal rate and not indicative of a slow registry.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The `readiness` phase duration was 0.0 seconds, and there were 0 `probe_failures_after_app_ready`, indicating the readiness probe was not a bottleneck.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "model_cache_pvc",
+      "rationale": "To prevent repeated downloads, keep model weights on a persistent volume, pre-populated by a prefetch job, and enable the application's cache reuse. This will allow subsequent starts to load from local disk.",
+      "evidence_ids": [
+       "E3"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,105 @@
+{
+ "incident_id": 74,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_throttling_ratio"
+     },
+     "id": "call_15666945242291674944"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "model_loading"
+     },
+     "id": "call_17820817971282634056"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The pod `eval-svc-645c549986-jq6gz` experienced a slow startup primarily due to **model_loading**. The `model.download` span accounted for 25.6s of the 33.0s total startup time, and the `cache_hit` attribute was `false`, indicating that the model weights were downloaded from the remote model hub on every startup. CPU throttling was negligible (mean 0.017), ruling out `app_init` performance issues.\\n\\n**Recommendation:**\\nFollow the `model_loading` runbook:\\n- Implement a persistent volume (PVC) for model weights to ensure they persist across pod restarts.\\n- Enable the application's cache reuse mechanism to avoid re-downloading weights.\\n- Consider pre-populating the cache via a prefetch job if the initial download remains a bottleneck.\", \"extras\": {\"signature\": \"Ev8CCvwCAWkUfROOYGYb11Nyg/BVcMn47/IjmKh3pp6s1BAQTgnXvM1KXLJdEHip3+A1k1AUT9mJj60b+fDOhJAVznAlhlUo/WMAUJYVAuEs5PpQM3umsVGntYrRoxrbendGTvnmDsELNOh6FxTpVnqYzOSCNAI32vQiqiILiYrDR0LwzjA+qZmOmdZT6Zpmthq9MSzfL+ErEVLjtCt9mj2zKk7QmXm/3VnSWWzByTUarDO8bj0V9uin4wdmlsgww/lqBnvXzW6UtApYfPKobrecVtSigRYieuKyJRRyTFbVPVSNWDiJo3PbItNsY7WkoIAeQB80qhOrrsC7KVZ2++ci3zyLhjNFSVOb9/E6TqIp+kqqNmuUoMobDkOgGz7CoQ5UStAyKwCR+3nmd4BDolldC6LB35aK6zpgI7mQl4NHcY9q3JJRj0qXry+eSWzBw6HSKxesgr7T4jvG+Gf3/nUKve+lDiB5vB5QsW6meAjBehkp/HPXcaZiD85vT5fhk9U=\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod startup was delayed primarily by the model download process, which accounted for 25.6 seconds of the total 33.0-second startup time. The model weights were fetched from a remote source on every startup because the cache hit attribute was false. Other potential bottlenecks, such as CPU throttling, were found to be negligible.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The model.download span took 25.648 seconds, representing the majority of the 33.0-second total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The model download cache_hit attribute was false, confirming that 262,144,000 bytes were re-downloaded from the remote model hub during this startup.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "CPU throttling was negligible with a mean ratio of 0.017, indicating that application initialisation was not constrained by CPU limits.",
+      "evidence_ids": [
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "app_init",
+      "reason": "CPU throttling metrics show a very low mean of 0.017, ruling out CPU-bound performance issues during initialisation.",
+      "evidence_ids": [
+       "E3"
+      ]
+     },
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.921 seconds, which is significantly lower than the 25.648 seconds spent on model downloading.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "model_cache_pvc",
+      "rationale": "Implementing a persistent volume for model weights ensures they persist across pod restarts, avoiding the need to re-download them from the remote store.",
+      "evidence_ids": [
+       "E4"
+      ]
+     },
+     {
+      "action": "Enable application cache reuse",
+      "rationale": "Enabling the application's native cache reuse mechanism will allow it to detect existing weights on disk, preventing redundant downloads.",
+      "evidence_ids": [
+       "E4"
+      ]
+     },
+     {
+      "action": "Pre-populate cache via prefetch job",
+      "rationale": "Using a prefetch job ensures that weights are available locally before the application starts, reducing the impact of the initial download.",
+      "evidence_ids": [
+       "E4"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

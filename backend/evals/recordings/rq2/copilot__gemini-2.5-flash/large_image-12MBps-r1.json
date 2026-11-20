@@ -1,0 +1,126 @@
+{
+ "incident_id": 72,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_workload_history",
+     "args": {},
+     "id": "03b40c9c-3298-48bd-b9ff-c446a0730b34"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "large_image"
+     },
+     "id": "867227e3-c3c5-4897-8a3d-dd10630e957f"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "slow_registry"
+     },
+     "id": "630716bb-d5cf-4d1d-92a8-dd35dc7c1059"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The root cause of the slow startup is `large_image`. The image pull took 79.5 seconds (97% of the total startup time) for a 648 MB image. The pull throughput was 8.2 MB/s, which is considered normal (>= 5 MB/s) according to the runbook for `large_image`. This indicates the slowness is due to the size of the image, not a slow registry or network.\\n\\n# Runbook: large container image\\n\\n## Symptoms\\n- Cold starts dominated by the `image_pull` phase; warm starts (image cached on the node) are fast.\\n- `Pulled` event reports a large image size (hundreds of MB or more compressed) and a long pull duration.\\n\\n## Evidence to check\\n- Startup timeline: `image_pull` duration and share of total; `cold_start` true.\\n- Pod events: `Pulled` message (duration, `Image size`).\\n- Workload history: warm vs cold startup totals for the same image.\\n- Pull throughput (`throughput_bytes_per_s`): if it is normal (\\u2265 5 MB/s) the problem is size, not the registry.\\n\\n## Likely causes\\n- Full OS base images (e.g. `python:3.x` instead of `-slim`), build toolchains left in the final stage.\\n- Large unused dependencies (ML frameworks such as torch/tensorflow installed but not imported).\\n- Model weights or datasets baked into the image.\\n\\n## Remediations (approved catalogue actions)\\n- `switch_image_variant` \\u2014 move the workload to a slimmer, pre-built image variant (multi-stage build, slim base,\\n  only runtime dependencies). Removes the cost permanently. Verify the variant runs the same code.\\n- `prepull_daemonset` \\u2014 pre-pull the image on nodes ahead of scale-up. Hides the pull from startup but moves the\\n  cost (bandwidth, disk) rather than removing it; report the pre-pull time alongside the startup gain.\\n\\n## Advisory (not automated)\\n- Restructure the Dockerfile: multi-stage build, `--no-cache-dir`, remove unused packages, order layers so that\\n  rarely-changing layers are cached.\\n\\n## Do not\\n- Do not set `imagePullPolicy: IfNotPresent` and call it a fix: it does nothing for a genuinely cold node.\", \"extras\": {\"signature\": \"CpQJAWkUfRPNWTiwQAIrEQBz+RrFDiKDcJj5tu8yNUhFCyYQiXHAIc4kdl3h8P4VHbpyGbszBL8/9VpR0ayGZT1Q0zQZbDHK6bh5len0R6COGI4kA/z8gap7ldXau9x6nEF4Qm9g/g8zoKGRKAo7ziLGevsmIh3ls1zAEgM+Lww1I62F1BNUTWttTsjD4FsPOof2FEKCMxLO9lu34o25/sQq/hrxxKGzbUUQB98i7mRIPLGVwm90nf9rhJajcFyI7IkgRJMTAfme0zvt4WLC1B25h+/8rYHsic5kVzB80O8/7kDmxenN//tkGW+5I5IFaeWn+c0rYnKjlqa+F9hroKV030eafN2H0j6v9DRsJV/705SgLo57je/o6tIaHnNTYCt/iiwVT/HMuQwQxaspHDieCB9SYQqLlJhTC012lxAPvWZNabFyYLz8QHAeb6iU9jZSdIPB7rJ6I70WGmpVAjgXfbPFSH0yarIBqKTz/RcvbkI6Q8TPavECscbmscNvfvkR82TrsvsPUT1CL6xJoiD3WFzdFbgv3uRSYMQ+LVtT7iBEYIQX6CQR3H/OCsSgw7MPm4/wOn15PjL/++NxdcR/fVgi9jO+Y4QChRxaMwzNwENFsS3vSiPbuvIy+gDYPUdN1gQEasdpTRaHbwUwQTdW6ocABvCosHjEQO+6Urw7eWdh5bgLx2stGybkDCykz61+0x7tDVPnRoz2rz3D1Q+cVQ0DPPuR4FcGxuHv5wmIAQBj7su5Npi2G+AISGBr4kmC9a9+H9s0RluNpAmpD+7ED1invxZr1LJ82siPGMbkzBER+2szSKXudN4gsIaDkZbwDzNOFHtR0KHeM+CCdCv8y10oP3w4rI4ujt7orm6JjLdi5p1JKC4/cqFzhw0FTPypcaMzioACMXpWx2hma9TvQCt90cOu8nufxpYVbvyVAGEza1VDHcD52ENmR/L6m+O6FKnqykIO6oWzwpx2C+KsSM/b0bQo8Stkuvt4TLkisxilYPQXkeke+prfCd48mFtoI+bwVM1juiZyhVcQkd9d8Cpxb+g6OVC3l0yUVn64NvHamp7erqBRiorurtELsHA980Ns9bXuOwNK4yDhvWbdGhc0WC7wZDt3aGdGjRpr57ZyVIU5ljieaIz7qG0Als3CSDKQXE8Y/TXGcc0n98N0c/JzgAZ6ILmKrPUPdC2uLwdvVnjUaTy3rf8SHk60bY96DEXF0bDFE9DN7Gh4SJFWu3u4fEI+iDDsdtN4vOUTakVtCIbBAWME4oOjYnLOFhItGh/C3BTqoS8bslTF/FemX8KX7t9kMuN7jbWrn5pcJhVYzFEUDyxLeycVcoUopZiVWG0Q/ZWSBzVX/JQvScXCGrn7jNwiRdbW3tbyDfTrkgD9ulvEgrAm8GfG5e7+DJXDB0pAjSyWYdaYB9ZhAh9lCZYV8vNa8kZBB4Iu9lw5K9r5tgFsjNiKxfz3jBOPdqrFO8s2vuTo6A6ZjDe5s4Z0rwQM9rfu2eqVfBn3HecytkoF4AbCXYIQrJQUWe7fy8saqDbnBSaDmehAproixE+ZtaEzNKw=\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "large_image",
+    "summary": "The pod 'demo/eval-svc' took 82.0 seconds to become Ready, breaching the 10.0 seconds SLO. The primary cause was the image pull phase, which lasted 79.5 seconds and accounted for 97% of the total startup time. This was due to the large image size of 648 MB, as the pull throughput of 8.2 MB/s was within normal limits.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod startup took 82.0 seconds, exceeding the SLO threshold of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'image_pull' phase was the dominant factor, lasting 79.457 seconds, which represents 97% of the total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image being pulled had a size of 647991705 bytes (approximately 648 MB).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull throughput was 8155250 bytes/s (approximately 8.2 MB/s).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The startup was a cold start, meaning the image was not cached on the node.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "A pull throughput of 8.2 MB/s is considered normal, as it is greater than or equal to 5 MB/s according to the runbook for large container images.",
+      "evidence_ids": [
+       "E1",
+       "E4"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput of 8.2 MB/s is above the 5 MB/s threshold for normal throughput, indicating that the registry or network was not the bottleneck.",
+      "evidence_ids": [
+       "E1",
+       "E4",
+       "E5"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "switch_image_variant",
+      "rationale": "Moving the workload to a slimmer, pre-built image variant (e.g., using multi-stage builds or a slim base image) will permanently reduce the image size and thus the pull time.",
+      "evidence_ids": [
+       "E4"
+      ]
+     },
+     {
+      "action": "prepull_daemonset",
+      "rationale": "Pre-pulling the image on nodes ahead of scale-up can hide the image pull time from the pod startup, though it moves the cost rather than removing it.",
+      "evidence_ids": [
+       "E4"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,128 @@
+{
+ "incident_id": 35,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_throttling_ratio"
+     },
+     "id": "d16c057f-12b9-4675-8ce3-e9df8f63b23e"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "app_init"
+     },
+     "id": "9b4b6a56-264e-443a-b344-cfe83c50d94e"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The root cause of the slow startup is `app_init`. The application's initialization, specifically the `init.compute` phase, took 31.0 seconds because the container was throttled 100% of the time due to a low CPU limit of 250m.\", \"extras\": {\"signature\": \"CrUDAWkUfRMH1OkaYEC+h+XKc5OeyZVFP/r2awvVvg1H4lXDMREMK+u7UJn0bDSx9TeGrDZftgtlwhr7F7NUgrbEwSppLQmm/NzXUaTDVkSGBhEe0GtbQrf5LDm2XpxV10wZY5NpTKeB5x9EmO28/kZGLRsNI8s2BPleXxB131UqFxproaE8f4EyG8Gxhlq7HehGulbnF527zg6wwGQaUt0nXp9IIqpcV62wRfUs5OqdveQN2Bb9TKCMFcrFOYLB2ET0kPsgSl39mBReHTOV47hQXibevWsyApQkv1yIt+IAobNiPzwMG7aI3GL65KqHjEELkscWS3lVjLDJ7gJeEOu6UqpuCLIRTjHos7L61ClrVLic6XYLqzR/2h+dpBx96rRy5Y+yWKg1Q/S/ohm6nwwfx4nXq74HwMZUAs/32/CYvoqGkybVNC+1H0jnwNaJIjxrHHBtrAIOUDtRJz0QfhLxtTPnaHHN2VAM1APYBlnEqey5mZw4PICl9OWHGUylaomwY0Z43fLcCuPRGIH5m+0ECqW1yjSezKCDGOsyZIV1CMEvBG0GoNn0biK8QxqWVbdknxItfD0=\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "app_init",
+    "summary": "The pod startup was slow, taking 39.0 seconds, which breached the 10.0-second SLO. This was primarily due to the application's initialisation phase, which lasted 34.152 seconds. Specifically, the 'init.compute' span took 31.009 seconds because the container was throttled 100% of the time under a low CPU limit of 250m.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod took 39.0 seconds to become Ready, exceeding the SLO threshold of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The 'app_init' phase was the longest, contributing 34.152 seconds to the total startup time.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "Within the 'app_init' phase, the 'init.compute' span took 31.009 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The container had a CPU limit of 250m.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The CPU throttling ratio was consistently 1.0 (100%) during the startup period.",
+      "evidence_ids": [
+       "E3"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.039 seconds for 53328919 bytes, which is not a significant portion of the total startup time and indicates a throughput of 13203496 bytes/s, which is not unusually slow.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull duration was 4.039 seconds for 53328919 bytes, which is not a significant portion of the total startup time and indicates a throughput of 13203496 bytes/s, which is not unusually slow.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "The 'model_s' signal indicates 0.0 seconds spent on model loading.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The 'scheduling' phase took 0.0 seconds and there were no 'failed_scheduling_events'.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The 'readiness' phase took 0.0 seconds and there were no 'probe_failures_after_app_ready'.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "adjust_cpu_resources",
+      "rationale": "The application's initialisation was severely throttled due to a low CPU limit, as evidenced by the 100% CPU throttling ratio. Raising the CPU limit and/or request should alleviate this bottleneck.",
+      "evidence_ids": [
+       "E3",
+       "E4"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

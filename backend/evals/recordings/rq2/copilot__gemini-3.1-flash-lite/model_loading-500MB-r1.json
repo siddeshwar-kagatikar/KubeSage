@@ -1,0 +1,121 @@
+{
+ "incident_id": 93,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_container_logs",
+     "args": {
+      "tail": 20
+     },
+     "id": "call_6239928449776203680"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_throttling_ratio"
+     },
+     "id": "call_13762050027065740480"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "model_loading"
+     },
+     "id": "call_5038006693287540117"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The pod `eval-svc-7c7875785f-4jw4b` experienced a slow startup primarily due to the `model_loading` phase, which accounted for 53.8 seconds of the 61.0-second total startup time. Specifically, the `model.download` span took 53.4 seconds to download 524 MB of model weights. Logs confirm that this was a cold download (`cache_hit: false`) and there was no CPU throttling during this period.\\n\\n**Conclusion:** The root cause is `model_loading`. The application is downloading model weights from a remote store on every startup without utilizing a persistent cache.\\n\\n**Recommendations:**\\n- Implement a persistent volume (PVC) for model weights to allow the application to reuse cached files across pod restarts, as suggested in the `model_loading` runbook.\\n- Consider pre-populating the cache or baking the model into the container image if the model size is manageable.\", \"extras\": {\"signature\": \"EpcDCpQDAWkUfROBRkATKH0Ih0MW+tWy9hmW7SKaPY/HvnBOhO4gUbeCHJ88DhtdItsYExWqm1kUlVGWCw1J6bNcb4ssvNBTwF+vzUjxZ2zYex9vxA3PqtFQsdtX6IvrYVEFUcpEKc3LswfjIagzLI4+sAR3k9eKtsXyu2fFig4XPL3vgF/FUeiW4hbSmU2zwkRXKOvmXRBPO197YA4/dG8heoVjxlwumU8DgXjPx27X/BB2A1QBKJh+/6dE6OCC6OzB1/jRCTGUiyjL/ubBrUah1lyZlnSD9g+tsER94EJ1TcPJE1jMYD80IZSJik81UMc0c0LnUD1t9Qtkpz9ET/8yJIg3ZnXcksYQ89NosLwhFGD52nlwmOfhFfSI7PsCe6fDHjuc/QliWvC68/25U1h15d7T7KU8NeR6pgi6DjnbTJOrVxvdUeviyhcFvqn4/wV9gmaPuNqlEm3yhbc9l2NZSgSU2ybexqwAR5SXe+hokTKm+fdTLWlGetgIqS7rWxMTrdENq6j9UOiGqrJye9gYTiIWSwqvoxM=\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod startup was delayed primarily by the model loading phase, which consumed 53.8 seconds of the total 61.0-second startup time. The application performed a cold download of 524 MB of model weights from a remote store on every startup, as confirmed by the lack of a cache hit. This behaviour significantly exceeded the 10.0-second SLO.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The model.download span accounted for 53.4 seconds of the startup time, downloading 524 MB of data.",
+      "evidence_ids": [
+       "E1",
+       "E2",
+       "E3"
+      ]
+     },
+     {
+      "statement": "Logs confirm that the model download was a cold start with cache_hit set to false.",
+      "evidence_ids": [
+       "E1",
+       "E3"
+      ]
+     },
+     {
+      "statement": "CPU throttling was not a factor in the slow startup, with a mean throttling ratio of 0.0.",
+      "evidence_ids": [
+       "E4"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was only 4.2 seconds, which is not the primary contributor to the 61.0-second startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "Scheduling took only 1.0 second, and there were no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "The app_init phase was dominated by the model download span, and CPU throttling was ruled out.",
+      "evidence_ids": [
+       "E1",
+       "E4"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Implement a persistent volume (PVC) for model weights to allow cache reuse across pod restarts.",
+      "rationale": "This prevents the application from performing a cold download of 524 MB on every startup, as recommended in the model_loading runbook.",
+      "evidence_ids": [
+       "E5"
+      ]
+     },
+     {
+      "action": "Consider pre-populating the cache or baking the model into the container image.",
+      "rationale": "These strategies reduce the dependency on remote model stores during the critical startup path.",
+      "evidence_ids": [
+       "E5"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,113 @@
+{
+ "incident_id": 48,
+ "model": "gemini-3.1-flash-lite",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "model_loading"
+     },
+     "id": "call_3818786666290084386"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_pod_spec",
+     "args": {},
+     "id": "call_1940523660274391186"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_workload_history",
+     "args": {},
+     "id": "call_4719196165894313258"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[]",
+   "tool_calls": [
+    {
+     "name": "get_container_logs",
+     "args": {
+      "contains": "model.download"
+     },
+     "id": "call_5634974261754276589"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The incident was caused by `model_loading`. The pod `eval-svc-688d987c7f-9b4d5` spent 10.15 seconds (out of a 16.0s total startup time) downloading model weights (`weights-100m.bin`) from a remote model hub.\\n\\nEvidence:\\n- **Startup Timeline (E1):** The `model.download` span accounted for 10.152s of the 11.25s `app_init` phase.\\n- **Pod Spec (E4):** The `MODEL_DIR` is mounted on an `emptyDir` volume, which is ephemeral and does not persist across pod restarts. This forces the application to re-download the 100MB model on every cold start.\\n- **Logs (E6):** Confirmed `cache_hit: false` for the download, indicating no local persistence was utilized.\\n\\n**Recommendation:**\\nFollow the `model_loading` runbook: implement a persistent volume (PVC) for the model weights to allow for cache reuse across pod restarts, or pre-populate the weights into the container image if the size allows.\", \"extras\": {\"signature\": \"Ep8BCpwBAWkUfRNlNIQLRsLudjMqf//OkOcKd0AM6qJQsarzG1eZGgT+jxoO+xoj4IGfSLfIDwbeKhj3GXeQqYjC1YfSvfQV4MUSOJIjCSQ9U5uWGHN88CAuc86G8MSqsYbshMWSzxqPP8PN7Q3JosyV5jpEhqz/kTmjxdbJTeavaR8R5cRn19OOpyCG/jKuDak4gJ4Vz1N0Oa+wdm7yoCZH\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "model_loading",
+    "summary": "The pod startup was delayed primarily by the application downloading 100MB of model weights from a remote hub. This download occurred because the model directory is mounted on an ephemeral emptyDir volume, preventing cache reuse across pod restarts. Consequently, the model download accounted for over 10 seconds of the total 16-second startup time.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The model.download span took 10.152 seconds, which represents the majority of the 11.25-second app_init phase.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The application logs confirm a cache_hit: false status for the model download, indicating that the weights were not retrieved from a local cache.",
+      "evidence_ids": [
+       "E6"
+      ]
+     },
+     {
+      "statement": "The pod specification uses an emptyDir volume for the model directory, which is ephemeral and does not persist data across pod restarts, forcing a re-download of the 100MB file on every cold start.",
+      "evidence_ids": [
+       "E4"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.272 seconds for a 53MB image, which is not the primary contributor to the 16-second total startup time compared to the model download.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase duration was 0.0 seconds, indicating no delay in pod placement.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Implement a persistent volume (PVC) for model weights.",
+      "rationale": "Using a PVC allows for cache reuse across pod restarts, avoiding the 10.15-second download penalty on every startup as per the model_loading runbook.",
+      "evidence_ids": [
+       "E3",
+       "E4"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

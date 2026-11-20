@@ -1,0 +1,83 @@
+{
+ "incident_id": 115,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "structured",
+   "data": {
+    "category": "large_image",
+    "summary": "The pod startup took 98.0 seconds, significantly exceeding the 10.0-second SLO. This delay was primarily due to a prolonged image pull phase, which lasted 96.357 seconds. The image size of 648 MB, pulled at a throughput of 6.7 MB/s, was the main contributor to this extended duration.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The total pod startup time was 98.0 seconds, which breached the SLO threshold of 10.0 seconds.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image pull phase accounted for 96.357 seconds of the total startup time, representing 98% of the duration.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image being pulled, localhost:5001/demo-ai-service:fat, has a size of 647991705 bytes (approximately 648 MB).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "statement": "The image was pulled at a throughput of 6724905 bytes per second (approximately 6.7 MB/s).",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "slow_registry",
+      "reason": "The image pull throughput of 6.7 MB/s is consistent with the large image size and the observed pull duration, not indicating an exceptionally slow registry or network.",
+      "evidence_ids": [
+       "E1",
+       "E2"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "There were no model loading spans, and the 'model_s' signal was 0.0 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "The application initialization ('app_init') took only 1.888 seconds, which is a small fraction of the total startup time.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "capacity",
+      "reason": "The scheduling phase duration was 0.0 seconds, and there were no failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_readiness",
+      "reason": "The readiness phase duration was 0.0 seconds, and there were no probe failures after the application was ready.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": []
+   }
+  }
+ ]
+}
