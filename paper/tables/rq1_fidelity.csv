@@ -1,0 +1,7 @@
+signal,n,in range,median miss,mean |dev.|
+dependency_answer_to_app_s,12,12/12,0.00,0.37
+model_s,18,18/18,0.00,2.43
+pull_s,27,27/27,0.00,7.73
+readiness_s,15,15/15,0.00,6.61
+scheduling_s,9,9/9,0.00,3.89
+throughput_bytes_per_s,12,12/12,0.00,45152.25

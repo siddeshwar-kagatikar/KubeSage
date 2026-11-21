@@ -1,0 +1,117 @@
+{
+ "incident_id": 64,
+ "model": "gemini-2.5-flash",
+ "responses": [
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "query_metric",
+     "args": {
+      "metric": "cpu_throttling_ratio"
+     },
+     "id": "930298b4-5308-43f3-9fab-dcd2835296d1"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "",
+   "tool_calls": [
+    {
+     "name": "get_runbook",
+     "args": {
+      "category": "slow_readiness"
+     },
+     "id": "fa16d40d-7222-4771-9c36-93df6ae94dc9"
+    }
+   ]
+  },
+  {
+   "type": "ai",
+   "content": "[{\"type\": \"text\", \"text\": \"The root cause of the slow startup is `slow_readiness`, specifically due to the application waiting 34.1 seconds for a dependency to connect during its initialization phase. There was no CPU throttling, scheduling delay, or excessively long image pull.\", \"extras\": {\"signature\": \"Cp8FAWkUfRMLOI77Wbm/c4xi46Y+sWReUP8Wt2ZFhQoprJKvURzFJp63aWwUAE3MpWA+ySoP58m26E4w8W/2AK/P9MJzA2zFgX2/0T8s1Fojmn0CUHbq01w6Ye5L6B7i2hLsQfpKYD6Xk09gzVGCUCtxuuMx+YndWRJdqE07KdDHSlFNV2UZW95f8pPvcQT0yqNoAjgxvN24BT5y8OJJOJ9zZl457+cd3XrDr9Sb5BjQmxMBZ3xqKjPaJEdK+sQhClW0ODcCPljVR7Qy6TNTgJ2axglIrTQ6waZwRAKJ0caUHWQY5WvF2VpzYvP9z1H4pHiVAyIv290syEFAak0PVyJGGrNuORf1jQHSsK1QbFKHTRVa+2mOszpwE75NRZT/f8l8vQ+4iS256vf+JIWzA4ud5LTtOHo3vWqMQ7vW5zKP8aelmm5M+oQFRL+3wgoDQ+64Fw8SHWLO/fUgJkQMgksEPQe9uKAoqnMBarQwHYn//mW5JuGfa9xbp/WiJGWJ0CdiTFSnJ/GUKNO+GVVqgszmMXXRgTUJmACj/80+Ja9LRvfD3d6ON5nuC9aSkCWrRHrmRDJTKXgCTQGY7xqZo/yPXPQ0lFqr3uBBJCw3rYc2E28ggRzrNdVCi4k7UzFHpCieWlmJkgKW5c7iopa2BNs6jwhemRNQLfGLnFk9BQWxYse1TmGe/lY8OvhyrHCUDBCZR9640BfKtKCwZv43QFL55+A3Nm/fsdd1HqgrsRJqGUwRo+SMm7YpenZTwJ2VfaDdBWgAKOpH+g/Q/SWRlvBaqU6YsAhj7X73t5ycGGkmb/gWdZ6aoJgU4HQYAjUltlqF0PSA45u2Q/QL86gsVKgDqeOew/ogY1dyJCbB37QaOIUY2E8SlUsB2+4pAFNdcJI=\"}}]",
+   "tool_calls": []
+  },
+  {
+   "type": "structured",
+   "data": {
+    "category": "slow_readiness",
+    "summary": "The pod took 41.0 seconds to become Ready, significantly exceeding the 10.0-second SLO. This delay was primarily due to the application waiting 34.097 seconds for a dependency to connect during its initialisation phase. The readiness probe itself was quick, indicating the application was genuinely not ready until the dependency was established.",
+    "confidence": "high",
+    "findings": [
+     {
+      "statement": "The pod startup took 41.0 seconds to reach a Ready state, which is 31.0 seconds over the 10.0-second SLO.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The application's initialisation phase (`app_init`) lasted 35.078 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "Within the `app_init` phase, the `dependency.connect` span accounted for 34.097 seconds, attempting to connect to 'http://slow-dependency.kubesage-infra.svc.cluster.local/' over 35 attempts.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "statement": "The Kubernetes `readiness` phase itself was very short, lasting only 0.082 seconds, indicating the probe quickly succeeded once the application was ready.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "ruled_out": [
+     {
+      "category": "capacity",
+      "reason": "There was no scheduling delay, with the `scheduling` phase duration being 0.0 seconds and 0 failed scheduling events.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "large_image",
+      "reason": "The image pull duration was 4.485 seconds for 53328919 bytes, resulting in a throughput of 11890506 bytes/s, which is not indicative of an excessively large image or slow registry.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "slow_registry",
+      "reason": "The image pull duration was 4.485 seconds for 53328919 bytes, resulting in a throughput of 11890506 bytes/s, which is not indicative of an excessively large image or slow registry.",
+      "evidence_ids": [
+       "E1"
+      ]
+     },
+     {
+      "category": "app_init",
+      "reason": "CPU throttling was not observed, with the `cpu_throttling_ratio` metric showing a minimum, maximum, and mean of 0.0.",
+      "evidence_ids": [
+       "E3"
+      ]
+     },
+     {
+      "category": "model_loading",
+      "reason": "There was no time spent on model loading, as indicated by `model_s` being 0.0 seconds.",
+      "evidence_ids": [
+       "E1"
+      ]
+     }
+    ],
+    "recommendations": [
+     {
+      "action": "Fix or warm the dependency, add retries with backoff, or decouple startup from it.",
+      "rationale": "The primary cause of the slow startup was the application waiting for a slow or unavailable dependency. Addressing the dependency directly is the most effective solution.",
+      "evidence_ids": [
+       "E4"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

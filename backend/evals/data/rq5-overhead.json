@@ -11,5 +11,16 @@
     "campaign_db_growth_kb":  168,
     "campaign_db_total_mb":  13,
     "host_logical_cores":  16,
-    "campaign_db_kb_per_startup":  16.8
+    "campaign_db_kb_per_startup":  16.8,
+    "idle_seconds":  120,
+    "idle_cpu_mean_pct_of_one_core":  0.1,
+    "idle_cpu_max_pct_of_one_core":  0.6,
+    "idle_rss_mean_mb":  132.8,
+    "idle_rss_max_mb":  132.8,
+    "idle_peak_working_set_mb":  162.1,
+    "idle_private_mb":  143.6,
+    "idle_new_startups":  0,
+    "idle_new_events":  0,
+    "idle_db_growth_kb":  0,
+    "idle_db_total_mb":  23.6
 }

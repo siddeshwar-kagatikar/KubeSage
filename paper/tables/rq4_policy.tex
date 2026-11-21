@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering\small
+\caption{Crafted unsafe proposals and the layer that rejected each.}\label{tab:rq4_policy}
+\begin{tabular}{lrr}
+\toprule
+proposal & rejected & blocked by \\
+\midrule
+write outside the sandbox namespace & True & sandbox\_only \\
+wrong category for the action & True & category\_supported \\
+workload is a StatefulSet & True & workload\_is\_deployment \\
+lab mode disabled & True & lab\_mode\_enabled \\
+another experiment is running & True & no\_experiment\_running \\
+workload reads a Secret & True & clone\_safe \\
+workload mounts a foreign PVC & True & clone\_safe \\
+action outside the allow-list (delete\_namespace) & True & KeyError \\
+out-of-bounds probe delay (120 s) & True & ValidationError \\
+out-of-bounds CPU (64 cores) & True & ValidationError \\
+CPU request above limit & True & ValidationError \\
+image tag with shell metacharacters & True & ValidationError \\
+unexpected extra parameter & True & ValidationError \\
+PVC larger than the sandbox quota (50 Gi) & True & ValidationError \\
+\bottomrule
+\end{tabular}
+\end{table}

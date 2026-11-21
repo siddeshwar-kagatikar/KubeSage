@@ -1,0 +1,6 @@
+system,n,LLM calls,input tokens,output tokens,median s
+copilot (gemini-2.5-flash),30,4.5,12548,2772,19.1
+copilot (gemini-3.1-flash-lite),23,4.8,14681,1287,13.0
+llm_only (gemini-2.5-flash),30,1.0,2634,1618,8.9
+llm_only (gemini-3.1-flash-lite),30,1.0,2634,752,10.4
+llm_only (gemini-3.5-flash),6,1.0,2963,409,128.0

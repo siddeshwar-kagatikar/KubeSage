@@ -1,0 +1,15 @@
+proposal,rejected,blocked by
+write outside the sandbox namespace,True,sandbox_only
+wrong category for the action,True,category_supported
+workload is a StatefulSet,True,workload_is_deployment
+lab mode disabled,True,lab_mode_enabled
+another experiment is running,True,no_experiment_running
+workload reads a Secret,True,clone_safe
+workload mounts a foreign PVC,True,clone_safe
+action outside the allow-list (delete_namespace),True,KeyError
+out-of-bounds probe delay (120 s),True,ValidationError
+out-of-bounds CPU (64 cores),True,ValidationError
+CPU request above limit,True,ValidationError
+image tag with shell metacharacters,True,ValidationError
+unexpected extra parameter,True,ValidationError
+PVC larger than the sandbox quota (50 Gi),True,ValidationError

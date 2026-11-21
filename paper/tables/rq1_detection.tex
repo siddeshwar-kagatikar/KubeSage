@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering\small
+\caption{Detection per fault configuration: top-1 accuracy (Wilson 95\% CI), recall of injected causes, incident decision, measurements inside their expected interval, and false alarms on controls.}\label{tab:rq1_detection}
+\begin{tabular}{lrrrrrr}
+\toprule
+fault & runs & top-1 & recall & incident & in range & false alarms \\
+\midrule
+app\_init & 9 & 9/9 (0.70-1.00) & 9/9 & 9/9 & - & - \\
+capacity & 9 & 9/9 (0.70-1.00) & 9/9 & 9/9 & 9/9 & - \\
+large\_image & 9 & 9/9 (0.70-1.00) & 9/9 & 9/9 & 9/9 & - \\
+model\_loading & 9 & 9/9 (0.70-1.00) & 9/9 & 9/9 & 9/9 & - \\
+slow\_readiness\_dependency & 9 & 9/9 (0.70-1.00) & 9/9 & 9/9 & 9/9 & - \\
+slow\_readiness\_probe & 9 & 9/9 (0.70-1.00) & 9/9 & 9/9 & 9/9 & - \\
+slow\_registry & 9 & 9/9 (0.70-1.00) & 9/9 & 9/9 & 18/18 & - \\
+compound (all) & 18 & 18/18 (0.82-1.00) & 36/36 & 18/18 & 30/30 & - \\
+control (all) & 9 & - & - & 9/9 & - & 0/9 \\
+\bottomrule
+\end{tabular}
+\end{table}

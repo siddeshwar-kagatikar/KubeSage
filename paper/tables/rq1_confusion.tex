@@ -1,0 +1,17 @@
+\begin{table}[t]
+\centering\small
+\caption{Confusion matrix of the top detector candidate (rows: expected, columns: predicted).}\label{tab:rq1_confusion}
+\begin{tabular}{lrrrrrrr}
+\toprule
+expected \textbackslash{} predicted & large\_image & slow\_registry & model\_loading & app\_init & capacity & slow\_readiness & none \\
+\midrule
+large\_image & 12 & 0 & 0 & 0 & 0 & 0 & 0 \\
+slow\_registry & 0 & 9 & 0 & 0 & 0 & 0 & 0 \\
+model\_loading & 0 & 0 & 12 & 0 & 0 & 0 & 0 \\
+app\_init & 0 & 0 & 0 & 12 & 0 & 0 & 0 \\
+capacity & 0 & 0 & 0 & 0 & 9 & 0 & 0 \\
+slow\_readiness & 0 & 0 & 0 & 0 & 0 & 27 & 0 \\
+none & 0 & 0 & 0 & 0 & 0 & 0 & 9 \\
+\bottomrule
+\end{tabular}
+\end{table}

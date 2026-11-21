@@ -1,0 +1,15 @@
+system A,system B,n,only A,only B,p
+copilot (gemini-2.5-flash),copilot (gemini-3.1-flash-lite),23,0,0,-
+copilot (gemini-2.5-flash),llm_only (gemini-2.5-flash),30,1,0,1.000
+copilot (gemini-2.5-flash),llm_only (gemini-3.1-flash-lite),30,0,0,-
+copilot (gemini-2.5-flash),llm_only (gemini-3.5-flash),6,0,0,-
+copilot (gemini-2.5-flash),rules (gemini-2.5-flash),30,0,0,-
+copilot (gemini-3.1-flash-lite),llm_only (gemini-2.5-flash),23,1,0,1.000
+copilot (gemini-3.1-flash-lite),llm_only (gemini-3.1-flash-lite),23,0,0,-
+copilot (gemini-3.1-flash-lite),rules (gemini-2.5-flash),23,0,0,-
+llm_only (gemini-2.5-flash),llm_only (gemini-3.1-flash-lite),30,0,1,1.000
+llm_only (gemini-2.5-flash),llm_only (gemini-3.5-flash),6,0,0,-
+llm_only (gemini-2.5-flash),rules (gemini-2.5-flash),30,0,1,1.000
+llm_only (gemini-3.1-flash-lite),llm_only (gemini-3.5-flash),6,0,0,-
+llm_only (gemini-3.1-flash-lite),rules (gemini-2.5-flash),30,0,0,-
+llm_only (gemini-3.5-flash),rules (gemini-2.5-flash),6,0,0,-

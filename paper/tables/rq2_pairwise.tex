@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering\small
+\caption{Paired comparison on shared incidents (exact McNemar): incidents only the first / only the second system diagnosed correctly.}\label{tab:rq2_pairwise}
+\begin{tabular}{lrrrrr}
+\toprule
+system A & system B & n & only A & only B & p \\
+\midrule
+copilot (gemini-2.5-flash) & copilot (gemini-3.1-flash-lite) & 23 & 0 & 0 & - \\
+copilot (gemini-2.5-flash) & llm\_only (gemini-2.5-flash) & 30 & 1 & 0 & 1.000 \\
+copilot (gemini-2.5-flash) & llm\_only (gemini-3.1-flash-lite) & 30 & 0 & 0 & - \\
+copilot (gemini-2.5-flash) & llm\_only (gemini-3.5-flash) & 6 & 0 & 0 & - \\
+copilot (gemini-2.5-flash) & rules (gemini-2.5-flash) & 30 & 0 & 0 & - \\
+copilot (gemini-3.1-flash-lite) & llm\_only (gemini-2.5-flash) & 23 & 1 & 0 & 1.000 \\
+copilot (gemini-3.1-flash-lite) & llm\_only (gemini-3.1-flash-lite) & 23 & 0 & 0 & - \\
+copilot (gemini-3.1-flash-lite) & rules (gemini-2.5-flash) & 23 & 0 & 0 & - \\
+llm\_only (gemini-2.5-flash) & llm\_only (gemini-3.1-flash-lite) & 30 & 0 & 1 & 1.000 \\
+llm\_only (gemini-2.5-flash) & llm\_only (gemini-3.5-flash) & 6 & 0 & 0 & - \\
+llm\_only (gemini-2.5-flash) & rules (gemini-2.5-flash) & 30 & 0 & 1 & 1.000 \\
+llm\_only (gemini-3.1-flash-lite) & llm\_only (gemini-3.5-flash) & 6 & 0 & 0 & - \\
+llm\_only (gemini-3.1-flash-lite) & rules (gemini-2.5-flash) & 30 & 0 & 0 & - \\
+llm\_only (gemini-3.5-flash) & rules (gemini-2.5-flash) & 6 & 0 & 0 & - \\
+\bottomrule
+\end{tabular}
+\end{table}

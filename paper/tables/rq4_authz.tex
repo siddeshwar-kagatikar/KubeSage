@@ -1,0 +1,41 @@
+\begin{table}[t]
+\centering\small
+\caption{What KubeSage's ServiceAccount may do (SubjectAccessReview against the cluster).}\label{tab:rq4_authz}
+\begin{tabular}{lrrrrr}
+\toprule
+verb & resource & namespace & allowed & as designed & purpose \\
+\midrule
+get & pods & demo & True & True & read pods in the monitored namespace \\
+list & pods & * & True & True & read pods cluster-wide \\
+watch & events & demo & True & True & watch events \\
+list & nodes & * & True & True & read nodes (capacity) \\
+get & pods/log & demo & True & True & read logs in demo \\
+get & pods/log & kubesage-sandbox & True & True & read logs in the sandbox \\
+get & pods/log & kubesage-infra & False & True & no logs outside the demo and sandbox namespaces \\
+get & secrets & demo & False & True & never read Secrets \\
+list & secrets & * & False & True & never list Secrets cluster-wide \\
+create & deployments & demo & False & True & no writes to the monitored namespace \\
+delete & deployments & demo & False & True & no deletes in the monitored namespace \\
+patch & deployments & demo & False & True & no patches in the monitored namespace \\
+create & pods & demo & False & True & no pod creation in demo \\
+delete & pods & demo & False & True & no pod deletion in demo \\
+create & deployments & kubesage-sandbox & True & True & sandbox writes are allowed \\
+delete & deployments & kubesage-sandbox & True & True & sandbox cleanup \\
+create & daemonsets & kubesage-sandbox & True & True & pre-pull DaemonSet \\
+create & jobs & kubesage-sandbox & True & True & prefetch Job \\
+create & persistentvolumeclaims & kubesage-sandbox & True & True & model cache PVC \\
+create & persistentvolumeclaims & demo & False & True & no PVCs outside the sandbox \\
+create & configmaps & kubesage-sandbox & True & True & copy ConfigMaps into the sandbox \\
+update & configmaps & demo & False & True & no ConfigMap edits in demo \\
+get & pods/proxy & kubesage-sandbox & True & True & smoke request through the API-server proxy \\
+get & pods/proxy & demo & False & True & no pod proxy outside the sandbox \\
+create & pods/exec & kubesage-sandbox & False & True & no exec into pods \\
+create & namespaces & * & False & True & cannot create namespaces \\
+delete & namespaces & * & False & True & cannot delete namespaces \\
+patch & nodes & * & False & True & cannot modify nodes \\
+create & clusterrolebindings & * & False & True & no privilege escalation \\
+create & rolebindings & kubesage-sandbox & False & True & no RBAC edits even in the sandbox \\
+impersonate & users & * & False & True & cannot impersonate other users \\
+\bottomrule
+\end{tabular}
+\end{table}

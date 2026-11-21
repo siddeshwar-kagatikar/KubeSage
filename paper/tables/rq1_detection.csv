@@ -1,0 +1,10 @@
+fault,runs,top-1,recall,incident,in range,false alarms
+app_init,9,9/9 (0.70-1.00),9/9,9/9,-,-
+capacity,9,9/9 (0.70-1.00),9/9,9/9,9/9,-
+large_image,9,9/9 (0.70-1.00),9/9,9/9,9/9,-
+model_loading,9,9/9 (0.70-1.00),9/9,9/9,9/9,-
+slow_readiness_dependency,9,9/9 (0.70-1.00),9/9,9/9,9/9,-
+slow_readiness_probe,9,9/9 (0.70-1.00),9/9,9/9,9/9,-
+slow_registry,9,9/9 (0.70-1.00),9/9,9/9,18/18,-
+compound (all),18,18/18 (0.82-1.00),36/36,18/18,30/30,-
+control (all),9,-,-,9/9,-,0/9

@@ -322,26 +322,34 @@ def cmd_run(args) -> None:
     used = [calls_in_window(history, datetime.now(UTC), key=k) for k in range(max(len(keys), 1))]
     if args.budget is not None:
         print(f"{len(used)} key(s); calls in the last 24 h per key: {used}; budget {args.budget} each")
+    # a key that has never answered this model and keeps failing with an access error is dead (e.g. a new project that
+    # cannot use gemini-2.5-*): skip it from the start so it does not eat incidents
+    worked = {r.get("key_index", 0) for r in history if r["status"] == "ok"}
+    for r in history:
+        if daily_quota_exhausted(r.get("error")) and r.get("key_index", 0) not in worked:
+            used[r.get("key_index", 0)] = 10**6
     for entry in todo:
-        # least-used key first: spreads the 5 calls/min limit across keys too
-        k = min(range(len(used)), key=used.__getitem__)
-        if args.budget is not None and used[k] + EXPECTED_CALLS[args.system] > args.budget:
-            print(f"stopping: every key would exceed {args.budget} calls in 24 h ({used} used)")
-            break
-        key_settings = settings.model_copy(update={"google_api_key": SecretStr(keys[k])}) if keys else settings
-        record = evaluate(entry, args.system, model_name, args, index, key_settings)
-        record["at"] = datetime.now(UTC).isoformat()
-        record["key_index"] = k
-        used[k] += record.get("llm_calls", 0)
-        with out.open("a", encoding="utf-8") as f:
-            f.write(json.dumps(record, default=str) + "\n")
-        print(f"  {entry['row_id']:<46} {record['status']:<6} {record.get('category')!s:<15} correct={record.get('correct')} "
-              f"src={record.get('source')} calls={record.get('llm_calls')} {record.get('error') or ''}"[:200], flush=True)  # fmt: skip
-        if daily_quota_exhausted(record.get("error")):
-            used[k] = 10**6  # this key is spent for today; carry on with the others
-            if min(used) >= 10**6:
-                print("daily quota exhausted on every key for this model; resume tomorrow")
+        while True:
+            # least-used key first: spreads the 5 calls/min limit across keys too
+            k = min(range(len(used)), key=used.__getitem__)
+            if used[k] >= 10**6:
+                print("no usable key left for this model today; resume tomorrow")
+                return
+            if args.budget is not None and used[k] + EXPECTED_CALLS[args.system] > args.budget:
+                print(f"stopping: every key would exceed {args.budget} calls in 24 h ({used} used)")
+                return
+            key_settings = settings.model_copy(update={"google_api_key": SecretStr(keys[k])}) if keys else settings
+            record = evaluate(entry, args.system, model_name, args, index, key_settings)
+            record["at"] = datetime.now(UTC).isoformat()
+            record["key_index"] = k
+            used[k] += record.get("llm_calls", 0)
+            with out.open("a", encoding="utf-8") as f:
+                f.write(json.dumps(record, default=str) + "\n")
+            print(f"  {entry['row_id']:<46} {record['status']:<6} {record.get('category')!s:<15} correct={record.get('correct')} "
+                  f"src={record.get('source')} calls={record.get('llm_calls')} {record.get('error') or ''}"[:200], flush=True)  # fmt: skip
+            if not daily_quota_exhausted(record.get("error")):
                 break
+            used[k] = 10**6  # this key is spent for today; retry the same incident on another key
 
 
 def cmd_summary(args) -> None:

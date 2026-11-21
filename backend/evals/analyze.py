@@ -368,7 +368,7 @@ def figure_rq2(table: Table) -> None:
         k, n = (int(x) for x in r[2].split(" ")[0].split("/"))
         lo, hi = wilson_interval(k, n)
         values.append(k / n)
-        errors.append([k / n - lo, hi - k / n])
+        errors.append([max(0.0, k / n - lo), max(0.0, hi - k / n)])  # k = n leaves -1e-16 of rounding
     fig, ax = plt.subplots(figsize=(5.4, 3.0))
     ax.bar(range(len(labels)), values, yerr=list(zip(*errors, strict=True)), capsize=3, color="#4477aa")
     ax.set_xticks(range(len(labels)), labels, rotation=30, ha="right", fontsize=7)

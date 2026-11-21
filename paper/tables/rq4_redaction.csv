@@ -1,0 +1,8 @@
+surface,leaked secrets
+stored_logs,0
+stored_pod_snapshot,0
+stored_events,0
+tool:get_pod_spec,0
+tool:get_container_logs,0
+tool:get_pod_events,0
+tool:get_workload_history,0
